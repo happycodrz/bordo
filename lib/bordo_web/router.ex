@@ -1,11 +1,22 @@
 defmodule BordoWeb.Router do
   use BordoWeb, :router
 
-  pipeline :api do
+  pipeline :public do
     plug :accepts, ["json"]
   end
 
-  scope "/api", BordoWeb do
-    pipe_through :api
+  # Pipeline for private apis, requires Authorisation header with Bearer token
+  pipeline :private do
+    plug :accepts, ["json"]
+
+    plug Auth.Guardian.Pipeline
+  end
+
+  scope "/auth", BordoWeb do
+    pipe_through :public
+
+    post "/sign-in", AuthController, :create
+  end
+
   end
 end
