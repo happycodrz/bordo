@@ -18,5 +18,4 @@ defmodule BordoWeb.Router do
     post "/sign-in", AuthController, :create
   end
 
-  end
 end
