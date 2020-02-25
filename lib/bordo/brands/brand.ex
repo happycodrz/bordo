@@ -14,6 +14,11 @@ defmodule Bordo.Brands.Brand do
   def changeset(brand, attrs) do
     brand
     |> cast(attrs, [:name, :icon_url])
+    |> put_change(:uuid, generate_short_uuid())
     |> validate_required([:name, :icon_url])
+  end
+
+  def generate_short_uuid() do
+    Ecto.UUID.generate() |> String.split("-") |> Enum.at(0)
   end
 end
