@@ -10,6 +10,6 @@ defmodule Bordo.Repo.Migrations.CreateBrands do
       timestamps()
     end
 
-    unique_index(:brands, [:uuid])
+    create unique_index(:brands, [:uuid])
   end
 end
