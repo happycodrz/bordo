@@ -4,7 +4,7 @@ defmodule Auth do
   and provide access_token and expires_in as a result
   """
   alias Auth.{Credentials, TokenResult}
-
+  alias Bordo.Users.User
   import Base
   require Logger
 
@@ -28,6 +28,7 @@ defmodule Auth do
     |> HTTPoison.post(body, headers)
     |> response
     |> parse
+    |> find_or_create_user(username)
   end
 
   defp build_url(%URI{} = url) do
@@ -74,5 +75,15 @@ defmodule Auth do
   defp parse({:error, error}) do
     _ = Logger.warn(fn -> "Failed to authenticate due to #{inspect(error)}" end)
     {:error, :unauthorized}
+  end
+
+  defp find_or_create_user(success_response, email) do
+    with {:ok, user} <- Bordo.Users.find_or_create(%{email: email}) do
+      success_response
+    end
+  end
+
+  defp find_or_create_user({:error, _} = error_response) do
+    error_response
   end
 end
