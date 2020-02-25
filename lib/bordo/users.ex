@@ -55,6 +55,19 @@ defmodule Bordo.Users do
     |> Repo.insert()
   end
 
+  def find_or_create(attrs) do
+    {:ok, user} =
+      %User{}
+      |> User.changeset(attrs)
+      |> Repo.insert(on_conflict: :nothing)
+
+    if is_nil(user.id) do
+      {:ok, user}
+    else
+      {:ok, Repo.one(from u in User, where: u.id == ^user.id)}
+    end
+  end
+
   @doc """
   Updates a user.
 
