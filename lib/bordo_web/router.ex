@@ -18,4 +18,9 @@ defmodule BordoWeb.Router do
     post "/sign-in", AuthController, :create
   end
 
+  scope "", BordoWeb do
+    pipe_through :private
+    resources "/brands", BrandController
+    resources "/users", UserController
+  end
 end
