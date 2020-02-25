@@ -1,6 +1,7 @@
 defmodule Bordo.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
+  import Bordo.Schema, only: [generate_short_uuid: 0]
 
   schema "users" do
     field :email, :string
@@ -12,7 +13,8 @@ defmodule Bordo.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:uuid, :email])
-    |> validate_required([:uuid, :email])
+    |> cast(attrs, [:email])
+    |> put_change(:uuid, generate_short_uuid())
+    |> validate_required([:email])
   end
 end
