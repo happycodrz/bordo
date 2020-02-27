@@ -5,11 +5,9 @@ defmodule Bordo.Repo.Migrations.CreateBrands do
     create table(:brands) do
       add :uuid, :string, null: false, unique: true
       add :name, :string, null: false
-      add :icon_url, :string
+      add :owner_id, references(:users, column: :id, on_delete: :nothing), null: false
 
       timestamps()
     end
-
-    create unique_index(:brands, [:uuid])
   end
 end
