@@ -24,11 +24,12 @@ defmodule Bordo.Brands do
   def list_brands_for_user(user_id) do
     query =
       from b in Brand,
-        join: ub in UserBrand,
+        left_join: ub in UserBrand,
         on: b.id == ub.brand_id,
+        distinct: b.id,
         where:
-          ub.user_id ==
-            ^user_id
+          b.owner_id == ^user_id or
+            ub.user_id == ^user_id
 
     Repo.all(query)
   end

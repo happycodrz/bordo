@@ -3,8 +3,8 @@ defmodule Bordo.Brands.UserBrand do
   import Ecto.Changeset
 
   schema "user_brands" do
-    belongs_to :brand, :id
-    belongs_to :user, :id
+    belongs_to :brand, Bordo.Brands.Brand
+    belongs_to :user, Bordo.Users.User
 
     timestamps()
   end
