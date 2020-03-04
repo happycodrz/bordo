@@ -6,16 +6,20 @@ defmodule Auth.Guardian do
   """
   use Guardian, otp_app: :bordo
   alias Auth.Identity
+  alias Bordo.Repo
+  alias Bordo.Users.User
 
-  # @impl Guardian
-  @doc false
   def subject_for_token(user, _claims) do
     {:ok, to_string(user.id)}
   end
 
-  # @impl Guardian
   @doc false
   def resource_from_claims(%{"sub" => "auth0|" <> id}) do
-    {:ok, %Identity{id: id}}
+    # user_with_brands = Repo.get_by(User, auth0_id: id) |> Repo.preload([:brands])
+    # TODO:
+    # expand to cache user & current_brand?
+    # expand %Identity to include better/more information as a session cache
+    user = Repo.get_by(User, auth0_id: id)
+    {:ok, %Identity{id: id, user_id: user.id}}
   end
 end

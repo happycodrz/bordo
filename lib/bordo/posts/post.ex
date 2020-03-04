@@ -3,6 +3,8 @@ defmodule Bordo.Posts.Post do
   import Ecto.Changeset
   import Bordo.Schema, only: [generate_short_uuid: 0]
 
+  @post_statuses ["draft", "published", "scheduled", "failed"]
+
   schema "posts" do
     field :status, :string
     field :title, :string
@@ -16,8 +18,9 @@ defmodule Bordo.Posts.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :status])
+    |> cast(attrs, [:title, :status, :brand_id, :user_id])
     |> put_change(:uuid, generate_short_uuid())
-    |> validate_required([:title, :status])
+    |> validate_required([:title, :status, :brand_id, :user_id])
+    |> validate_inclusion(:status, @post_statuses)
   end
 end

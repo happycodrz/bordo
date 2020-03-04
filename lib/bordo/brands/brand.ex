@@ -5,16 +5,19 @@ defmodule Bordo.Brands.Brand do
 
   schema "brands" do
     field :name, :string
+    field :owner_id, :id
     field :uuid, :string
 
+    has_many(:user_brands, Bordo.Brands.UserBrand)
+    many_to_many(:users, Bordo.Users.User, join_through: "user_brands")
     timestamps()
   end
 
   @doc false
   def changeset(brand, attrs) do
     brand
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :owner_id])
     |> put_change(:uuid, generate_short_uuid())
-    |> validate_required([:name])
+    |> validate_required([:name, :owner_id])
   end
 end

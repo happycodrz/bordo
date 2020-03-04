@@ -4,11 +4,11 @@ defmodule Auth do
   and provide access_token and expires_in as a result
   """
   alias Auth.{Credentials, TokenResult}
-  alias Bordo.Users.User
+  alias Bordo.Users
   import Base
   require Logger
 
-  @auth0 Application.fetch_env!(:bordo, :auth0)
+  @auth0 Application.get_env(:bordo, :auth0)
 
   @doc """
   Retrieves the access_token token for a username / password pair
@@ -78,12 +78,11 @@ defmodule Auth do
   end
 
   defp find_or_create_user(success_response, email) do
-    with {:ok, user} <- Bordo.Users.find_or_create(%{email: email}) do
+    {:ok, %Auth.TokenResult{access_token: access_token}} = success_response
+    {:ok, %{"sub" => "auth0|" <> id}} = Auth.Guardian.decode_and_verify(access_token)
+
+    with {:ok, _user} <- Users.find_or_create(%{email: email, auth0_id: id}) do
       success_response
     end
-  end
-
-  defp find_or_create_user({:error, _} = error_response) do
-    error_response
   end
 end

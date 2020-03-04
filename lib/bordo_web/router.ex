@@ -10,6 +10,7 @@ defmodule BordoWeb.Router do
     plug :accepts, ["json"]
 
     plug Auth.Guardian.Pipeline
+    plug Auth.CurrentBrand
   end
 
   scope "/auth", BordoWeb do
@@ -21,7 +22,7 @@ defmodule BordoWeb.Router do
   scope "", BordoWeb do
     pipe_through :private
     resources "/brands", BrandController
-    resources "/posts", UserController
+    resources "/posts", PostController
     resources "/teams", TeamController
     resources "/users", UserController
   end

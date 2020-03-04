@@ -7,7 +7,7 @@ defmodule BordoWeb.PostController do
   action_fallback BordoWeb.FallbackController
 
   def index(conn, _params) do
-    posts = Posts.list_posts()
+    posts = Posts.list_posts(conn.assigns.current_brand)
     render(conn, "index.json", posts: posts)
   end
 

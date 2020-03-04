@@ -7,7 +7,7 @@ defmodule BordoWeb.BrandController do
   action_fallback BordoWeb.FallbackController
 
   def index(conn, _params) do
-    brands = Brands.list_brands()
+    brands = Brands.list_brands_for_user(conn.assigns.current_identity.user_id)
     render(conn, "index.json", brands: brands)
   end
 

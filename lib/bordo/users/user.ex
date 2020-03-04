@@ -6,6 +6,7 @@ defmodule Bordo.Users.User do
   schema "users" do
     field :email, :string
     field :uuid, :string
+    field :auth0_id, :string
 
     timestamps()
   end
@@ -13,7 +14,7 @@ defmodule Bordo.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email])
+    |> cast(attrs, [:email, :auth0_id])
     |> put_change(:uuid, generate_short_uuid())
     |> validate_required([:email])
   end

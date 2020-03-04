@@ -1,0 +1,11 @@
+- Determine user fields & role
+- Add role enum type :owner, :admin, :manage, :user non-null
+- Determine tenant feel
+  - everything belongs_to brand?
+    - brand access?
+    - team -> brand
+    - user -> team
+    -
+
+- Add posts
+- Add post_status enum type :draft, :published, :scheduled, :failed (show failed to user?)

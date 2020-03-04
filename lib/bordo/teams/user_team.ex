@@ -3,7 +3,7 @@ defmodule Bordo.Teams.UserTeam do
   import Ecto.Changeset
 
   schema "user_teams" do
-    field :brand_id, :id
+    field :team_id, :id
     field :user_id, :id
 
     timestamps()

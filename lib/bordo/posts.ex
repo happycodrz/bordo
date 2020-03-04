@@ -17,8 +17,9 @@ defmodule Bordo.Posts do
       [%Post{}, ...]
 
   """
-  def list_posts do
-    Repo.all(Post)
+  def list_posts(brand_id) do
+    from(p in Post, where: p.brand_id == ^brand_id)
+    |> Repo.all()
   end
 
   @doc """

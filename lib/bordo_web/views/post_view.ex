@@ -11,8 +11,12 @@ defmodule BordoWeb.PostView do
   end
 
   def render("post.json", %{post: post}) do
-    %{id: post.id,
+    %{
+      id: post.id,
       title: post.title,
-      status: post.status}
+      status: post.status,
+      brand_id: post.brand_id,
+      user_id: post.user_id
+    }
   end
 end

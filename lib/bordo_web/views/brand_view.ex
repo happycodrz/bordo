@@ -11,9 +11,6 @@ defmodule BordoWeb.BrandView do
   end
 
   def render("brand.json", %{brand: brand}) do
-    %{id: brand.id,
-      uuid: brand.uuid,
-      name: brand.name,
-      icon_url: brand.icon_url}
+    %{id: brand.id, uuid: brand.uuid, name: brand.name}
   end
 end
