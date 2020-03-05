@@ -25,5 +25,9 @@ defmodule BordoWeb.Router do
     resources "/posts", PostController
     resources "/teams", TeamController
     resources "/users", UserController
+
+    scope "/uploads", Uploads do
+      resources "/aws", AwsController, only: [:create]
+    end
   end
 end
