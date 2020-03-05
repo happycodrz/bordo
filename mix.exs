@@ -35,6 +35,8 @@ defmodule Bordo.MixProject do
     [
       {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.1"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
       {:gettext, "~> 0.11"},
       {:guardian, "~> 2.0.0"},
       {:httpoison, "~> 1.6.2"},
@@ -43,7 +45,7 @@ defmodule Bordo.MixProject do
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 
