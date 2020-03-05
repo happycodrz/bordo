@@ -29,6 +29,11 @@ config :phoenix, :json_library, Jason
 # this avoids having to configure it on every migration file
 config :bordo, Bordo.Repo, migration_timestamps: [type: :utc_datetime_usec]
 
+config :ex_aws,
+  json_codec: Jason,
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
