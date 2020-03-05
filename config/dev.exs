@@ -76,3 +76,5 @@ config :bordo, Auth.Guardian,
   issuer: "bordo",
   verify_issuer: false,
   secret_key: System.get_env("AUTH0_SIGNING_SECRET")
+
+config :bordo, :aws, bucket_name: System.get_env("AWS_BUCKET")
