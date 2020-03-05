@@ -15,7 +15,6 @@ defmodule BordoWeb.UserTeamController do
     with {:ok, %UserTeam{} = user_team} <- Teams.create_user_team(user_team_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.user_team_path(conn, :show, user_team))
       |> render("show.json", user_team: user_team)
     end
   end
