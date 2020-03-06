@@ -31,6 +31,7 @@ config :bordo, Bordo.Repo, migration_timestamps: [type: :utc_datetime_usec]
 
 config :ex_aws,
   json_codec: Jason,
+  region: {:system, "AWS_REGION"},
   access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
   secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
 
