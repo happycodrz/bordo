@@ -13,7 +13,7 @@ defmodule BordoWeb.Uploads.AwsController do
     with {:ok, url} <- presign_url(file_path) do
       conn
       |> put_status(:created)
-      |> json(%{url: url})
+      |> json(%{url: url, file_path: file_path})
     end
   end
 
