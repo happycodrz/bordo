@@ -22,6 +22,7 @@ defmodule BordoWeb.Router do
   scope "/", BordoWeb do
     pipe_through :private
     resources "/brands", BrandController
+    resources "/images", ImageController
     resources "/posts", PostController
     resources "/teams", TeamController
     resources "/users", UserController
