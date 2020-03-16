@@ -18,6 +18,7 @@ defmodule Bordo.Brands.Brand do
     brand
     |> cast(attrs, [:name, :owner_id])
     |> put_change(:uuid, generate_short_uuid())
+    |> foreign_key_constraint(:owner_id)
     |> validate_required([:name, :owner_id])
   end
 end

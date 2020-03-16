@@ -20,6 +20,7 @@ defmodule Bordo.Posts.Post do
     post
     |> cast(attrs, [:title, :status, :brand_id, :user_id])
     |> put_change(:uuid, generate_short_uuid())
+    |> foreign_key_constraint(:brand_id)
     |> validate_required([:title, :status, :brand_id, :user_id])
     |> validate_inclusion(:status, @post_statuses)
   end
