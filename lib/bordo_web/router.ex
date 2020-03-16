@@ -10,7 +10,6 @@ defmodule BordoWeb.Router do
     plug :accepts, ["json"]
 
     plug Auth.Guardian.Pipeline
-    plug Auth.CurrentBrand
   end
 
   scope "/auth", BordoWeb do
