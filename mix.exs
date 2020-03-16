@@ -33,6 +33,7 @@ defmodule Bordo.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:cors_plug, "~> 2.0"},
       {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.1"},
       {:ex_aws, "~> 2.1"},
