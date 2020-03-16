@@ -5,7 +5,6 @@ defmodule Bordo.Repo.Migrations.CreateTeams do
     create table(:teams) do
       add :uuid, :string, null: false, unique: true
       add :name, :string, null: false
-      add :brand_id, references(:brands, on_delete: :delete_all), null: false
       add :owner_id, references(:users, column: :id, on_delete: :delete_all), null: false
 
       timestamps()

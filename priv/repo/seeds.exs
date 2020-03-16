@@ -1,4 +1,5 @@
-alias Bordo.{Brands, Posts, Users}
+alias Bordo.{Brands, Posts, Teams, Users}
+
 # Script for populating the database. You can run it as:
 #
 #     mix run priv/repo/seeds.exs
@@ -10,6 +11,12 @@ alias Bordo.{Brands, Posts, Users}
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+teams = [
+  %{name: "Fleetio", owner_id: 1},
+  %{name: "Bordo", owner_id: 2}
+]
+
 users = [
   %{email: "kevin@bor.do"},
   %{email: "michael@bor.do"}
@@ -36,11 +43,15 @@ posts = [
 ]
 
 # TODO: Refactor to use bang methods
+# These are order-dependent
 users
 |> Enum.each(&Users.create_user(&1))
 
 brands
 |> Enum.each(&Brands.create_brand(&1))
+
+teams
+|> Enum.each(&Teams.create_team(&1))
 
 posts
 |> Enum.each(&Posts.create_post(&1))
