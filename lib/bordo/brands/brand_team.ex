@@ -12,7 +12,7 @@ defmodule Bordo.Brands.BrandTeam do
   @doc false
   def changeset(brand_team, attrs) do
     brand_team
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:brand_id, :team_id])
+    |> validate_required([:brand_id, :team_id])
   end
 end

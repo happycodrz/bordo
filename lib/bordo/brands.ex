@@ -24,10 +24,10 @@ defmodule Bordo.Brands do
 
   def list_brands_for_team(team_id) do
     query =
-      from t in Team,
+      from b in Brand,
         left_join: bt in BrandTeam,
-        on: t.id == bt.brand_id,
-        distinct: t.id,
+        on: b.id == bt.brand_id,
+        distinct: b.id,
         where: bt.team_id == ^team_id
 
     Repo.all(query)
