@@ -6,6 +6,7 @@ defmodule Bordo.Users do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
+  alias Bordo.Brands.{Brand, UserBrand}
   alias Bordo.Users.User
 
   @doc """
@@ -19,6 +20,28 @@ defmodule Bordo.Users do
   """
   def list_users do
     Repo.all(User)
+  end
+
+  @doc """
+  Returns the list of users joined with a brand by uuid.
+
+  ## Examples
+
+      iex> list_users_for_brand(brand_uuid)
+      [%User{}, ...]
+
+  """
+  def list_users_for_brand(uuid: brand_uuid) do
+    query =
+      from u in User,
+        left_join: ub in UserBrand,
+        on: u.id == ub.user_id,
+        left_join: b in Brand,
+        on: b.id == ub.brand_id,
+        distinct: u.id,
+        where: b.uuid == ^brand_uuid
+
+    Repo.all(query)
   end
 
   @doc """
