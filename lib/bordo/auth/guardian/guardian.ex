@@ -20,6 +20,6 @@ defmodule Auth.Guardian do
     # expand to cache user & current_brand?
     # expand %Identity to include better/more information as a session cache
     user = Repo.get_by(User, auth0_id: id)
-    {:ok, %Identity{id: id, user_id: user.id}}
+    {:ok, %Identity{id: id, user_id: user.id, team_id: user.team_id}}
   end
 end
