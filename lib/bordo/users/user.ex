@@ -8,6 +8,7 @@ defmodule Bordo.Users.User do
     field :uuid, :string
     field :auth0_id, :string
 
+    belongs_to :team, Bordo.Teams.Team
     timestamps()
   end
 

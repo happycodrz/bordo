@@ -8,8 +8,9 @@ defmodule Bordo.Brands.Brand do
     field :owner_id, :id
     field :uuid, :string
 
-    has_many(:user_brands, Bordo.Brands.UserBrand)
-    many_to_many(:users, Bordo.Users.User, join_through: "user_brands")
+    has_many(:team_brands, Bordo.Brands.BrandTeam)
+    # many_to_many(:, Bordo.Users.User, join_through: "user_brands")
+    # many_to_many(:users, Bordo.Users.User, join_through: "user_brands")
     timestamps()
   end
 

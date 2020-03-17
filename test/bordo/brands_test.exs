@@ -122,4 +122,61 @@ defmodule Bordo.BrandsTest do
       assert %Ecto.Changeset{} = Brands.change_user_brand(user_brand)
     end
   end
+
+  describe "brand_teams" do
+    alias Bordo.Brands.BrandTeam
+
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{}
+
+    def brand_team_fixture(attrs \\ %{}) do
+      {:ok, brand_team} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Brands.create_brand_team()
+
+      brand_team
+    end
+
+    test "list_brand_teams/0 returns all brand_teams" do
+      brand_team = brand_team_fixture()
+      assert Brands.list_brand_teams() == [brand_team]
+    end
+
+    test "get_brand_team!/1 returns the brand_team with given id" do
+      brand_team = brand_team_fixture()
+      assert Brands.get_brand_team!(brand_team.id) == brand_team
+    end
+
+    test "create_brand_team/1 with valid data creates a brand_team" do
+      assert {:ok, %BrandTeam{} = brand_team} = Brands.create_brand_team(@valid_attrs)
+    end
+
+    test "create_brand_team/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Brands.create_brand_team(@invalid_attrs)
+    end
+
+    test "update_brand_team/2 with valid data updates the brand_team" do
+      brand_team = brand_team_fixture()
+      assert {:ok, %BrandTeam{} = brand_team} = Brands.update_brand_team(brand_team, @update_attrs)
+    end
+
+    test "update_brand_team/2 with invalid data returns error changeset" do
+      brand_team = brand_team_fixture()
+      assert {:error, %Ecto.Changeset{}} = Brands.update_brand_team(brand_team, @invalid_attrs)
+      assert brand_team == Brands.get_brand_team!(brand_team.id)
+    end
+
+    test "delete_brand_team/1 deletes the brand_team" do
+      brand_team = brand_team_fixture()
+      assert {:ok, %BrandTeam{}} = Brands.delete_brand_team(brand_team)
+      assert_raise Ecto.NoResultsError, fn -> Brands.get_brand_team!(brand_team.id) end
+    end
+
+    test "change_brand_team/1 returns a brand_team changeset" do
+      brand_team = brand_team_fixture()
+      assert %Ecto.Changeset{} = Brands.change_brand_team(brand_team)
+    end
+  end
 end
