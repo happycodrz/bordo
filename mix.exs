@@ -20,7 +20,7 @@ defmodule Bordo.MixProject do
   def application do
     [
       mod: {Bordo.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:cloudex, :logger, :runtime_tools]
     ]
   end
 
@@ -33,6 +33,7 @@ defmodule Bordo.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:cloudex, "~> 1.4"},
       {:cors_plug, "~> 2.0"},
       {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.1"},
