@@ -7,9 +7,7 @@ defmodule BordoWeb.UserController do
   action_fallback BordoWeb.FallbackController
 
   def index(conn, _params) do
-    %Plug.Conn{assigns: %{current_identity: %Auth.Identity{team_id: team_id}}} = conn
-
-    users = Users.list_users_for_team(team_id)
+    users = Users.list_users_for_team(conn |> team_id())
     render(conn, "index.json", users: users)
   end
 
