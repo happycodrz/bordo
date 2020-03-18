@@ -2,7 +2,7 @@ defmodule BordoWeb.BrandController do
   use BordoWeb, :controller
 
   alias Bordo.Brands
-  alias Bordo.Brands.{Brand, BrandTeam}
+  alias Bordo.Brands.{Brand}
   alias Ecto.Multi
 
   action_fallback BordoWeb.FallbackController
