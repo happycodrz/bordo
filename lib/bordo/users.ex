@@ -56,7 +56,7 @@ defmodule Bordo.Users do
   def list_users_for_team(team_id) do
     query =
       from u in User,
-        where: u.id == ^team_id
+        where: u.team_id == ^team_id
 
     Repo.all(query)
   end

@@ -15,7 +15,7 @@ defmodule Bordo.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :auth0_id])
+    |> cast(attrs, [:email, :auth0_id, :team_id])
     |> put_change(:uuid, generate_short_uuid())
     |> validate_required([:email])
   end
