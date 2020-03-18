@@ -45,6 +45,23 @@ defmodule Bordo.Users do
   end
 
   @doc """
+  Returns the list of users joined with a brand by uuid.
+
+  ## Examples
+
+      iex> list_users_for_brand(brand_uuid)
+      [%User{}, ...]
+
+  """
+  def list_users_for_team(team_id) do
+    query =
+      from u in User,
+        where: u.id == ^team_id
+
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.

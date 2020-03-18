@@ -23,6 +23,7 @@ defmodule BordoWeb do
 
       import Plug.Conn
       import BordoWeb.Gettext
+      import BordoWeb.CurrentIdentity, only: [current_identity: 1]
       alias BordoWeb.Router.Helpers, as: Routes
     end
   end
