@@ -95,6 +95,24 @@ defmodule Bordo.Users do
     |> Repo.insert()
   end
 
+  @doc """
+  Creates a user.
+
+  ## Examples
+
+      iex> create_user(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user_brand(attrs \\ %{}) do
+    %UserBrand{}
+    |> UserBrand.changeset(attrs)
+    |> Repo.insert()
+  end
+
   def find_or_create(attrs) do
     {:ok, user} =
       %User{}
