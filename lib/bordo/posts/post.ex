@@ -9,6 +9,7 @@ defmodule Bordo.Posts.Post do
     field :status, :string
     field :title, :string
     field :uuid, :string
+    field :scheduled_for, :utc_datetime
     field :brand_id, :id
     field :user_id, :id
 
@@ -18,7 +19,7 @@ defmodule Bordo.Posts.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :status, :brand_id, :user_id])
+    |> cast(attrs, [:title, :status, :brand_id, :user_id, :utc_datetime])
     |> put_change(:uuid, generate_short_uuid())
     |> foreign_key_constraint(:brand_id)
     |> validate_required([:title, :status, :brand_id, :user_id])
