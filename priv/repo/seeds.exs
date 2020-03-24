@@ -18,7 +18,7 @@ teams = [
 ]
 
 users = [
-  %{email: "kevin@bor.do"},
+  %{email: "kevin@bor.do", auth0_id: "5e7a9a590cf8140c66c315b4"},
   %{email: "michael@bor.do"}
 ]
 
