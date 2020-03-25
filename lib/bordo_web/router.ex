@@ -23,11 +23,11 @@ defmodule BordoWeb.Router do
 
     resources "/brands", BrandController do
       resources "/channels", Brands.ChannelController
+      resources "/posts", Brands.PostController
       resources "/users", Brands.UserController
     end
 
     resources "/images", ImageController
-    resources "/posts", PostController
     resources "/teams", TeamController
     resources "/users", UserController
     resources "/user-brands", UserBrandController, only: [:create]

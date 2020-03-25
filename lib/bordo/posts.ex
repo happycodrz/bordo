@@ -7,6 +7,7 @@ defmodule Bordo.Posts do
   alias Bordo.Repo
 
   alias Bordo.Posts.Post
+  alias Bordo.Brands.Brand
 
   @doc """
   Returns the list of posts.
@@ -20,6 +21,25 @@ defmodule Bordo.Posts do
   def list_posts(brand_id) do
     from(p in Post, where: p.brand_id == ^brand_id)
     |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of users joined with a brand by uuid.
+
+  ## Examples
+
+      iex> list_posts_for_brand(brand_uuid)
+      [%User{}, ...]
+
+  """
+  def list_posts_for_brand(uuid: brand_uuid) do
+    brand = Repo.get_by!(Brand, uuid: brand_uuid)
+
+    query =
+      from p in Post,
+        where: p.brand_id == ^brand.id
+
+    Repo.all(query)
   end
 
   @doc """

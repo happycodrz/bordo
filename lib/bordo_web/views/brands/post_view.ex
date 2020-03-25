@@ -1,6 +1,6 @@
-defmodule BordoWeb.PostView do
+defmodule BordoWeb.Brands.PostView do
   use BordoWeb, :view
-  alias BordoWeb.PostView
+  alias BordoWeb.Brands.PostView
 
   def render("index.json", %{posts: posts}) do
     %{data: render_many(posts, PostView, "post.json")}
