@@ -16,8 +16,8 @@ defmodule Bordo.Channels.Channel do
   @doc false
   def changeset(channel, attrs) do
     channel
-    |> cast(attrs, [:auth_token, :refresh_token, :network])
+    |> cast(attrs, [:auth_token, :refresh_token, :network, :brand_id])
     |> put_change(:uuid, generate_short_uuid())
-    |> validate_required([:auth_token, :refresh_token, :network])
+    |> validate_required([:auth_token, :refresh_token, :network, :brand_id])
   end
 end

@@ -1,4 +1,4 @@
-defmodule BordoWeb.ChannelController do
+defmodule BordoWeb.Brands.ChannelController do
   use BordoWeb, :controller
 
   alias Bordo.Channels
@@ -11,11 +11,13 @@ defmodule BordoWeb.ChannelController do
     render(conn, "index.json", channels: channels)
   end
 
-  def create(conn, %{"channel" => channel_params}) do
+  def create(conn, %{"channel" => channel_params, "brand_id" => brand_uuid}) do
+    channel_params = Map.merge(channel_params, %{"brand_uuid" => brand_uuid})
+
     with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.channel_path(conn, :show, channel))
+      |> put_resp_header("location", Routes.brand_channel_path(conn, :show, brand_uuid, channel))
       |> render("show.json", channel: channel)
     end
   end

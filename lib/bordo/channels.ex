@@ -7,6 +7,7 @@ defmodule Bordo.Channels do
   alias Bordo.Repo
 
   alias Bordo.Channels.Channel
+  alias Bordo.Brands.Brand
 
   @doc """
   Returns the list of channels.
@@ -50,8 +51,10 @@ defmodule Bordo.Channels do
 
   """
   def create_channel(attrs \\ %{}) do
+    brand = Repo.get_by!(Brand, uuid: attrs["brand_uuid"])
+
     %Channel{}
-    |> Channel.changeset(attrs)
+    |> Channel.changeset(attrs |> Map.merge(%{"brand_id" => brand.id}))
     |> Repo.insert()
   end
 

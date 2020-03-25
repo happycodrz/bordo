@@ -1,6 +1,6 @@
-defmodule BordoWeb.ChannelView do
+defmodule BordoWeb.Brands.ChannelView do
   use BordoWeb, :view
-  alias BordoWeb.ChannelView
+  alias BordoWeb.Brands.ChannelView
 
   def render("index.json", %{channels: channels}) do
     %{data: render_many(channels, ChannelView, "channel.json")}
@@ -11,10 +11,12 @@ defmodule BordoWeb.ChannelView do
   end
 
   def render("channel.json", %{channel: channel}) do
-    %{id: channel.id,
+    %{
+      id: channel.id,
       uuid: channel.uuid,
       auth_token: channel.auth_token,
       refresh_token: channel.refresh_token,
-      network: channel.network}
+      network: channel.network
+    }
   end
 end

@@ -22,6 +22,7 @@ defmodule BordoWeb.Router do
     pipe_through :private
 
     resources "/brands", BrandController do
+      resources "/channels", Brands.ChannelController
       resources "/users", Brands.UserController
     end
 
