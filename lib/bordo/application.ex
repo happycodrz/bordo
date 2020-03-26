@@ -11,7 +11,8 @@ defmodule Bordo.Application do
       # Start the Ecto repository
       Bordo.Repo,
       # Start the endpoint when the application starts
-      BordoWeb.Endpoint
+      BordoWeb.Endpoint,
+      {Bordo.Workers.PostScheduler, %{}}
       # Starts a worker by calling: Bordo.Worker.start_link(arg)
       # {Bordo.Worker, arg},
     ]

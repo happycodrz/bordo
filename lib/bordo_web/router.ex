@@ -27,6 +27,7 @@ defmodule BordoWeb.Router do
       resources "/users", Brands.UserController
     end
 
+    resources "/brand-teams", BrandTeamController
     resources "/images", ImageController
     resources "/teams", TeamController
     resources "/users", UserController

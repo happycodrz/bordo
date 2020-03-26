@@ -15,7 +15,10 @@ defmodule BordoWeb.BrandTeamController do
     with {:ok, %BrandTeam{} = brand_team} <- Brands.create_brand_team(brand_team_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.brand_team_path(conn, :show, brand_team))
+      |> put_resp_header(
+        "location",
+        Routes.brand_team_path(conn, :show, brand_team)
+      )
       |> render("show.json", brand_team: brand_team)
     end
   end
@@ -28,7 +31,8 @@ defmodule BordoWeb.BrandTeamController do
   def update(conn, %{"id" => id, "brand_team" => brand_team_params}) do
     brand_team = Brands.get_brand_team!(id)
 
-    with {:ok, %BrandTeam{} = brand_team} <- Brands.update_brand_team(brand_team, brand_team_params) do
+    with {:ok, %BrandTeam{} = brand_team} <-
+           Brands.update_brand_team(brand_team, brand_team_params) do
       render(conn, "show.json", brand_team: brand_team)
     end
   end

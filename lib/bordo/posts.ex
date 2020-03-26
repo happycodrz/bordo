@@ -24,6 +24,27 @@ defmodule Bordo.Posts do
   end
 
   @doc """
+  Returns the list of posts for the scheduler.
+
+  ## Examples
+
+      iex> list_posts_to_schedule()
+      [%Post{}, ...]
+
+  """
+  def list_posts_to_schedule() do
+    start_time = Timex.now()
+
+    end_time =
+      Timex.shift(start_time, milliseconds: Bordo.Workers.PostScheduler.schedule_interval())
+
+    from(p in Post,
+      where: fragment("? BETWEEN ? AND ?", p.scheduled_for, ^start_time, ^end_time)
+    )
+    |> Repo.all()
+  end
+
+  @doc """
   Returns the list of users joined with a brand by uuid.
 
   ## Examples
