@@ -48,6 +48,7 @@ defmodule Bordo.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
+      {:timex, "~> 3.6.1"},
       {:sweet_xml, "~> 0.6.6"}
     ]
   end
