@@ -40,7 +40,7 @@ defmodule Bordo.MixProject do
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:gettext, "~> 0.11"},
-      {:guardian, "~> 2.0.0"},
+      {:guardian, "~> 2.1.1"},
       {:httpoison, "~> 1.6.2"},
       {:jason, "~> 1.0"},
       {:phoenix, "~> 1.4.12"},
