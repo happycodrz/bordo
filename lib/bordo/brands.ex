@@ -7,7 +7,6 @@ defmodule Bordo.Brands do
   alias Bordo.Repo
 
   alias Bordo.Brands.{Brand, BrandTeam, UserBrand}
-  alias Bordo.Teams.{Team}
 
   @doc """
   Returns the list of brands.
