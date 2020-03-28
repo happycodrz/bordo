@@ -1,33 +1,17 @@
 defmodule Bordo.Workers.PostScheduler do
-  use GenServer
+  use Oban.Worker, queue: :events
 
-  alias Bordo.Posts
+  @impl Oban.Worker
+  def perform(%{"post_id" => _id} = args, _job) do
+    IO.puts("RUNNING POST SCHEDULER")
+    # find post + post_variant
+    # dispatch service/adapter
+    # handle failure?
+    case args do
+      _ ->
+        IO.inspect(args)
+    end
 
-  @schedule_interval 10_000
-
-  def start_link(args) do
-    GenServer.start_link(__MODULE__, args, name: __MODULE__)
+    :ok
   end
-
-  def init(state) do
-    schedule_posts()
-    {:ok, state}
-  end
-
-  def handle_info(:schedule_posts, state) do
-    IO.inspect("Getting posts that need to be scheduled this minuteP")
-    schedule_posts()
-    IO.inspect(posts_that_need_to_run())
-    {:noreply, state}
-  end
-
-  defp schedule_posts do
-    Process.send_after(self(), :schedule_posts, @schedule_interval)
-  end
-
-  defp posts_that_need_to_run() do
-    Posts.list_posts_to_schedule()
-  end
-
-  def schedule_interval(), do: @schedule_interval
 end
