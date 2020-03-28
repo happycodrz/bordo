@@ -5,7 +5,7 @@ defmodule BordoWeb.UserControllerTest do
   alias Bordo.Users.User
 
   @create_attrs %{
-    email: "some email",
+    email: "some exmail",
     uuid: "some uuid"
   }
   @update_attrs %{
