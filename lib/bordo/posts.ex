@@ -24,27 +24,6 @@ defmodule Bordo.Posts do
   end
 
   @doc """
-  Returns the list of posts for the scheduler.
-
-  ## Examples
-
-      iex> list_posts_to_schedule()
-      [%Post{}, ...]
-
-  """
-  def list_posts_to_schedule() do
-    start_time = Timex.now()
-
-    end_time =
-      Timex.shift(start_time, milliseconds: Bordo.Workers.PostScheduler.schedule_interval())
-
-    from(p in Post,
-      where: fragment("? BETWEEN ? AND ?", p.scheduled_for, ^start_time, ^end_time)
-    )
-    |> Repo.all()
-  end
-
-  @doc """
   Returns the list of users joined with a brand by uuid.
 
   ## Examples
@@ -95,6 +74,26 @@ defmodule Bordo.Posts do
     %Post{}
     |> Post.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_and_schedule_post(attrs \\ %{}) do
+    with {:ok, %Post{} = post} <- create_post(attrs),
+         {:ok, %Oban.Job{} = _job} <- schedule_post(post) do
+      {:ok, post}
+    else
+      {:error, err} ->
+        {:error, err}
+    end
+  end
+
+  def schedule_post(%Post{} = post) do
+    if is_nil(post.scheduled_for) do
+      {:ok, post}
+    else
+      %{"post_id" => post.id}
+      |> Bordo.Workers.PostScheduler.new(scheduled_at: post.scheduled_for)
+      |> Oban.insert()
+    end
   end
 
   @doc """
