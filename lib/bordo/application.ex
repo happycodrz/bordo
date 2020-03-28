@@ -12,7 +12,7 @@ defmodule Bordo.Application do
       Bordo.Repo,
       # Start the endpoint when the application starts
       BordoWeb.Endpoint,
-      {Bordo.Workers.PostScheduler, %{}}
+      {Oban, oban_config()}
       # Starts a worker by calling: Bordo.Worker.start_link(arg)
       # {Bordo.Worker, arg},
     ]
@@ -28,5 +28,19 @@ defmodule Bordo.Application do
   def config_change(changed, _new, removed) do
     BordoWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp oban_config do
+    opts = Application.get_env(:bordo, Oban)
+
+    # # Prevent running queues or scheduling jobs from an iex console.
+    # if Code.ensure_loaded?(IEx) and IEx.started?() do
+    #   opts
+    #   |> Keyword.put(:crontab, false)
+    #   |> Keyword.put(:queues, false)
+    # else
+    #   opts
+    # end
+    opts
   end
 end

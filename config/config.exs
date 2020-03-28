@@ -63,6 +63,11 @@ config :cloudex,
   secret: System.get_env("CLOUDINARY_API_SECRET"),
   cloud_name: System.get_env("CLOUDINARY_NAME")
 
+config :bordo, Oban,
+  repo: Bordo.Repo,
+  prune: {:maxlen, 10_000},
+  queues: [default: 10, events: 50, media: 20]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
