@@ -46,7 +46,7 @@ defmodule Bordo.MixProject do
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:oban, "~> 1.2.0"},
       {:phoenix, "~> 1.4.12"},
-      {:phoenix_ecto, "~> 4.0"},
+      {:phoenix_ecto, "~> 4.1"},
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
