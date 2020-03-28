@@ -35,8 +35,8 @@ defmodule Bordo.MixProject do
     [
       {:cloudex, "~> 1.4"},
       {:cors_plug, "~> 2.0"},
-      {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
-      {:ecto_sql, "~> 3.1"},
+      {:credo, "~> 1.3.2", only: [:dev, :test], runtime: false},
+      {:ecto_sql, "~> 3.4"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:gettext, "~> 0.11"},
@@ -51,8 +51,7 @@ defmodule Bordo.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
       {:timex, "~> 3.6.1"},
-      {:sweet_xml, "~> 0.6.6"},
-
+      {:sweet_xml, "~> 0.6.6"}
     ]
   end
 
