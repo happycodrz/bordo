@@ -25,6 +25,8 @@ defmodule BordoWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint BordoWeb.Endpoint
+
+      import BordoWeb.GuardianSupport
     end
   end
 
