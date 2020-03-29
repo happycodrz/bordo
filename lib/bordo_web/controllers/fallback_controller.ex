@@ -6,9 +6,9 @@ defmodule BordoWeb.FallbackController do
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
-    |> put_status(:bad_request)
+    |> put_status(:unprocessable_entity)
     |> put_view(BordoWeb.ErrorView)
-    |> render(:"400", changeset: changeset)
+    |> render(:"422", changeset: changeset)
   end
 
   def call(conn, {:error, :unauthorized}) do
