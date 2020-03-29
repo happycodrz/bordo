@@ -6,6 +6,7 @@ defmodule Bordo.Repo.Migrations.CreateChannels do
       add :uuid, :string
       add :auth_token, :string
       add :refresh_token, :string
+      add :user_id, :string
       add :network, :string
       add :brand_id, references(:brands, on_delete: :delete_all)
 
