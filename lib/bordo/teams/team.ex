@@ -6,8 +6,8 @@ defmodule Bordo.Teams.Team do
   schema "teams" do
     field :name, :string
     field :uuid, :string
-    field :owner_id, :id
 
+    belongs_to :owner, Bordo.Users.User
     timestamps()
   end
 
