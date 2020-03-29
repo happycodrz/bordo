@@ -17,6 +17,10 @@ defmodule BordoWeb.Brands.PostController do
       |> put_status(:created)
       |> put_resp_header("location", Routes.brand_post_path(conn, :show, brand_uuid, post))
       |> render("show.json", post: post)
+    else
+      {:error, err} ->
+        IO.inspect(err)
+        {:error, err}
     end
   end
 

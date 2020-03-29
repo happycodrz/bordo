@@ -59,6 +59,22 @@ defmodule Bordo.Posts do
   def get_post!(id), do: Repo.get!(Post, id)
 
   @doc """
+  Gets a single post.
+
+  Raises `Ecto.NoResultsError` if the Post does not exist.
+
+  ## Examples
+
+      iex> get_scheduled_post!(123)
+      %Post{}
+
+      iex> get_scheduled_post!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_scheduled_post!(id), do: Repo.get!(Post |> preload(post_variants: [:channel]), id)
+
+  @doc """
   Creates a post.
 
   ## Examples
@@ -72,6 +88,7 @@ defmodule Bordo.Posts do
   """
   def create_post(attrs \\ %{}) do
     %Post{}
+    |> Repo.preload(:post_variants)
     |> Post.changeset(attrs)
     |> Repo.insert()
   end
