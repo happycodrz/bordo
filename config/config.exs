@@ -68,6 +68,16 @@ config :bordo, Oban,
   prune: {:maxlen, 10_000},
   queues: [default: 10, events: 50, media: 20]
 
+####
+# Integration configuration
+####
+config :facebook,
+  app_id: 900_643_757_055_908,
+  app_secret: "344a4ccc9fb73ccfbfb7c3fb7fd83d1a",
+  app_access_token: "f97353f742736ed93e607918f6125031",
+  graph_url: "https://graph.facebook.com",
+  graph_video_url: "https://graph-video.facebook.com"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

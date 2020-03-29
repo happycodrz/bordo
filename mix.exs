@@ -39,6 +39,7 @@ defmodule Bordo.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
+      {:facebook, "~> 0.24.0"},
       {:gettext, "~> 0.11"},
       {:guardian, "~> 2.1.1"},
       {:httpoison, "~> 1.6.2"},
