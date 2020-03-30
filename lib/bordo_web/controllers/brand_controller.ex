@@ -13,19 +13,19 @@ defmodule BordoWeb.BrandController do
   end
 
   def create(conn, %{"brand" => brand_params}) do
-    %Plug.Conn{assigns: %{current_identity: %Auth.Identity{team_id: team_id, user_id: user_id}}} =
-      conn
+    case create_brand(
+           brand_params,
+           user_id(conn),
+           team_id(conn)
+         ) do
+      {:ok, %{brand: brand}} ->
+        conn
+        |> put_status(:created)
+        |> put_resp_header("location", Routes.brand_path(conn, :show, brand))
+        |> render("show.json", brand: brand)
 
-    with {:ok, result} <-
-           create_brand(
-             brand_params,
-             user_id,
-             team_id
-           ) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.brand_path(conn, :show, result.brand))
-      |> render("show.json", brand: result.brand)
+      {:error, :brand, err, _} ->
+        {:error, err}
     end
   end
 
