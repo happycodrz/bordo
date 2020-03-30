@@ -94,9 +94,17 @@ defmodule Bordo.Posts do
   end
 
   def create_and_schedule_post(attrs \\ %{}) do
-    with {:ok, %Post{} = post} <- create_post(attrs),
-         {:ok, %Oban.Job{} = _job} <- schedule_post(post) do
-      {:ok, post}
+    with {:ok, %Post{} = post} <- create_post(attrs) do
+      case schedule_post(post) do
+        {:ok, %Oban.Job{} = _job} ->
+          {:ok, post}
+
+        {:ok, %Post{} = post} ->
+          {:ok, post}
+
+        error ->
+          {:error, error}
+      end
     else
       {:error, err} ->
         {:error, err}
