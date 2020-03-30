@@ -19,7 +19,6 @@ defmodule BordoWeb.Brands.PostController do
       |> render("show.json", post: post)
     else
       {:error, err} ->
-        IO.inspect(err)
         {:error, err}
     end
   end
