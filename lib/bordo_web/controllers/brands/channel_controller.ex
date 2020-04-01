@@ -12,7 +12,8 @@ defmodule BordoWeb.Brands.ChannelController do
   end
 
   def create(conn, %{"channel" => channel_params, "brand_id" => brand_uuid}) do
-    channel_params = Map.merge(channel_params, %{"brand_uuid" => brand_uuid})
+    brand = Bordo.Repo.get_by!(Bordo.Brands.Brand, uuid: brand_uuid)
+    channel_params = Map.merge(channel_params, %{"brand_id" => brand.id})
 
     with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do
       conn
