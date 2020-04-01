@@ -8,8 +8,8 @@ defmodule Bordo.Channels.Channel do
     field :network, :string
     field :refresh_token, :string
     field :uuid, :string
-    field :brand_id, :id
 
+    belongs_to :brand, Bordo.Brands.Brand
     timestamps()
   end
 

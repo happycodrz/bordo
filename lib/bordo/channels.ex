@@ -51,10 +51,8 @@ defmodule Bordo.Channels do
 
   """
   def create_channel(attrs \\ %{}) do
-    brand = Repo.get_by!(Brand, uuid: attrs["brand_uuid"])
-
     %Channel{}
-    |> Channel.changeset(attrs |> Map.merge(%{"brand_id" => brand.id}))
+    |> Channel.changeset(attrs)
     |> Repo.insert()
   end
 
