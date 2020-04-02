@@ -4,7 +4,6 @@ defmodule BordoWeb.TeamControllerTest do
   alias Bordo.Teams
   alias Bordo.Teams.Team
   alias Bordo.Users
-  alias Bordo.Users.User
 
   @create_attrs %{
     name: "some name"
