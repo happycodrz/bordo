@@ -16,3 +16,6 @@ config :bordo, BordoWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :mix_test_watch,
+  clear: true

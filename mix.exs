@@ -43,7 +43,7 @@ defmodule Bordo.MixProject do
       {:guardian, "~> 2.1.1"},
       {:httpoison, "~> 1.6.2"},
       {:jason, "~> 1.0"},
-      {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:oban, "~> 1.2.0"},
       {:phoenix, "~> 1.4.12"},
       {:phoenix_ecto, "~> 4.1"},
