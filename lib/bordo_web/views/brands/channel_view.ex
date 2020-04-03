@@ -12,7 +12,6 @@ defmodule BordoWeb.Brands.ChannelView do
 
   def render("channel.json", %{channel: channel}) do
     %{
-      id: channel.id,
       uuid: channel.uuid,
       auth_token: channel.auth_token,
       refresh_token: channel.refresh_token,

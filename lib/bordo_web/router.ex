@@ -27,6 +27,11 @@ defmodule BordoWeb.Router do
       resources "/users", Brands.UserController
     end
 
+    scope "/providers" do
+      get "/twitter/auth", Providers.TwitterController, :auth
+      get "/twitter/callback", Providers.TwitterController, :callback
+    end
+
     resources "/images", ImageController
     resources "/teams", TeamController
     resources "/users", UserController
