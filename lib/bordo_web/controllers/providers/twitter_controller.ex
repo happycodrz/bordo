@@ -5,6 +5,11 @@ defmodule BordoWeb.Providers.TwitterController do
   alias Bordo.Channels
 
   def auth(conn, _params) do
+    ExTwitter.configure(:process,
+      consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
+      consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET")
+    )
+
     tokens = ExTwitter.request_token()
 
     # Generate the url for "Sign-in with twitter".
@@ -18,6 +23,11 @@ defmodule BordoWeb.Providers.TwitterController do
         "oauth_verifier" => oauth_verifier,
         "brand_uuid" => brand_uuid
       }) do
+    ExTwitter.configure(:process,
+      consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
+      consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET")
+    )
+
     # Exchange for an access token
     with {:ok, access_token} <- ExTwitter.access_token(oauth_verifier, oauth_token) do
       brand = Bordo.Repo.get_by!(Bordo.Brands.Brand, uuid: brand_uuid)
