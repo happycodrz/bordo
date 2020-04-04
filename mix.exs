@@ -39,6 +39,7 @@ defmodule Bordo.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
+      {:extwitter, "~> 0.12.0"},
       {:gettext, "~> 0.11"},
       {:guardian, "~> 2.1.1"},
       {:httpoison, "~> 1.6.2"},
@@ -51,7 +52,6 @@ defmodule Bordo.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
       {:timex, "~> 3.6.1"},
-      {:extwitter, "~> 0.12.0"},
       {:slack, "~> 0.22.0"},
       {:sweet_xml, "~> 0.6.6"}
     ]
