@@ -31,21 +31,30 @@ defmodule BordoWeb.Providers.FacebookController do
         client_secret: System.get_env("FACEBOOK_APP_SECRET")
       })
 
-    json_response =
-      %URI{
-        host: "graph.facebook.com",
-        path: "/v6.0/oauth/access_token",
-        port: 443,
-        query: query,
-        scheme: "https"
-      }
-      |> URI.to_string()
-      |> HTTPoison.get!()
-      |> Map.get(:body)
-      |> Jason.decode()
+    with {:ok, %{"access_token" => access_token}} <- auth(query) do
+      json(conn, %{auth_token: access_token})
+    else
+      {:ok,
+       %{
+         "error" => resp
+       }} ->
+        json(conn, %{
+          error: %{detail: "Auth failed", message: resp["message"], type: resp["type"]}
+        })
+    end
+  end
 
-    {:ok, %{"access_token" => access_token}} = json_response
-
-    json(conn, %{access_token: access_token})
+  defp auth(query) do
+    %URI{
+      host: "graph.facebook.com",
+      path: "/v6.0/oauth/access_token",
+      port: 443,
+      query: query,
+      scheme: "https"
+    }
+    |> URI.to_string()
+    |> HTTPoison.get!()
+    |> Map.get(:body)
+    |> Jason.decode()
   end
 end
