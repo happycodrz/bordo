@@ -1,9 +1,6 @@
 defmodule BordoWeb.Providers.TwitterController do
   use BordoWeb, :controller
 
-  alias Bordo.Channels.Channel
-  alias Bordo.Channels
-
   def auth(conn, _params) do
     ExTwitter.configure(:process,
       consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
