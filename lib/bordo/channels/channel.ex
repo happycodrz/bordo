@@ -18,6 +18,6 @@ defmodule Bordo.Channels.Channel do
     channel
     |> cast(attrs, [:token, :token_secret, :network, :brand_id])
     |> put_change(:uuid, generate_short_uuid())
-    |> validate_required([:token, :token_secret, :network, :brand_id])
+    |> validate_required([:token, :network, :brand_id])
   end
 end
