@@ -6,9 +6,19 @@ defmodule Bordo.ChannelsTest do
   describe "channels" do
     alias Bordo.Channels.Channel
 
-    @valid_attrs %{auth_token: "some auth_token", network: "some network", refresh_token: "some refresh_token", uuid: "some uuid"}
-    @update_attrs %{auth_token: "some updated auth_token", network: "some updated network", refresh_token: "some updated refresh_token", uuid: "some updated uuid"}
-    @invalid_attrs %{auth_token: nil, network: nil, refresh_token: nil, uuid: nil}
+    @valid_attrs %{
+      token: "some token",
+      network: "some network",
+      token_secret: "some token_secret",
+      uuid: "some uuid"
+    }
+    @update_attrs %{
+      token: "some updated token",
+      network: "some updated network",
+      token_secret: "some updated token_secret",
+      uuid: "some updated uuid"
+    }
+    @invalid_attrs %{token: nil, network: nil, token_secret: nil, uuid: nil}
 
     def channel_fixture(attrs \\ %{}) do
       {:ok, channel} =
@@ -31,9 +41,9 @@ defmodule Bordo.ChannelsTest do
 
     test "create_channel/1 with valid data creates a channel" do
       assert {:ok, %Channel{} = channel} = Channels.create_channel(@valid_attrs)
-      assert channel.auth_token == "some auth_token"
+      assert channel.token == "some token"
       assert channel.network == "some network"
-      assert channel.refresh_token == "some refresh_token"
+      assert channel.token_secret == "some token_secret"
       assert channel.uuid == "some uuid"
     end
 
@@ -44,9 +54,9 @@ defmodule Bordo.ChannelsTest do
     test "update_channel/2 with valid data updates the channel" do
       channel = channel_fixture()
       assert {:ok, %Channel{} = channel} = Channels.update_channel(channel, @update_attrs)
-      assert channel.auth_token == "some updated auth_token"
+      assert channel.token == "some updated token"
       assert channel.network == "some updated network"
-      assert channel.refresh_token == "some updated refresh_token"
+      assert channel.token_secret == "some updated token_secret"
       assert channel.uuid == "some updated uuid"
     end
 

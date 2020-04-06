@@ -32,7 +32,7 @@ defmodule BordoWeb.Providers.FacebookController do
       })
 
     with {:ok, %{"access_token" => access_token}} <- auth(query) do
-      json(conn, %{auth_token: access_token})
+      json(conn, %{token: access_token})
     else
       {:ok,
        %{

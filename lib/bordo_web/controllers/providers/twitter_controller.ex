@@ -27,7 +27,7 @@ defmodule BordoWeb.Providers.TwitterController do
     # Exchange for an access token
     with {:ok, access_token} <- ExTwitter.access_token(oauth_verifier, oauth_token) do
       json(conn, %{
-        "auth_token" => access_token.oauth_token,
+        "token" => access_token.oauth_token,
         "secret" => access_token.oauth_token_secret
       })
     else

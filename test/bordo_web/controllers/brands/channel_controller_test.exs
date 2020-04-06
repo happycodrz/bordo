@@ -5,16 +5,16 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
   alias Bordo.Channels.Channel
 
   @create_attrs %{
-    auth_token: "some auth_token",
+    token: "some token",
     network: "some network",
-    refresh_token: "some refresh_token"
+    token_secret: "some token_secret"
   }
   @update_attrs %{
-    auth_token: "some updated auth_token",
+    token: "some updated token",
     network: "some updated network",
-    refresh_token: "some updated refresh_token"
+    token_secret: "some updated token_secret"
   }
-  @invalid_attrs %{auth_token: nil, network: nil, refresh_token: nil, uuid: nil}
+  @invalid_attrs %{token: nil, network: nil, token_secret: nil, uuid: nil}
 
   def fixture(:channel, params) do
     {:ok, channel} = Channels.create_channel(@create_attrs |> Map.merge(params))
@@ -49,9 +49,9 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
 
       assert %{
                "id" => id,
-               "auth_token" => "some auth_token",
+               "token" => "some token",
                "network" => "some network",
-               "refresh_token" => "some refresh_token"
+               "token_secret" => "some token_secret"
              } = json_response(conn, 200)["data"]
     end
 
@@ -82,9 +82,9 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
 
       assert %{
                "id" => id,
-               "auth_token" => "some updated auth_token",
+               "token" => "some updated token",
                "network" => "some updated network",
-               "refresh_token" => "some updated refresh_token"
+               "token_secret" => "some updated token_secret"
              } = json_response(conn, 200)["data"]
     end
 

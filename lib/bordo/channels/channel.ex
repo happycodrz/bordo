@@ -4,9 +4,9 @@ defmodule Bordo.Channels.Channel do
   import Bordo.Schema, only: [generate_short_uuid: 0]
 
   schema "channels" do
-    field :auth_token, :string
+    field :token, :string
     field :network, :string
-    field :refresh_token, :string
+    field :token_secret, :string
     field :uuid, :string
 
     belongs_to :brand, Bordo.Brands.Brand
@@ -16,8 +16,8 @@ defmodule Bordo.Channels.Channel do
   @doc false
   def changeset(channel, attrs) do
     channel
-    |> cast(attrs, [:auth_token, :refresh_token, :network, :brand_id])
+    |> cast(attrs, [:token, :token_secret, :network, :brand_id])
     |> put_change(:uuid, generate_short_uuid())
-    |> validate_required([:auth_token, :refresh_token, :network, :brand_id])
+    |> validate_required([:token, :token_secret, :network, :brand_id])
   end
 end

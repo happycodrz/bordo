@@ -12,7 +12,7 @@ defmodule Bordo.Workers.PostScheduler do
     apply(network_module, :handle_event, [
       %{
         message: post.title,
-        token: first_channel.auth_token
+        token: first_channel.token
       }
     ])
 
