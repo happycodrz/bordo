@@ -28,10 +28,10 @@ defmodule BordoWeb.Router do
     end
 
     scope "/providers" do
-      get "/twitter/auth", Providers.TwitterController, :auth
-      get "/twitter/callback", Providers.TwitterController, :callback
       get "/facebook/auth", Providers.FacebookController, :auth
       get "/facebook/callback", Providers.FacebookController, :callback
+      get "/twitter/auth", Providers.TwitterController, :auth
+      get "/twitter/callback", Providers.TwitterController, :callback
     end
 
     resources "/images", ImageController
