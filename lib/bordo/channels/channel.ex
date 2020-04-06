@@ -3,6 +3,8 @@ defmodule Bordo.Channels.Channel do
   import Ecto.Changeset
   import Bordo.Schema, only: [generate_short_uuid: 0]
 
+  @supported_networks ["twitter", "facebook"]
+
   schema "channels" do
     field :token, :string
     field :network, :string
@@ -18,6 +20,13 @@ defmodule Bordo.Channels.Channel do
     channel
     |> cast(attrs, [:token, :token_secret, :network, :brand_id])
     |> put_change(:uuid, generate_short_uuid())
+    |> validate_inclusion(:network, @supported_networks,
+      message: "must be one of #{supported_networks_error_msg()}"
+    )
     |> validate_required([:token, :network, :brand_id])
+  end
+
+  defp supported_networks_error_msg do
+    @supported_networks |> Enum.join(", ")
   end
 end
