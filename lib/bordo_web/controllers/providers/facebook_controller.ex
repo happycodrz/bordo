@@ -1,12 +1,16 @@
 defmodule BordoWeb.Providers.FacebookController do
   use BordoWeb, :controller
 
-  def auth(conn, _params) do
+  alias Bordo.Brands.Brand
+  alias Bordo.Channels
+  alias Bordo.Channels.Channel
+
+  def auth(conn, %{"brand_id" => brand_id}) do
     query =
       URI.encode_query(%{
         client_id: System.get_env("FACEBOOK_APP_ID"),
         redirect_uri: System.get_env("FACEBOOK_REDIRECT_URI"),
-        state: "2"
+        state: URI.encode_query(%{brand_id: brand_id})
       })
 
     auth_url =
@@ -22,7 +26,9 @@ defmodule BordoWeb.Providers.FacebookController do
     json(conn, %{url: auth_url})
   end
 
-  def callback(conn, %{"code" => code}) do
+  def callback(conn, %{"code" => code, "state" => state}) do
+    %{"brand_id" => brand_id} = URI.decode_query(state)
+
     query =
       URI.encode_query(%{
         code: code,
@@ -32,6 +38,28 @@ defmodule BordoWeb.Providers.FacebookController do
       })
 
     with {:ok, %{"access_token" => access_token}} <- auth(query) do
+      brand = Bordo.Repo.get_by!(Brand, uuid: brand_id)
+
+      channel_params =
+        Map.merge(
+          %{
+            "token" => access_token,
+            "network" => "facebook"
+          },
+          %{"brand_id" => brand.id}
+        )
+
+      with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do
+        conn
+        |> put_status(:created)
+        |> put_resp_header(
+          "location",
+          Routes.brand_channel_path(conn, :show, brand_id, channel)
+        )
+        |> put_view(BordoWeb.Brands.ChannelView)
+        |> render("show.json", channel: channel)
+      end
+
       json(conn, %{token: access_token})
     else
       {:ok,
