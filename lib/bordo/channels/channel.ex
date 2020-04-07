@@ -3,7 +3,7 @@ defmodule Bordo.Channels.Channel do
   import Ecto.Changeset
   import Bordo.Schema, only: [generate_short_uuid: 0]
 
-  @supported_networks ["twitter", "facebook"]
+  @supported_networks ["twitter", "facebook", "linkedin"]
 
   schema "channels" do
     field :token, :string
