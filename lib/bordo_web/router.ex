@@ -28,6 +28,8 @@ defmodule BordoWeb.Router do
     end
 
     scope "/providers" do
+      get "/linkedin/auth", Providers.LinkedinController, :auth
+      get "/linkedin/callback", Providers.LinkedinController, :callback
       get "/facebook/auth", Providers.FacebookController, :auth
       get "/facebook/callback", Providers.FacebookController, :callback
       get "/twitter/auth", Providers.TwitterController, :auth
