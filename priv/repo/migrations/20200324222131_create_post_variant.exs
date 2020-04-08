@@ -1,4 +1,4 @@
-defmodule Bordo.Repo.Migrations.CreatePostVeriants do
+defmodule Bordo.Repo.Migrations.CreatePostVariant do
   use Ecto.Migration
 
   def change do
@@ -6,6 +6,7 @@ defmodule Bordo.Repo.Migrations.CreatePostVeriants do
       add :uuid, :string
       add :channel_id, references(:channels, on_delete: :delete_all)
       add :post_id, references(:posts, on_delete: :delete_all)
+      add :title, :string, null: false
 
       timestamps()
     end
