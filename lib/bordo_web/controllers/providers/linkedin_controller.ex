@@ -5,16 +5,14 @@ defmodule BordoWeb.Providers.LinkedinController do
   alias Bordo.Channels
   alias Bordo.Channels.Channel
 
-  @redirect_uri System.get_env("LINKEDIN_REDIRECT_URI")
-
   def auth(conn, %{"brand_id" => brand_id}) do
     query =
       URI.encode_query(%{
         state: URI.encode_query(%{brand_id: brand_id}),
         client_id: System.get_env("LINKEDIN_CLIENT_ID"),
-        redirect_uri: @redirect_uri,
+        redirect_uri: System.get_env("LINKEDIN_REDIRECT_URI"),
         response_type: "code",
-        scope: "w_member_social"
+        scope: "w_member_social,r_liteprofile"
       })
 
     auth_url =
@@ -37,7 +35,7 @@ defmodule BordoWeb.Providers.LinkedinController do
       URI.encode_query(%{
         code: code,
         client_id: System.get_env("LINKEDIN_CLIENT_ID"),
-        redirect_uri: @redirect_uri,
+        redirect_uri: System.get_env("LINKEDIN_REDIRECT_URI"),
         client_secret: System.get_env("LINKEDIN_CLIENT_SECRET"),
         grant_type: "authorization_code"
       })
