@@ -1,6 +1,7 @@
 defmodule BordoWeb.Brands.PostController do
   use BordoWeb, :controller
 
+  alias Bordo.Brands.Brand
   alias Bordo.Posts
   alias Bordo.Posts.Post
 
@@ -12,6 +13,9 @@ defmodule BordoWeb.Brands.PostController do
   end
 
   def create(conn, %{"post" => post_params, "brand_id" => brand_uuid}) do
+    brand = Bordo.Repo.get_by!(Brand, uuid: brand_uuid)
+    post_params = post_params |> Map.merge(%{"user_id" => user_id(conn), "brand_id" => brand.id})
+
     with {:ok, %Post{} = post} <- Posts.create_and_schedule_post(post_params) do
       conn
       |> put_status(:created)
