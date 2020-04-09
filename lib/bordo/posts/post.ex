@@ -4,10 +4,7 @@ defmodule Bordo.Posts.Post do
   import Bordo.Schema, only: [generate_short_uuid: 0]
   import Ecto.Query, warn: false
 
-  @post_statuses ["draft", "published", "scheduled", "failed"]
-
   schema "posts" do
-    field :status, :string
     field :title, :string
     field :uuid, :string
     field :scheduled_for, :utc_datetime
@@ -21,11 +18,19 @@ defmodule Bordo.Posts.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :status, :brand_id, :user_id, :scheduled_for])
+    |> cast(attrs, [:title, :brand_id, :user_id, :scheduled_for])
     |> cast_assoc(:post_variants)
     |> put_change(:uuid, generate_short_uuid())
     |> foreign_key_constraint(:brand_id)
-    |> validate_required([:title, :status, :brand_id, :user_id])
-    |> validate_inclusion(:status, @post_statuses)
+    |> validate_required([:title, :brand_id, :user_id])
+  end
+
+  def create_changeset(post, attrs) do
+    post
+    |> cast(attrs, [:title, :brand_id, :user_id, :scheduled_for])
+    |> cast_assoc(:post_variants, with: &Bordo.PostVariants.PostVariant.create_changeset/2)
+    |> put_change(:uuid, generate_short_uuid())
+    |> foreign_key_constraint(:brand_id)
+    |> validate_required([:title, :brand_id, :user_id])
   end
 end

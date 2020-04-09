@@ -14,7 +14,6 @@ defmodule BordoWeb.Brands.PostView do
     %{
       id: post.id,
       title: post.title,
-      status: post.status,
       brand_id: post.brand_id,
       user_id: post.user_id
     }

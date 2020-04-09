@@ -31,7 +31,6 @@ defmodule Bordo.PostsTest do
 
     test "create_post/1 with valid data creates a post" do
       assert {:ok, %Post{} = post} = Posts.create_post(@valid_attrs)
-      assert post.status == "some status"
       assert post.title == "some title"
     end
 
@@ -42,7 +41,6 @@ defmodule Bordo.PostsTest do
     test "update_post/2 with valid data updates the post" do
       post = post_fixture()
       assert {:ok, %Post{} = post} = Posts.update_post(post, @update_attrs)
-      assert post.status == "some updated status"
       assert post.title == "some updated title"
     end
 

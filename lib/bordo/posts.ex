@@ -89,7 +89,7 @@ defmodule Bordo.Posts do
   def create_post(attrs \\ %{}) do
     %Post{}
     |> Repo.preload(:post_variants)
-    |> Post.changeset(attrs)
+    |> Post.create_changeset(attrs)
     |> Repo.insert()
   end
 
