@@ -13,13 +13,13 @@ alias Bordo.{Brands, Posts, Teams, Users}
 # and so on) as they will fail if something goes wrong.
 
 teams = [
-  %{name: "Fleetio", owner_id: 1},
-  %{name: "Bordo", owner_id: 2}
+  %{name: "Bordo", owner_id: 2},
+  %{name: "Fleetio", owner_id: 1}
 ]
 
 users = [
   %{email: "kevin@bor.do", auth0_id: "5e7a9a590cf8140c66c315b4", team_id: 1},
-  %{email: "michael@bor.do"}
+  %{email: "michael@bor.do", team_id: 1}
 ]
 
 brands = [
@@ -66,3 +66,13 @@ user_brands = [
 
 user_brands
 |> Enum.each(&Brands.create_user_brand(&1))
+
+brand_teams = [%{brand_id: 1, team_id: 1}, %{brand_id: 2, team_id: 2}]
+
+brand_teams |> Enum.each(&Brands.create_brand_team(&1))
+
+# kevin = Users.get_user!(1)
+# michael = Users.get_user!(2)
+
+# kevin |> Users.update_user(%{team_id: 1})
+# michael |> Users.update_user(%{team_id: 1})
