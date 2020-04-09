@@ -112,13 +112,9 @@ defmodule Bordo.Posts do
   end
 
   def schedule_post(%Post{} = post) do
-    if is_nil(post.scheduled_for) do
-      {:ok, post}
-    else
-      %{"post_id" => post.id}
-      |> Bordo.Workers.PostScheduler.new(scheduled_at: post.scheduled_for)
-      |> Oban.insert()
-    end
+    %{"post_id" => post.id}
+    |> Bordo.Workers.PostScheduler.new(scheduled_at: post.scheduled_for)
+    |> Oban.insert()
   end
 
   @doc """
