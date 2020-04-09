@@ -27,20 +27,22 @@ brands = [
   %{name: "Fleetio", owner_id: 1}
 ]
 
-posts = [
-  %{
-    title: "Post for Bordo",
-    brand_id: 1,
-    user_id: 2,
-    status: "published"
-  },
-  %{
-    title: "Post for fleetio",
-    brand_id: 2,
-    user_id: 1,
-    status: "published"
-  }
-]
+# Removed temporarially b/c posts depend on
+# channel & post-variant
+# posts = [
+#   %{
+#     title: "Post for Bordo",
+#     brand_id: 1,
+#     user_id: 2,
+#     status: "published"
+#   },
+#   %{
+#     title: "Post for fleetio",
+#     brand_id: 2,
+#     user_id: 1,
+#     status: "published"
+#   }
+# ]
 
 # TODO: Refactor to use bang methods
 # These are order-dependent
@@ -53,8 +55,8 @@ brands
 teams
 |> Enum.each(&Teams.create_team(&1))
 
-posts
-|> Enum.each(&Posts.create_post(&1))
+# posts
+# |> Enum.each(&Posts.create_post(&1))
 
 user_brands = [
   %{
