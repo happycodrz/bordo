@@ -5,6 +5,7 @@ defmodule Bordo.PostVariants.PostVariant do
 
   schema "post_variants" do
     field :uuid, :string
+    field :title, :string
     belongs_to :channel, Bordo.Channels.Channel
     belongs_to :post, Bordo.Posts.Post
 
@@ -14,7 +15,8 @@ defmodule Bordo.PostVariants.PostVariant do
   @doc false
   def changeset(post_variant, attrs) do
     post_variant
-    |> cast(attrs, [:channel_id, :post_id])
+    |> cast(attrs, [:channel_id, :post_id, :title])
     |> put_change(:uuid, generate_short_uuid())
+    |> validate_required([:channel_id, :title])
   end
 end
