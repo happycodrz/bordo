@@ -1,4 +1,8 @@
 defmodule Bordo.Providers.Twitter do
+  def handle_event(%{channel: channel, message: message}) do
+    create_tweet(channel, message)
+  end
+
   def create_tweet(channel, status) do
     ExTwitter.configure(:process,
       consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),

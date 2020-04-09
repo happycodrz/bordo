@@ -4,25 +4,24 @@ defmodule Bordo.Workers.PostScheduler do
 
   def perform(%{"post_id" => post_id}, _job) do
     post = Bordo.Posts.get_scheduled_post!(post_id)
-    first_channel = post.post_variants |> Enum.at(0) |> Map.get(:channel)
-    network_module = networks(first_channel.network)
-    # TODO:
-    # Map-apply private functions.
-    # handle unknown network & have shared-validation for "networks"
-    apply(network_module, :handle_event, [
-      %{
-        message: post.title,
-        token: first_channel.token
-      }
-    ])
-
-    :ok
+    post.post_variants |> Enum.each(&dispatch_post_variant(&1))
   end
 
-  def networks(network) do
+  defp dispatch_post_variant(post_variant) do
+    networks(post_variant.channel.network)
+    |> apply(:handle_event, [
+      %{
+        channel: post_variant.channel,
+        message: post_variant.title
+      }
+    ])
+  end
+
+  defp networks(network) do
     Map.get(
       %{
-        "slack" => Bordo.Channels.SlackBot
+        "slack" => Bordo.Channels.SlackBot,
+        "twitter" => Bordo.Providers.Twitter
       },
       network
     )
