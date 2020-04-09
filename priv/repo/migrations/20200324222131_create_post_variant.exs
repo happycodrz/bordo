@@ -6,7 +6,8 @@ defmodule Bordo.Repo.Migrations.CreatePostVariant do
       add :uuid, :string
       add :channel_id, references(:channels, on_delete: :delete_all)
       add :post_id, references(:posts, on_delete: :delete_all)
-      add :title, :string, null: false
+      add :content, :string, null: false
+      add :status, :post_status, null: false, default: "draft"
 
       timestamps()
     end
