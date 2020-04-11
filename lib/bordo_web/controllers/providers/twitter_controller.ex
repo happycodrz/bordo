@@ -66,8 +66,8 @@ defmodule BordoWeb.Providers.TwitterController do
 
   defp configure_twitter do
     ExTwitter.configure(:process,
-      consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
-      consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET")
+      consumer_key: System.get_env("TWITTER_ACCESS_TOKEN"),
+      consumer_secret: System.get_env("TWITTER_ACCESS_TOKEN_SECRET")
     )
   end
 end
