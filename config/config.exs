@@ -68,6 +68,12 @@ config :bordo, Oban,
   prune: {:maxlen, 10_000},
   queues: [default: 10, events: 50, media: 20]
 
+config :appsignal, :config,
+  active: true,
+  name: "Bordo",
+  push_api_key: System.get_env("APPSIGNAL_PUSH_API_KEY"),
+  env: Mix.env()
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
