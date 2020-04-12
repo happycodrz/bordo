@@ -7,12 +7,20 @@ defmodule BordoWeb.Providers.TwitterController do
   def auth(conn, %{"brand_id" => brand_id}) do
     configure_twitter()
 
-    {:ok, authenticate_url} =
-      request_token(brand_id)
-      |> Map.get(:oauth_token)
-      |> ExTwitter.authenticate_url()
+    with {:ok, token} <- get_request_token(brand_id),
+         {:ok, authenticate_url} <- get_authenticate_url(token) do
+      json(conn, %{url: authenticate_url})
+    else
+      {:error, reason} ->
+        conn
+        |> put_status(422)
+        |> json(%{errors: %{detail: reason}})
 
-    json(conn, %{url: authenticate_url})
+      _ ->
+        conn
+        |> put_status(422)
+        |> json(%{errors: %{detail: "Auth error, check logs for details."}})
+    end
   end
 
   def callback(conn, %{
@@ -36,21 +44,43 @@ defmodule BordoWeb.Providers.TwitterController do
       |> render("show.json", channel: channel)
     else
       {:error, 401} ->
-        json(conn, %{errors: %{detail: "auth failed"}})
+        conn
+        |> put_status(422)
+        |> json(%{errors: %{detail: "auth failed"}})
 
       err ->
-        json(conn, %{errors: %{detail: err}})
+        conn
+        |> put_status(422)
+        |> json(%{errors: %{detail: err}})
     end
   end
 
-  defp request_token(brand_id) do
+  # Handling errors from extwitter request_token is difficult right now b/c no error tuple is returned
+  # this could be refactored later to return the error tuple.
+  defp get_request_token(brand_id) do
     query = URI.encode_query(%{brand_id: brand_id})
 
-    System.get_env("TWITTER_CALLBACK_URI")
-    |> URI.parse()
-    |> Map.merge(%{query: query})
-    |> URI.to_string()
-    |> ExTwitter.request_token()
+    try do
+      tokens =
+        System.get_env("TWITTER_CALLBACK_URI")
+        |> URI.parse()
+        |> Map.merge(%{query: query})
+        |> URI.to_string()
+        |> ExTwitter.request_token()
+
+      {:ok, tokens}
+    rescue
+      MatchError ->
+        {:error,
+         "Error retrieving token, this could be due to configuration. Check logs for details."}
+    end
+  end
+
+  defp get_authenticate_url(tokens) do
+    tokens
+    |> Map.get(:oauth_token)
+    |> ExTwitter.authenticate_url()
+    |> IO.inspect()
   end
 
   defp build_channel_params(access_token, brand) do
