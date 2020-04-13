@@ -37,6 +37,7 @@ defmodule BordoWeb.Router do
     end
 
     resources "/images", ImageController
+    get "/profile", ProfileController, :show
     resources "/teams", TeamController
     resources "/users", UserController
     resources "/user-brands", UserBrandController, only: [:create]
