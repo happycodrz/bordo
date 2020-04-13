@@ -14,13 +14,25 @@ defmodule BordoWeb.AuthController do
   action_fallback BordoWeb.FallbackController
 
   def create(conn, credentials) do
-    _ = Logger.debug(fn -> "Login attempt with user: #{credentials["username"]}" end)
+    Logger.debug(fn -> "Login attempt with user: #{credentials["username"]}" end)
 
     with {:ok, credentials} <- Credentials.validate(credentials),
          {:ok, %TokenResult{} = result} <- Auth.sign_in(credentials) do
       conn
       |> put_status(:ok)
       |> render(:show, token_result: result)
+    else
+      {:error, :forbidden} ->
+        conn
+        |> put_status(401)
+        |> json(%{errors: %{detail: "forbidden"}})
+
+      {:error, err} ->
+        Logger.debug(fn -> err end)
+
+        conn
+        |> put_status(401)
+        |> json(%{errors: %{detail: "forbidden"}})
     end
   end
 end

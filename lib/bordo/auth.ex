@@ -77,12 +77,18 @@ defmodule Auth do
     {:error, :unauthorized}
   end
 
-  defp find_or_create_user(success_response, email) do
-    {:ok, %Auth.TokenResult{access_token: access_token}} = success_response
-    {:ok, %{"sub" => "auth0|" <> id}} = Auth.Guardian.decode_and_verify(access_token)
-
-    with {:ok, _user} <- Users.find_or_create(%{email: email, auth0_id: id}) do
+  defp find_or_create_user(
+         {:ok, %Auth.TokenResult{access_token: access_token}} = success_response,
+         email
+       ) do
+    with {:ok, %{"sub" => "auth0|" <> id}} <- Auth.Guardian.decode_and_verify(access_token),
+         {:ok, _user} <- Users.find_or_create(%{email: email, auth0_id: id}) do
       success_response
+    else
+      error ->
+        {:error, error}
     end
   end
+
+  defp find_or_create_user({:error, _}, _), do: {:error, :forbidden}
 end
