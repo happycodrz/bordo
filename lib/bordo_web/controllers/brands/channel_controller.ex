@@ -11,14 +11,14 @@ defmodule BordoWeb.Brands.ChannelController do
     render(conn, "index.json", channels: channels)
   end
 
-  def create(conn, %{"channel" => channel_params, "brand_id" => brand_uuid}) do
-    brand = Bordo.Repo.get_by!(Bordo.Brands.Brand, uuid: brand_uuid)
+  def create(conn, %{"channel" => channel_params, "brand_id" => brand_id}) do
+    brand = Bordo.Brands.get_brand!(brand_id)
     channel_params = Map.merge(channel_params, %{"brand_id" => brand.id})
 
     with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.brand_channel_path(conn, :show, brand_uuid, channel))
+      |> put_resp_header("location", Routes.brand_channel_path(conn, :show, brand_id, channel))
       |> render("show.json", channel: channel)
     end
   end

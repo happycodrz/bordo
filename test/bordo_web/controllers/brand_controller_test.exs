@@ -6,12 +6,13 @@ defmodule BordoWeb.BrandControllerTest do
 
   @create_attrs %{
     icon_url: "some icon_url",
-    name: "some name"
+    name: "some name",
+    slug: "some-name"
   }
   @update_attrs %{
     name: "some updated name"
   }
-  @invalid_attrs %{icon_url: nil, name: nil, uuid: nil}
+  @invalid_attrs %{icon_url: nil, name: nil}
 
   def fixture(:brand, params) do
     {:ok, brand} = Brands.create_brand(@create_attrs |> Map.merge(params))

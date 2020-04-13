@@ -1,4 +1,6 @@
-alias Bordo.{Brands, Posts, Teams, Users}
+import Ecto.Changeset, only: [change: 2]
+
+alias Bordo.{Brands, Repo, Teams, Users}
 
 # Script for populating the database. You can run it as:
 #
@@ -12,69 +14,84 @@ alias Bordo.{Brands, Posts, Teams, Users}
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-teams = [
-  %{name: "Bordo", owner_id: 2},
-  %{name: "Fleetio", owner_id: 1}
+#
+# Create users
+#
+
+users =
+  [
+    %Users.User{
+      email: "kevin@bor.do",
+      auth0_id: "5e7a9a590cf8140c66c315b4",
+      first_name: "Kevin",
+      last_name: "Brown"
+    },
+    %Users.User{
+      email: "michael@bor.do",
+      auth0_id: "5e519eaee234a20cfc54cb0f",
+      first_name: "Michael",
+      last_name: "Panik"
+    }
+  ]
+  |> Enum.each(fn user -> Repo.insert!(user) end)
+
+users = Users.list_users()
+kevin = Enum.at(users, 0)
+michael = Enum.at(users, 1)
+
+#
+# Create teams
+#
+
+[
+  %Teams.Team{name: "Bordo", owner_id: michael.id},
+  %Teams.Team{name: "Fleetio", owner_id: kevin.id}
 ]
+|> Enum.each(fn team -> Repo.insert!(team) end)
 
-users = [
-  %{email: "kevin@bor.do", auth0_id: "5e7a9a590cf8140c66c315b4", team_id: 1},
-  %{email: "michael@bor.do", team_id: 1}
+teams = Teams.list_teams()
+bordo = Enum.at(teams, 0)
+fleetio = Enum.at(teams, 1)
+
+Repo.update!(change(kevin, team_id: bordo.id))
+Repo.update!(change(michael, team_id: bordo.id))
+
+#
+# Create brands
+#
+
+[
+  %Brands.Brand{name: "Bordo", owner_id: michael.id, slug: "bordo"},
+  %Brands.Brand{name: "Fleetio", owner_id: kevin.id, slug: "fleetio"}
 ]
+|> Enum.each(fn brand -> Repo.insert!(brand) end)
 
-brands = [
-  %{name: "Bordo", owner_id: 2},
-  %{name: "Fleetio", owner_id: 1}
-]
+brands = Brands.list_brands()
+brand_bordo = Enum.at(brands, 0)
+brand_fleetio = Enum.at(brands, 1)
 
-# Removed temporarially b/c posts depend on
-# channel & post-variant
-# posts = [
-#   %{
-#     title: "Post for Bordo",
-#     brand_id: 1,
-#     user_id: 2,
-#     status: "published"
-#   },
-#   %{
-#     title: "Post for fleetio",
-#     brand_id: 2,
-#     user_id: 1,
-#     status: "published"
-#   }
-# ]
+#
+# Link brands to users
+#
 
-# TODO: Refactor to use bang methods
-# These are order-dependent
-users
-|> Enum.each(&Users.create_user(&1))
-
-brands
-|> Enum.each(&Brands.create_brand(&1))
-
-teams
-|> Enum.each(&Teams.create_team(&1))
-
-# posts
-# |> Enum.each(&Posts.create_post(&1))
-
-user_brands = [
-  %{
-    brand_id: 2,
-    user_id: 1
+[
+  %Brands.BrandUser{
+    brand_id: brand_bordo.id,
+    user_id: kevin.id
   },
-  %{brand_id: 1, user_id: 2}
+  %Brands.BrandUser{brand_id: brand_bordo.id, user_id: michael.id}
 ]
+|> Enum.each(fn brand_user -> Repo.insert!(brand_user) end)
 
-user_brands
-|> Enum.each(&Brands.create_user_brand(&1))
+#
+# Link brands to users
+#
 
-brand_teams = [%{brand_id: 1, team_id: 1}, %{brand_id: 2, team_id: 2}]
-
-brand_teams |> Enum.each(&Brands.create_brand_team(&1))
-
-# kevin = Users.get_user!(1)
-# michael = Users.get_user!(2)
-
-# kevin |> Users.update_user(%{team_id: 1})
-# michael |> Users.update_user(%{team_id: 1})
+[
+  %Brands.BrandTeam{
+    brand_id: brand_bordo.id,
+    team_id: bordo.id
+  },
+  %Brands.BrandTeam{brand_id: brand_fleetio.id, team_id: fleetio.id}
+]
+|> Enum.each(&Repo.insert!(&1))

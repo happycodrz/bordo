@@ -1,7 +1,6 @@
 defmodule BordoWeb.Providers.FacebookController do
   use BordoWeb, :controller
 
-  alias Bordo.Brands.Brand
   alias Bordo.Channels
   alias Bordo.Channels.Channel
 
@@ -38,15 +37,13 @@ defmodule BordoWeb.Providers.FacebookController do
       })
 
     with {:ok, %{"access_token" => access_token}} <- auth(query) do
-      brand = Bordo.Repo.get_by!(Brand, uuid: brand_id)
-
       channel_params =
         Map.merge(
           %{
             "token" => access_token,
             "network" => "facebook"
           },
-          %{"brand_id" => brand.id}
+          %{"brand_id" => brand_id}
         )
 
       with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do

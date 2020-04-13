@@ -1,6 +1,6 @@
 defmodule BordoWeb.Providers.TwitterController do
   use BordoWeb, :controller
-  alias Bordo.Brands.Brand
+
   alias Bordo.Channels
   alias Bordo.Channels.Channel
 
@@ -31,9 +31,8 @@ defmodule BordoWeb.Providers.TwitterController do
     configure_twitter()
 
     with {:ok, access_token} <- ExTwitter.access_token(oauth_verifier, oauth_token),
-         brand = Bordo.Repo.get_by!(Brand, uuid: brand_id),
          {:ok, %Channel{} = channel} <-
-           Channels.create_channel(build_channel_params(access_token, brand)) do
+           Channels.create_channel(build_channel_params(access_token, brand_id)) do
       conn
       |> put_status(:created)
       |> put_resp_header(
@@ -83,14 +82,14 @@ defmodule BordoWeb.Providers.TwitterController do
     |> IO.inspect()
   end
 
-  defp build_channel_params(access_token, brand) do
+  defp build_channel_params(access_token, brand_id) do
     Map.merge(
       %{
         "token" => access_token.oauth_token,
         "token_secret" => access_token.oauth_token_secret,
         "network" => "twitter"
       },
-      %{"brand_id" => brand.id}
+      %{"brand_id" => brand_id}
     )
   end
 

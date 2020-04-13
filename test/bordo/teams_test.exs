@@ -6,9 +6,9 @@ defmodule Bordo.TeamsTest do
   describe "teams" do
     alias Bordo.Teams.Team
 
-    @valid_attrs %{name: "some name", uuid: "some uuid"}
-    @update_attrs %{name: "some updated name", uuid: "some updated uuid"}
-    @invalid_attrs %{name: nil, uuid: nil}
+    @valid_attrs %{name: "some name"}
+    @update_attrs %{name: "some updated name"}
+    @invalid_attrs %{name: nil}
 
     def team_fixture(attrs \\ %{}) do
       {:ok, team} =
@@ -32,7 +32,6 @@ defmodule Bordo.TeamsTest do
     test "create_team/1 with valid data creates a team" do
       assert {:ok, %Team{} = team} = Teams.create_team(@valid_attrs)
       assert team.name == "some name"
-      assert team.uuid == "some uuid"
     end
 
     test "create_team/1 with invalid data returns error changeset" do
@@ -43,7 +42,6 @@ defmodule Bordo.TeamsTest do
       team = team_fixture()
       assert {:ok, %Team{} = team} = Teams.update_team(team, @update_attrs)
       assert team.name == "some updated name"
-      assert team.uuid == "some updated uuid"
     end
 
     test "update_team/2 with invalid data returns error changeset" do

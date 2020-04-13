@@ -6,9 +6,9 @@ defmodule Bordo.PostVariantsTest do
   describe "post_variants" do
     alias Bordo.PostVariants.PostVariant
 
-    @valid_attrs %{uuid: "some uuid"}
-    @update_attrs %{uuid: "some updated uuid"}
-    @invalid_attrs %{uuid: nil}
+    @valid_attrs %{content: "post content"}
+    @update_attrs %{content: "updated post content"}
+    @invalid_attrs %{status: "invalid status"}
 
     def post_variant_fixture(attrs \\ %{}) do
       {:ok, post_variant} =
@@ -31,7 +31,7 @@ defmodule Bordo.PostVariantsTest do
 
     test "create_post_variant/1 with valid data creates a post_variant" do
       assert {:ok, %PostVariant{} = post_variant} = PostVariants.create_post_variant(@valid_attrs)
-      assert post_variant.uuid == "some uuid"
+      assert post_variant.content == "post content"
     end
 
     test "create_post_variant/1 with invalid data returns error changeset" do
@@ -40,13 +40,19 @@ defmodule Bordo.PostVariantsTest do
 
     test "update_post_variant/2 with valid data updates the post_variant" do
       post_variant = post_variant_fixture()
-      assert {:ok, %PostVariant{} = post_variant} = PostVariants.update_post_variant(post_variant, @update_attrs)
-      assert post_variant.uuid == "some updated uuid"
+
+      assert {:ok, %PostVariant{} = post_variant} =
+               PostVariants.update_post_variant(post_variant, @update_attrs)
+
+      assert post_variant.content == "updated post content"
     end
 
     test "update_post_variant/2 with invalid data returns error changeset" do
       post_variant = post_variant_fixture()
-      assert {:error, %Ecto.Changeset{}} = PostVariants.update_post_variant(post_variant, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               PostVariants.update_post_variant(post_variant, @invalid_attrs)
+
       assert post_variant == PostVariants.get_post_variant!(post_variant.id)
     end
 

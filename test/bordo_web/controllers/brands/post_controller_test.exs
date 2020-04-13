@@ -5,14 +5,13 @@ defmodule BordoWeb.Brands.PostControllerTest do
   alias Bordo.Posts.Post
 
   @create_attrs %{
-    status: "draft",
-    title: "some title"
+    title: "some title",
+    slug: "some-title"
   }
   @update_attrs %{
-    status: "published",
     title: "some updated title"
   }
-  @invalid_attrs %{status: nil, title: nil}
+  @invalid_attrs %{title: nil}
 
   def fixture(:post, params) do
     {:ok, post} = Posts.create_post(@create_attrs |> Map.merge(params))
@@ -21,7 +20,9 @@ defmodule BordoWeb.Brands.PostControllerTest do
 
   setup %{conn: conn} do
     {:ok, user} = Bordo.Users.create_user(%{email: "xx", auth0_id: "1234"})
-    {:ok, brand} = Bordo.Brands.create_brand(%{name: "test brand", owner_id: user.id})
+
+    {:ok, brand} =
+      Bordo.Brands.create_brand(%{name: "test brand", owner_id: user.id, slug: "test-brand"})
 
     {:ok,
      conn: conn |> authorize_request(user) |> put_req_header("accept", "application/json"),
@@ -31,7 +32,7 @@ defmodule BordoWeb.Brands.PostControllerTest do
 
   describe "index" do
     test "lists all posts", %{conn: conn, brand: brand} do
-      conn = get(conn, Routes.brand_post_path(conn, :index, brand.uuid))
+      conn = get(conn, Routes.brand_post_path(conn, :index, brand.slug))
 
       assert json_response(conn, 200)["data"] == []
     end
@@ -46,11 +47,10 @@ defmodule BordoWeb.Brands.PostControllerTest do
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.brand_post_path(conn, :show, brand, id))
+      conn = get(conn, Routes.brand_post_path(conn, :show, brand.slug, id))
 
       assert %{
                "id" => id,
-               "status" => "draft",
                "title" => "some title"
              } = json_response(conn, 200)["data"]
     end
@@ -77,7 +77,6 @@ defmodule BordoWeb.Brands.PostControllerTest do
 
       assert %{
                "id" => id,
-               "status" => "published",
                "title" => "some updated title"
              } = json_response(conn, 200)["data"]
     end

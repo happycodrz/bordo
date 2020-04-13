@@ -6,9 +6,12 @@ defmodule Bordo.BrandsTest do
   describe "brands" do
     alias Bordo.Brands.Brand
 
-    @valid_attrs %{icon_url: "some icon_url", name: "some name", uuid: "some uuid"}
-    @update_attrs %{icon_url: "some updated icon_url", name: "some updated name", uuid: "some updated uuid"}
-    @invalid_attrs %{icon_url: nil, name: nil, uuid: nil}
+    @valid_attrs %{icon_url: "some icon_url", name: "some name"}
+    @update_attrs %{
+      icon_url: "some updated icon_url",
+      name: "some updated name"
+    }
+    @invalid_attrs %{icon_url: nil, name: nil}
 
     def brand_fixture(attrs \\ %{}) do
       {:ok, brand} =
@@ -33,7 +36,6 @@ defmodule Bordo.BrandsTest do
       assert {:ok, %Brand{} = brand} = Brands.create_brand(@valid_attrs)
       assert brand.icon_url == "some icon_url"
       assert brand.name == "some name"
-      assert brand.uuid == "some uuid"
     end
 
     test "create_brand/1 with invalid data returns error changeset" do
@@ -45,7 +47,6 @@ defmodule Bordo.BrandsTest do
       assert {:ok, %Brand{} = brand} = Brands.update_brand(brand, @update_attrs)
       assert brand.icon_url == "some updated icon_url"
       assert brand.name == "some updated name"
-      assert brand.uuid == "some updated uuid"
     end
 
     test "update_brand/2 with invalid data returns error changeset" do
@@ -66,8 +67,8 @@ defmodule Bordo.BrandsTest do
     end
   end
 
-  describe "user_brands" do
-    alias Bordo.Brands.UserBrand
+  describe "brand_users" do
+    alias Bordo.Brands.BrandUser
 
     @valid_attrs %{}
     @update_attrs %{}
@@ -82,9 +83,9 @@ defmodule Bordo.BrandsTest do
       user_brand
     end
 
-    test "list_user_brands/0 returns all user_brands" do
+    test "list_brand_users/0 returns all brand_users" do
       user_brand = user_brand_fixture()
-      assert Brands.list_user_brands() == [user_brand]
+      assert Brands.list_brand_users() == [user_brand]
     end
 
     test "get_user_brand!/1 returns the user_brand with given id" do
@@ -93,7 +94,7 @@ defmodule Bordo.BrandsTest do
     end
 
     test "create_user_brand/1 with valid data creates a user_brand" do
-      assert {:ok, %UserBrand{} = user_brand} = Brands.create_user_brand(@valid_attrs)
+      assert {:ok, %BrandUser{} = user_brand} = Brands.create_user_brand(@valid_attrs)
     end
 
     test "create_user_brand/1 with invalid data returns error changeset" do
@@ -102,7 +103,9 @@ defmodule Bordo.BrandsTest do
 
     test "update_user_brand/2 with valid data updates the user_brand" do
       user_brand = user_brand_fixture()
-      assert {:ok, %UserBrand{} = user_brand} = Brands.update_user_brand(user_brand, @update_attrs)
+
+      assert {:ok, %BrandUser{} = user_brand} =
+               Brands.update_user_brand(user_brand, @update_attrs)
     end
 
     test "update_user_brand/2 with invalid data returns error changeset" do
@@ -113,7 +116,7 @@ defmodule Bordo.BrandsTest do
 
     test "delete_user_brand/1 deletes the user_brand" do
       user_brand = user_brand_fixture()
-      assert {:ok, %UserBrand{}} = Brands.delete_user_brand(user_brand)
+      assert {:ok, %BrandUser{}} = Brands.delete_user_brand(user_brand)
       assert_raise Ecto.NoResultsError, fn -> Brands.get_user_brand!(user_brand.id) end
     end
 
@@ -159,7 +162,9 @@ defmodule Bordo.BrandsTest do
 
     test "update_brand_team/2 with valid data updates the brand_team" do
       brand_team = brand_team_fixture()
-      assert {:ok, %BrandTeam{} = brand_team} = Brands.update_brand_team(brand_team, @update_attrs)
+
+      assert {:ok, %BrandTeam{} = brand_team} =
+               Brands.update_brand_team(brand_team, @update_attrs)
     end
 
     test "update_brand_team/2 with invalid data returns error changeset" do

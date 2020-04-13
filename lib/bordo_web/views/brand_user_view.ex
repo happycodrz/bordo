@@ -1,4 +1,4 @@
-defmodule BordoWeb.UserBrandView do
+defmodule BordoWeb.BrandUserView do
   use BordoWeb, :view
 
   def render("show.json", %{user_brand: user_brand}) do

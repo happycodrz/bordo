@@ -1,25 +1,21 @@
 defmodule Bordo.Brands.Brand do
-  use Ecto.Schema
+  use Bordo.Schema
   import Ecto.Changeset
-  import Bordo.Schema, only: [generate_short_uuid: 0]
 
   schema "brands" do
     field :name, :string
-    field :owner_id, :id
-    field :uuid, :string
-
+    field :slug, :string
+    belongs_to(:owner, Bordo.Users.User)
     has_many(:team_brands, Bordo.Brands.BrandTeam)
-    # many_to_many(:, Bordo.Users.User, join_through: "user_brands")
-    # many_to_many(:users, Bordo.Users.User, join_through: "user_brands")
+
     timestamps()
   end
 
   @doc false
   def changeset(brand, attrs) do
     brand
-    |> cast(attrs, [:name, :owner_id])
-    |> put_change(:uuid, generate_short_uuid())
+    |> cast(attrs, [:name, :owner_id, :slug])
     |> foreign_key_constraint(:owner_id)
-    |> validate_required([:name, :owner_id])
+    |> validate_required([:name, :owner_id, :slug])
   end
 end

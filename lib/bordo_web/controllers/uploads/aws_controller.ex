@@ -7,7 +7,7 @@ defmodule BordoWeb.Uploads.AwsController do
 
   def create(conn, %{"file" => %{"file_name" => file_name}}) do
     file_ext = file_name |> String.split(".") |> Enum.at(-1)
-    file_name = Bordo.Schema.generate_short_uuid()
+    file_name = Bordo.Schema.generate_short_slug()
     file_path = "tmp/" <> file_name <> "." <> file_ext
 
     with {:ok, url} <- presign_url(file_path) do

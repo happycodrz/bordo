@@ -1,12 +1,10 @@
 defmodule Bordo.PostVariants.PostVariant do
-  use Ecto.Schema
+  use Bordo.Schema
   import Ecto.Changeset
-  import Bordo.Schema, only: [generate_short_uuid: 0]
 
   @post_statuses ["draft", "published", "scheduled", "failed"]
 
   schema "post_variants" do
-    field :uuid, :string
     field :content, :string
     field :status, :string
     belongs_to :channel, Bordo.Channels.Channel
@@ -19,7 +17,6 @@ defmodule Bordo.PostVariants.PostVariant do
   def changeset(post_variant, attrs) do
     post_variant
     |> cast(attrs, [:channel_id, :status, :post_id, :content])
-    |> put_change(:uuid, generate_short_uuid())
     |> validate_required([:channel_id, :status, :content])
     |> validate_inclusion(:status, @post_statuses)
   end
@@ -27,7 +24,6 @@ defmodule Bordo.PostVariants.PostVariant do
   def create_changeset(post_variant, attrs) do
     post_variant
     |> cast(attrs, [:channel_id, :status, :post_id, :content])
-    |> put_change(:uuid, generate_short_uuid())
     |> put_change(:status, "scheduled")
     |> validate_required([:channel_id, :status, :content])
     |> validate_inclusion(:status, @post_statuses)

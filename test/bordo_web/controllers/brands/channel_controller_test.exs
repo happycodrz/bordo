@@ -6,15 +6,15 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
 
   @create_attrs %{
     token: "some token",
-    network: "some network",
+    network: "twitter",
     token_secret: "some token_secret"
   }
   @update_attrs %{
     token: "some updated token",
-    network: "some updated network",
+    network: "twitter",
     token_secret: "some updated token_secret"
   }
-  @invalid_attrs %{token: nil, network: nil, token_secret: nil, uuid: nil}
+  @invalid_attrs %{token: nil, network: nil, token_secret: nil}
 
   def fixture(:channel, params) do
     {:ok, channel} = Channels.create_channel(@create_attrs |> Map.merge(params))
@@ -23,7 +23,9 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
 
   setup %{conn: conn} do
     {:ok, user} = Bordo.Users.create_user(%{email: "xx", auth0_id: "1234"})
-    {:ok, brand} = Bordo.Brands.create_brand(%{name: "test brand", owner_id: user.id})
+
+    {:ok, brand} =
+      Bordo.Brands.create_brand(%{name: "test brand", owner_id: user.id, slug: "test-brand"})
 
     {:ok,
      conn: conn |> authorize_request(user) |> put_req_header("accept", "application/json"),
@@ -40,24 +42,22 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
 
   describe "create channel" do
     test "renders channel when data is valid", %{conn: conn, brand: brand} do
-      conn =
-        post(conn, Routes.brand_channel_path(conn, :create, brand.uuid), channel: @create_attrs)
+      conn = post(conn, Routes.brand_channel_path(conn, :create, brand), channel: @create_attrs)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.brand_channel_path(conn, :show, brand.uuid, id))
+      conn = get(conn, Routes.brand_channel_path(conn, :show, brand.slug, id))
 
       assert %{
                "id" => id,
                "token" => "some token",
-               "network" => "some network",
+               "network" => "twitter",
                "token_secret" => "some token_secret"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, brand: brand} do
-      conn =
-        post(conn, Routes.brand_channel_path(conn, :create, brand.uuid), channel: @invalid_attrs)
+      conn = post(conn, Routes.brand_channel_path(conn, :create, brand), channel: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] != %{}
     end
@@ -72,25 +72,23 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
       brand: brand
     } do
       conn =
-        put(conn, Routes.brand_channel_path(conn, :update, brand.uuid, channel),
-          channel: @update_attrs
-        )
+        put(conn, Routes.brand_channel_path(conn, :update, brand, channel), channel: @update_attrs)
 
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get(conn, Routes.brand_channel_path(conn, :show, brand.uuid, id))
+      conn = get(conn, Routes.brand_channel_path(conn, :show, brand, id))
 
       assert %{
                "id" => id,
                "token" => "some updated token",
-               "network" => "some updated network",
+               "network" => "twitter",
                "token_secret" => "some updated token_secret"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, channel: channel, brand: brand} do
       conn =
-        put(conn, Routes.brand_channel_path(conn, :update, brand.uuid, channel),
+        put(conn, Routes.brand_channel_path(conn, :update, brand, channel),
           channel: @invalid_attrs
         )
 
@@ -102,11 +100,11 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
     setup [:create_channel]
 
     test "deletes chosen channel", %{conn: conn, channel: channel, brand: brand} do
-      conn = delete(conn, Routes.brand_channel_path(conn, :delete, brand.uuid, channel))
+      conn = delete(conn, Routes.brand_channel_path(conn, :delete, brand, channel))
       assert response(conn, 204)
 
       assert_error_sent 404, fn ->
-        get(conn, Routes.brand_channel_path(conn, :show, brand.uuid, channel))
+        get(conn, Routes.brand_channel_path(conn, :show, brand, channel))
       end
     end
   end

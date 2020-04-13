@@ -9,16 +9,14 @@ defmodule Bordo.ChannelsTest do
     @valid_attrs %{
       token: "some token",
       network: "some network",
-      token_secret: "some token_secret",
-      uuid: "some uuid"
+      token_secret: "some token_secret"
     }
     @update_attrs %{
       token: "some updated token",
       network: "some updated network",
-      token_secret: "some updated token_secret",
-      uuid: "some updated uuid"
+      token_secret: "some updated token_secret"
     }
-    @invalid_attrs %{token: nil, network: nil, token_secret: nil, uuid: nil}
+    @invalid_attrs %{token: nil, network: nil, token_secret: nil}
 
     def channel_fixture(attrs \\ %{}) do
       {:ok, channel} =
@@ -44,7 +42,6 @@ defmodule Bordo.ChannelsTest do
       assert channel.token == "some token"
       assert channel.network == "some network"
       assert channel.token_secret == "some token_secret"
-      assert channel.uuid == "some uuid"
     end
 
     test "create_channel/1 with invalid data returns error changeset" do
@@ -57,7 +54,6 @@ defmodule Bordo.ChannelsTest do
       assert channel.token == "some updated token"
       assert channel.network == "some updated network"
       assert channel.token_secret == "some updated token_secret"
-      assert channel.uuid == "some updated uuid"
     end
 
     test "update_channel/2 with invalid data returns error changeset" do

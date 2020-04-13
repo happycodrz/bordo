@@ -1,10 +1,10 @@
 defmodule Bordo.Brands.BrandTeam do
-  use Ecto.Schema
+  use Bordo.Schema
   import Ecto.Changeset
 
   schema "brand_teams" do
-    field :brand_id, :id
-    field :team_id, :id
+    belongs_to(:brand, Bordo.Brands.BrandTeam)
+    belongs_to(:team, Bordo.Teams.Team)
 
     timestamps()
   end

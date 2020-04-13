@@ -1,5 +1,5 @@
 defmodule Bordo.Media.Image do
-  use Ecto.Schema
+  use Bordo.Schema
   import Ecto.Changeset
 
   schema "images" do

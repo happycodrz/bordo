@@ -1,5 +1,5 @@
 defmodule Bordo.Teams.UserTeam do
-  use Ecto.Schema
+  use Bordo.Schema
   import Ecto.Changeset
 
   schema "user_teams" do

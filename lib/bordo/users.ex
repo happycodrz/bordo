@@ -6,7 +6,7 @@ defmodule Bordo.Users do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
-  alias Bordo.Brands.{Brand, UserBrand}
+  alias Bordo.Brands.{Brand, BrandUser}
   alias Bordo.Users.User
 
   @doc """
@@ -23,33 +23,33 @@ defmodule Bordo.Users do
   end
 
   @doc """
-  Returns the list of users joined with a brand by uuid.
+  Returns the list of users joined with a brand by slug.
 
   ## Examples
 
-      iex> list_users_for_brand(brand_uuid)
+      iex> list_users_for_brand(slug)
       [%User{}, ...]
 
   """
-  def list_users_for_brand(uuid: brand_uuid) do
+  def list_users_for_brand(slug) do
     query =
       from u in User,
-        left_join: ub in UserBrand,
+        left_join: ub in BrandUser,
         on: u.id == ub.user_id,
         left_join: b in Brand,
         on: b.id == ub.brand_id,
         distinct: u.id,
-        where: b.uuid == ^brand_uuid
+        where: b.slug == ^slug
 
     Repo.all(query)
   end
 
   @doc """
-  Returns the list of users joined with a brand by uuid.
+  Returns the list of users joined with a brand by team_id.
 
   ## Examples
 
-      iex> list_users_for_brand(brand_uuid)
+      iex> list_users_for_brand(team_id)
       [%User{}, ...]
 
   """
@@ -108,8 +108,8 @@ defmodule Bordo.Users do
 
   """
   def create_user_brand(attrs \\ %{}) do
-    %UserBrand{}
-    |> UserBrand.changeset(attrs)
+    %BrandUser{}
+    |> BrandUser.changeset(attrs)
     |> Repo.insert()
   end
 

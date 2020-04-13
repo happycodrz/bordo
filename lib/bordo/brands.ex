@@ -6,7 +6,7 @@ defmodule Bordo.Brands do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
-  alias Bordo.Brands.{Brand, BrandTeam, UserBrand}
+  alias Bordo.Brands.{Brand, BrandTeam, BrandUser}
 
   @doc """
   Returns the list of brands.
@@ -35,7 +35,7 @@ defmodule Bordo.Brands do
   def list_brands_for_user(user_id) do
     query =
       from b in Brand,
-        left_join: ub in UserBrand,
+        left_join: ub in BrandUser,
         on: b.id == ub.brand_id,
         distinct: b.id,
         where:
@@ -126,19 +126,19 @@ defmodule Bordo.Brands do
     Brand.changeset(brand, %{})
   end
 
-  alias Bordo.Brands.UserBrand
+  alias Bordo.Brands.BrandUser
 
   @doc """
-  Returns the list of user_brands.
+  Returns the list of brand_users.
 
   ## Examples
 
-      iex> list_user_brands()
-      [%UserBrand{}, ...]
+      iex> list_brand_users()
+      [%BrandUser{}, ...]
 
   """
-  def list_user_brands do
-    Repo.all(UserBrand)
+  def list_brand_users do
+    Repo.all(BrandUser)
   end
 
   @doc """
@@ -149,13 +149,13 @@ defmodule Bordo.Brands do
   ## Examples
 
       iex> get_user_brand!(123)
-      %UserBrand{}
+      %BrandUser{}
 
       iex> get_user_brand!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_user_brand!(id), do: Repo.get!(UserBrand, id)
+  def get_user_brand!(id), do: Repo.get!(BrandUser, id)
 
   @doc """
   Creates a user_brand.
@@ -163,15 +163,15 @@ defmodule Bordo.Brands do
   ## Examples
 
       iex> create_user_brand(%{field: value})
-      {:ok, %UserBrand{}}
+      {:ok, %BrandUser{}}
 
       iex> create_user_brand(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_user_brand(attrs \\ %{}) do
-    %UserBrand{}
-    |> UserBrand.changeset(attrs)
+    %BrandUser{}
+    |> BrandUser.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -181,15 +181,15 @@ defmodule Bordo.Brands do
   ## Examples
 
       iex> update_user_brand(user_brand, %{field: new_value})
-      {:ok, %UserBrand{}}
+      {:ok, %BrandUser{}}
 
       iex> update_user_brand(user_brand, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user_brand(%UserBrand{} = user_brand, attrs) do
+  def update_user_brand(%BrandUser{} = user_brand, attrs) do
     user_brand
-    |> UserBrand.changeset(attrs)
+    |> BrandUser.changeset(attrs)
     |> Repo.update()
   end
 
@@ -199,13 +199,13 @@ defmodule Bordo.Brands do
   ## Examples
 
       iex> delete_user_brand(user_brand)
-      {:ok, %UserBrand{}}
+      {:ok, %BrandUser{}}
 
       iex> delete_user_brand(user_brand)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_user_brand(%UserBrand{} = user_brand) do
+  def delete_user_brand(%BrandUser{} = user_brand) do
     Repo.delete(user_brand)
   end
 
@@ -215,11 +215,11 @@ defmodule Bordo.Brands do
   ## Examples
 
       iex> change_user_brand(user_brand)
-      %Ecto.Changeset{source: %UserBrand{}}
+      %Ecto.Changeset{source: %BrandUser{}}
 
   """
-  def change_user_brand(%UserBrand{} = user_brand) do
-    UserBrand.changeset(user_brand, %{})
+  def change_user_brand(%BrandUser{} = user_brand) do
+    BrandUser.changeset(user_brand, %{})
   end
 
   alias Bordo.Brands.BrandTeam

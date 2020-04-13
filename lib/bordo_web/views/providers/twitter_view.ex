@@ -8,7 +8,6 @@ defmodule BordoWeb.Providers.TwitterView do
 
   def render("channel.json", %{twitter: twitter}) do
     %{
-      uuid: twitter.uuid,
       token: twitter.token,
       token_secret: twitter.token_secret,
       network: twitter.network

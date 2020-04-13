@@ -1,8 +1,8 @@
-defmodule Bordo.Brands.UserBrand do
-  use Ecto.Schema
+defmodule Bordo.Brands.BrandUser do
+  use Bordo.Schema
   import Ecto.Changeset
 
-  schema "user_brands" do
+  schema "brand_users" do
     belongs_to :brand, Bordo.Brands.Brand
     belongs_to :user, Bordo.Users.User
 

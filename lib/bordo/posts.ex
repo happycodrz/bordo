@@ -24,16 +24,16 @@ defmodule Bordo.Posts do
   end
 
   @doc """
-  Returns the list of users joined with a brand by uuid.
+  Returns the list of posts by brand slug.
 
   ## Examples
 
-      iex> list_posts_for_brand(brand_uuid)
+      iex> list_posts_for_brand(slug)
       [%User{}, ...]
 
   """
-  def list_posts_for_brand(uuid: brand_uuid) do
-    brand = Repo.get_by!(Brand, uuid: brand_uuid)
+  def list_posts_for_brand(slug) do
+    brand = Repo.get_by!(Brand, slug: slug)
 
     query =
       from p in Post,

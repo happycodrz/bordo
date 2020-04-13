@@ -1,11 +1,9 @@
 defmodule Bordo.Teams.Team do
-  use Ecto.Schema
+  use Bordo.Schema
   import Ecto.Changeset
-  import Bordo.Schema, only: [generate_short_uuid: 0]
 
   schema "teams" do
     field :name, :string
-    field :uuid, :string
 
     belongs_to :owner, Bordo.Users.User
     timestamps()
@@ -15,7 +13,6 @@ defmodule Bordo.Teams.Team do
   def changeset(team, attrs) do
     team
     |> cast(attrs, [:name, :owner_id])
-    |> put_change(:uuid, generate_short_uuid())
     |> validate_required([:name, :owner_id])
   end
 end

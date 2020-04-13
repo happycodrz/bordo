@@ -6,9 +6,9 @@ defmodule Bordo.UsersTest do
   describe "users" do
     alias Bordo.Users.User
 
-    @valid_attrs %{email: "some email", uuid: "some uuid"}
-    @update_attrs %{email: "some updated email", uuid: "some updated uuid"}
-    @invalid_attrs %{email: nil, uuid: nil}
+    @valid_attrs %{email: "some email"}
+    @update_attrs %{email: "some updated email"}
+    @invalid_attrs %{email: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -32,7 +32,6 @@ defmodule Bordo.UsersTest do
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Users.create_user(@valid_attrs)
       assert user.email == "some email"
-      assert user.uuid == "some uuid"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -43,7 +42,6 @@ defmodule Bordo.UsersTest do
       user = user_fixture()
       assert {:ok, %User{} = user} = Users.update_user(user, @update_attrs)
       assert user.email == "some updated email"
-      assert user.uuid == "some updated uuid"
     end
 
     test "update_user/2 with invalid data returns error changeset" do

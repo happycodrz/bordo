@@ -19,3 +19,5 @@ config :logger, level: :warn
 
 config :mix_test_watch,
   clear: true
+
+config :bordo, Oban, queues: false

@@ -5,14 +5,12 @@ defmodule BordoWeb.UserControllerTest do
   alias Bordo.Users.User
 
   @create_attrs %{
-    email: "some exmail",
-    uuid: "some uuid"
+    email: "some email"
   }
   @update_attrs %{
-    email: "some updated email",
-    uuid: "some updated uuid"
+    email: "some updated email"
   }
-  @invalid_attrs %{email: nil, uuid: nil}
+  @invalid_attrs %{email: nil}
 
   def fixture(:user) do
     {:ok, user} = Users.create_user(@create_attrs)
@@ -39,8 +37,7 @@ defmodule BordoWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "email" => "some email",
-               "uuid" => "some uuid"
+               "email" => "some email"
              } = json_response(conn, 200)["data"]
     end
 
@@ -61,8 +58,7 @@ defmodule BordoWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "email" => "some updated email",
-               "uuid" => "some updated uuid"
+               "email" => "some updated email"
              } = json_response(conn, 200)["data"]
     end
 
