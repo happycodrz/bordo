@@ -11,6 +11,13 @@ defmodule BordoWeb.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{id: user.id, uuid: user.uuid, email: user.email, team_id: user.team_id}
+    %{
+      id: user.id,
+      uuid: user.uuid,
+      email: user.email,
+      team_id: user.team_id,
+      first_name: user.first_name,
+      last_name: user.last_name
+    }
   end
 end
