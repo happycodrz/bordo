@@ -39,7 +39,7 @@ defmodule Bordo.Posts do
       from p in Post,
         where: p.brand_id == ^brand.id
 
-    Repo.all(query)
+    Repo.all(query) |> Repo.preload(:post_variants)
   end
 
   @doc """

@@ -11,6 +11,6 @@ defmodule BordoWeb.PostVariantView do
   end
 
   def render("post_variant.json", %{post_variant: post_variant}) do
-    %{id: post_variant.id}
+    %{id: post_variant.id, content: post_variant.content, status: post_variant.status}
   end
 end
