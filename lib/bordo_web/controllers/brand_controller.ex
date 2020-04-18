@@ -54,7 +54,7 @@ defmodule BordoWeb.BrandController do
     Multi.new()
     |> Multi.insert(
       :brand,
-      Brand.changeset(%Brand{}, attrs)
+      Brand.changeset(%Brand{}, Map.merge(attrs, %{"owner_id" => user_id}))
     )
     |> Multi.run(:brand_team, fn _repo, %{brand: brand} ->
       Brands.create_brand_team(%{"brand_id" => brand.id, "team_id" => team_id})
