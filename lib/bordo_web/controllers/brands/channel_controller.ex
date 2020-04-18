@@ -6,8 +6,8 @@ defmodule BordoWeb.Brands.ChannelController do
 
   action_fallback BordoWeb.FallbackController
 
-  def index(conn, _params) do
-    channels = Channels.list_channels()
+  def index(conn, %{"brand_id" => brand_slug}) do
+    channels = Channels.list_channels_by_brand_slug(brand_slug)
     render(conn, "index.json", channels: channels)
   end
 

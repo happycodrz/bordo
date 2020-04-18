@@ -23,6 +23,25 @@ defmodule Bordo.Channels do
   end
 
   @doc """
+  Returns the list of channels by brand-slug.
+
+  ## Examples
+
+      iex> list_channels_by_brand_slug(brand_slug)
+      [%Channel{}, ...]
+
+  """
+  def list_channels_by_brand_slug(brand_slug) do
+    query =
+      from c in Channel,
+        left_join: b in Brand,
+        on: b.id == c.brand_id,
+        where: b.slug == ^brand_slug
+
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single channel.
 
   Raises `Ecto.NoResultsError` if the Channel does not exist.
