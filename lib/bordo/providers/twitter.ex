@@ -1,6 +1,15 @@
 defmodule Bordo.Providers.Twitter do
-  def handle_event(%{channel: channel, message: message}) do
-    create_tweet(channel, message)
+  alias ExTwitter.Model.Tweet
+  alias Bordo.PostVariants
+  alias Bordo.PostVariants.PostVariant
+
+  def handle_event(%PostVariant{channel: channel, content: content} = post_variant) do
+    with %Tweet{id: _id} <- create_tweet(channel, content) do
+      post_variant |> PostVariants.update_post_variant(%{status: "published"})
+    else
+      _error ->
+        post_variant |> PostVariants.update_post_variant(%{status: "failed"})
+    end
   end
 
   def create_tweet(channel, status) do
