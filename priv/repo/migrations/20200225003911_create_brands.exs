@@ -13,8 +13,8 @@ defmodule Bordo.Repo.Migrations.CreateBrands do
       timestamps()
     end
 
-    create unique_index(:brands, [:id, :name])
-    create unique_index(:brands, [:id, :slug])
+    create unique_index(:brands, [:name])
+    create unique_index(:brands, [:slug])
     create index(:brands, [:owner_id])
   end
 end

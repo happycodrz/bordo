@@ -10,6 +10,8 @@ defmodule Bordo.Repo.Migrations.CreateBrandTeams do
       timestamps()
     end
 
+    create unique_index(:brands, [:brand_id, :team_id])
+
     create index(:brand_teams, [:brand_id])
     create index(:brand_teams, [:team_id])
   end
