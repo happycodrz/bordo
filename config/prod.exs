@@ -12,7 +12,7 @@ use Mix.Config
 config :bordo, BordoWeb.Endpoint, url: [host: "bordo-staging.herokuapp.com", port: 80]
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 
 # ## SSL Support
 #
