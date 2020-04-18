@@ -4,7 +4,6 @@ defmodule Bordo.Repo.Migrations.CreateChannels do
   def change do
     create table(:channels, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :uuid, :string
       add :token, :string
       add :token_secret, :string
       add :user_id, :string
