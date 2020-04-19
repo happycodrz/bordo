@@ -26,8 +26,8 @@ defmodule BordoWeb.Brands.PostController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
+  def show(conn, %{"id" => slug, "brand_id" => brand_slug}) do
+    post = Posts.get_brand_post_by_slug!(brand_slug, slug)
     render(conn, "show.json", post: post)
   end
 

@@ -58,6 +58,16 @@ defmodule Bordo.Posts do
   """
   def get_post!(id), do: Repo.get!(Post, id)
 
+  def get_brand_post_by_slug!(brand_slug, slug) do
+    query =
+      from p in Post,
+        left_join: b in Brand,
+        on: b.id == p.brand_id,
+        where: b.slug == ^brand_slug and p.slug == ^slug
+
+    Repo.one(query) |> Repo.preload(:post_variants)
+  end
+
   @doc """
   Gets a single post.
 
