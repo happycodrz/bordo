@@ -9,12 +9,10 @@ defmodule Bordo.Workers.PostScheduler do
 
   defp dispatch_post_variant(post_variant) do
     networks(post_variant.channel.network)
-    |> apply(:handle_event, [
-      %{
-        channel: post_variant.channel,
-        message: post_variant.title
-      }
-    ])
+    |> apply(
+      :handle_event,
+      [post_variant]
+    )
   end
 
   defp networks(network) do
