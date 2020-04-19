@@ -7,6 +7,7 @@ defmodule Bordo.PostVariants.PostVariant do
   schema "post_variants" do
     field :content, :string
     field :status, :string
+    field :external_id, :string
     belongs_to :channel, Bordo.Channels.Channel
     belongs_to :post, Bordo.Posts.Post
 
@@ -16,7 +17,7 @@ defmodule Bordo.PostVariants.PostVariant do
   @doc false
   def changeset(post_variant, attrs) do
     post_variant
-    |> cast(attrs, [:channel_id, :status, :post_id, :content])
+    |> cast(attrs, [:channel_id, :status, :post_id, :content, :external_id])
     |> validate_required([:channel_id, :status, :content])
     |> validate_inclusion(:status, @post_statuses)
   end
