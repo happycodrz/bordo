@@ -65,7 +65,7 @@ defmodule Bordo.Posts do
         on: b.id == p.brand_id,
         where: b.slug == ^brand_slug and p.slug == ^slug
 
-    Repo.one(query) |> Repo.preload(:post_variants)
+    Repo.one!(query) |> Repo.preload(:post_variants)
   end
 
   @doc """
