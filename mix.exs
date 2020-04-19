@@ -42,6 +42,7 @@ defmodule Bordo.MixProject do
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:extwitter, "~> 0.12.0"},
+      {:filtrex, "~> 0.4.3"},
       {:gettext, "~> 0.11"},
       {:guardian, "~> 2.1.1"},
       {:httpoison, "~> 1.6.2"},
