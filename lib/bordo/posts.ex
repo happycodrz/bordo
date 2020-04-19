@@ -1,4 +1,6 @@
 defmodule Bordo.Posts do
+  import Filtrex.Type.Config
+
   @moduledoc """
   The Posts context.
   """
@@ -8,6 +10,12 @@ defmodule Bordo.Posts do
 
   alias Bordo.Posts.Post
   alias Bordo.Brands.Brand
+
+  def filter_options(:brand_index) do
+    defconfig do
+      datetime([:scheduled_for])
+    end
+  end
 
   @doc """
   Returns the list of posts.
@@ -32,14 +40,16 @@ defmodule Bordo.Posts do
       [%User{}, ...]
 
   """
-  def list_posts_for_brand(slug) do
-    brand = Repo.get_by!(Brand, slug: slug)
-
-    query =
+  def list_posts_for_brand(slug, filter) do
+    base_query =
       from p in Post,
-        where: p.brand_id == ^brand.id
+        left_join: b in Brand,
+        on: b.id == p.brand_id,
+        where: b.slug == ^slug
 
-    Repo.all(query) |> Repo.preload(:post_variants)
+    Filtrex.query(base_query, filter)
+    |> Bordo.Repo.all()
+    |> Bordo.Repo.preload(:post_variants)
   end
 
   @doc """

@@ -6,9 +6,21 @@ defmodule BordoWeb.Brands.PostController do
 
   action_fallback BordoWeb.FallbackController
 
-  def index(conn, %{"brand_id" => slug}) do
-    posts = Posts.list_posts_for_brand(slug)
-    render(conn, "index.json", posts: posts)
+  def index(conn, %{"brand_id" => slug} = params) do
+    # remove keys that are not filtered against
+    filter_params = Map.drop(params, ~w(brand_id))
+
+    config = Bordo.Posts.filter_options(:brand_index)
+
+    case Filtrex.parse_params(config, filter_params) do
+      {:ok, filter} ->
+        posts = Posts.list_posts_for_brand(slug, filter)
+        render(conn, "index.json", posts: posts)
+
+      {:error, error} ->
+        conn
+        |> json(%{errors: %{detail: error}})
+    end
   end
 
   def create(conn, %{"post" => post_params, "brand_id" => brand_id}) do
