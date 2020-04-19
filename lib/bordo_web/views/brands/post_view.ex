@@ -18,6 +18,7 @@ defmodule BordoWeb.Brands.PostView do
       brand_id: post.brand_id,
       user_id: post.user_id,
       scheduled_for: post.scheduled_for,
+      slug: post.slug,
       post_variants:
         render_many(post.post_variants, PostVariantView, "post_variant.json", as: :post_variant)
     }
