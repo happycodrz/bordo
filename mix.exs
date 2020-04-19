@@ -39,8 +39,6 @@ defmodule Bordo.MixProject do
       {:credo, "~> 1.3.2", only: [:dev, :test], runtime: false},
       {:ecto_autoslug_field, "~> 2.0"},
       {:ecto_sql, "~> 3.4"},
-      {:ex_aws, "~> 2.1"},
-      {:ex_aws_s3, "~> 2.0"},
       {:extwitter, "~> 0.12.0"},
       {:filtrex, "~> 0.4.3"},
       {:gettext, "~> 0.11"},
@@ -55,8 +53,7 @@ defmodule Bordo.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
       {:timex, "~> 3.6.1"},
-      {:slack, "~> 0.22.0"},
-      {:sweet_xml, "~> 0.6.6"}
+      {:slack, "~> 0.22.0"}
     ]
   end
 

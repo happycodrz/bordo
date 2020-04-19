@@ -6,99 +6,111 @@ defmodule Bordo.Media do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
-  alias Bordo.Media.Image
+  alias Bordo.Media.Media
+  alias Bordo.Brands.Brand
 
   @doc """
-  Returns the list of Image.
+  Returns the list of Media.
 
   ## Examples
 
-      iex> list_images()
-      [%Image{}, ...]
+      iex> list_medias()
+      [%Media{}, ...]
 
   """
-  def list_images do
-    Repo.all(Image)
+  def list_media do
+    Repo.all(Media)
+  end
+
+  def list_media(brand_id: brand_id) do
+    base_query =
+      from m in Media,
+        left_join: b in Brand,
+        on: b.id == m.brand_id,
+        where: b.id == ^brand_id
+
+    base_query
+    |> Bordo.Repo.all()
   end
 
   @doc """
-  Gets a single image.
+  Gets a single media.
 
-  Raises `Ecto.NoResultsError` if the Image does not exist.
+  Raises `Ecto.NoResultsError` if the Media does not exist.
 
   ## Examples
 
-      iex> get_image!(123)
-      %Image{}
+      iex> get_media!(123)
+      %Media{}
 
-      iex> get_image!(456)
+      iex> get_media!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_image!(id), do: Repo.get!(Image, id)
+  def get_media!(id), do: Repo.get!(Media, id)
 
   @doc """
-  Creates a image.
+  Creates a media.
 
   ## Examples
 
-      iex> create_image(%{field: value})
-      {:ok, %Image{}}
+      iex> create_media(%{field: value})
+      {:ok, %Media{}}
 
-      iex> create_image(%{field: bad_value})
+      iex> create_media(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_image(attrs \\ %{}) do
-    %Image{}
-    |> Image.changeset(attrs)
+  def create_media(attrs \\ %{}) do
+    %Media{}
+    |> Media.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a image.
+  Updates a media.
 
   ## Examples
 
-      iex> update_image(image, %{field: new_value})
-      {:ok, %Image{}}
+      iex> update_media(media, %{field: new_value})
+      {:ok, %Media{}}
 
-      iex> update_image(image, %{field: bad_value})
+      iex> update_media(media, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_image(%Image{} = image, attrs) do
-    image
-    |> Image.changeset(attrs)
+  def update_media(%Media{} = media, attrs) do
+    media
+    |> Media.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a image.
+  Deletes a media.
 
   ## Examples
 
-      iex> delete_image(image)
-      {:ok, %Image{}}
+      iex> delete_media(media)
+      {:ok, %Media{}}
 
-      iex> delete_image(image)
+      iex> delete_media(media)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_image(%Image{} = image) do
-    Repo.delete(image)
+  def delete_media(%Media{} = media) do
+    Repo.delete(media)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking image changes.
+  Returns an `%Ecto.Changeset{}` for tracking media changes.
 
   ## Examples
 
-      iex> change_image(image)
-      %Ecto.Changeset{source: %Image{}}
+      iex> change_media(media)
+      %Ecto.Changeset{source: %Media{}}
 
   """
-  def change_image(%Image{} = image) do
-    Image.changeset(image, %{})
+  def change_media(%Media{} = media) do
+    Media.changeset(media, %{})
   end
 end

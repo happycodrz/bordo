@@ -50,14 +50,6 @@ config :bordo, Auth.Guardian,
   verify_issuer: false,
   secret_key: System.get_env("AUTH0_SIGNING_SECRET")
 
-config :bordo, :aws, bucket_name: System.get_env("AWS_BUCKET")
-
-config :ex_aws,
-  json_codec: Jason,
-  region: {:system, "AWS_REGION"},
-  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
-  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
-
 config :cloudex,
   api_key: System.get_env("CLOUDINARY_API_KEY"),
   secret: System.get_env("CLOUDINARY_API_SECRET"),

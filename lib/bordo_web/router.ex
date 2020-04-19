@@ -22,7 +22,8 @@ defmodule BordoWeb.Router do
     pipe_through :private
 
     resources "/brands", BrandController do
-      resources "/channels", Brands.ChannelController
+      resources "/channels", Brands.ChannelController, except: [:update]
+      resources "/media", Brands.MediaController
       resources "/posts", Brands.PostController
       resources "/users", Brands.UserController
     end
@@ -36,14 +37,9 @@ defmodule BordoWeb.Router do
       get "/twitter/callback", Providers.TwitterController, :callback
     end
 
-    resources "/images", ImageController
     get "/profile", ProfileController, :show
     resources "/teams", TeamController
     resources "/users", UserController
     resources "/user-brands", BrandUserController, only: [:create]
-
-    scope "/uploads", Uploads do
-      resources "/aws", AwsController, only: [:create]
-    end
   end
 end
