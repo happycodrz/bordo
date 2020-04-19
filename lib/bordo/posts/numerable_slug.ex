@@ -6,20 +6,27 @@ defmodule EctoSlugs.Bordo.Posts.NumberableSlug do
   alias Bordo.Repo
   alias Bordo.Posts.Post
 
-  # @behaviour EctoSlugs.Bordo.Posts.TitleSlug.Type
-  def cast, do: 1
-
   def get_sources(changeset, _opts) do
-    # # This function is used to get sources to build slug from:
-    brand_id = changeset.changes.brand_id
+    # This function is used to get sources to build slug from:
+    changeset
+    |> get_brand_id
+    |> get_last_post
+    |> maybe_increment_slug
+  end
 
-    last_post =
-      Repo.one(from p in Post, where: p.brand_id == ^brand_id, order_by: [desc: p.slug], limit: 1)
+  defp get_brand_id(changeset) do
+    changeset.changes.brand_id
+  end
 
-    if is_nil(last_post) do
+  defp get_last_post(brand_id) do
+    Repo.one(from p in Post, where: p.brand_id == ^brand_id, order_by: [desc: p.slug], limit: 1)
+  end
+
+  defp maybe_increment_slug(post) do
+    if is_nil(post) do
       ["1"]
     else
-      [Integer.to_string(last_post.slug + 1)]
+      [Integer.to_string(post.slug + 1)]
     end
   end
 end
