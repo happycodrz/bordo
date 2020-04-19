@@ -19,9 +19,21 @@ defmodule Bordo.PostsTest do
       post
     end
 
-    test "list_posts/0 returns all posts" do
-      post = post_fixture()
-      assert Posts.list_posts() == [post]
+    setup do
+      {:ok, user} = Bordo.Users.create_user(%{email: "xx", auth0_id: "1234"})
+
+      {:ok, brand} =
+        Bordo.Brands.create_brand(%{name: "test brand", owner_id: user.id, slug: "test-brand"})
+
+      {:ok, brand: brand, user: user}
+    end
+
+    test "list_posts_for_brand/2 returns posts for brand", %{brand: brand, user: user} do
+      post = post_fixture(%{brand_id: brand.id, user_id: user.id})
+      config = Bordo.Posts.filter_options(:brand_index)
+      {:ok, filters} = Filtrex.parse_params(config, %{})
+
+      assert Posts.list_posts_for_brand(brand.slug, filters) == [post]
     end
 
     test "get_post!/1 returns the post with given id" do

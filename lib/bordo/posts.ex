@@ -18,20 +18,6 @@ defmodule Bordo.Posts do
   end
 
   @doc """
-  Returns the list of posts.
-
-  ## Examples
-
-      iex> list_posts()
-      [%Post{}, ...]
-
-  """
-  def list_posts(brand_id) do
-    from(p in Post, where: p.brand_id == ^brand_id)
-    |> Repo.all()
-  end
-
-  @doc """
   Returns the list of posts by brand slug.
 
   ## Examples
