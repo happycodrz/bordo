@@ -23,20 +23,20 @@ defmodule Bordo.Channels do
   end
 
   @doc """
-  Returns the list of channels by brand-slug.
+  Returns the list of channels by brand.
 
   ## Examples
 
-      iex> list_channels_by_brand_slug(brand_slug)
+      iex> list_channels(brand_id: brand_id)
       [%Channel{}, ...]
 
   """
-  def list_channels_by_brand_slug(brand_slug) do
+  def list_channels(brand_id: brand_id) do
     query =
       from c in Channel,
         left_join: b in Brand,
         on: b.id == c.brand_id,
-        where: b.slug == ^brand_slug
+        where: b.id == ^brand_id
 
     Repo.all(query)
   end

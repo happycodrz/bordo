@@ -18,20 +18,20 @@ defmodule Bordo.Posts do
   end
 
   @doc """
-  Returns the list of posts by brand slug.
+  Returns the list of posts by brand.
 
   ## Examples
 
-      iex> list_posts_for_brand(slug)
+      iex> list_posts(slug)
       [%User{}, ...]
 
   """
-  def list_posts_for_brand(slug, filter) do
+  def list_posts(brand_id, filter) do
     base_query =
       from p in Post,
         left_join: b in Brand,
         on: b.id == p.brand_id,
-        where: b.slug == ^slug
+        where: b.id == ^brand_id
 
     Filtrex.query(base_query, filter)
     |> Bordo.Repo.all()
@@ -54,12 +54,12 @@ defmodule Bordo.Posts do
   """
   def get_post!(id), do: Repo.get!(Post, id)
 
-  def get_brand_post_by_slug!(brand_slug, slug) do
+  def get_brand_post!(id, brand_id) do
     query =
       from p in Post,
         left_join: b in Brand,
         on: b.id == p.brand_id,
-        where: b.slug == ^brand_slug and p.slug == ^slug
+        where: b.id == ^brand_id and p.id == ^id
 
     Repo.one!(query) |> Repo.preload(:post_variants)
   end

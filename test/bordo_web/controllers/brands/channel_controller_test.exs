@@ -46,7 +46,7 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.brand_channel_path(conn, :show, brand.slug, id))
+      conn = get(conn, Routes.brand_channel_path(conn, :show, brand, id))
 
       assert %{
                "id" => id,
@@ -58,39 +58,6 @@ defmodule BordoWeb.Brands.ChannelControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn, brand: brand} do
       conn = post(conn, Routes.brand_channel_path(conn, :create, brand), channel: @invalid_attrs)
-
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "update channel" do
-    setup [:create_channel]
-
-    test "renders channel when data is valid", %{
-      conn: conn,
-      channel: %Channel{id: id} = channel,
-      brand: brand
-    } do
-      conn =
-        put(conn, Routes.brand_channel_path(conn, :update, brand, channel), channel: @update_attrs)
-
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-      conn = get(conn, Routes.brand_channel_path(conn, :show, brand, id))
-
-      assert %{
-               "id" => id,
-               "token" => "some updated token",
-               "network" => "twitter",
-               "token_secret" => "some updated token_secret"
-             } = json_response(conn, 200)["data"]
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, channel: channel, brand: brand} do
-      conn =
-        put(conn, Routes.brand_channel_path(conn, :update, brand, channel),
-          channel: @invalid_attrs
-        )
 
       assert json_response(conn, 422)["errors"] != %{}
     end

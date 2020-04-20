@@ -6,14 +6,13 @@ defmodule BordoWeb.Brands.ChannelController do
 
   action_fallback BordoWeb.FallbackController
 
-  def index(conn, %{"brand_id" => brand_slug}) do
-    channels = Channels.list_channels_by_brand_slug(brand_slug)
+  def index(conn, %{"brand_id" => brand_id}) do
+    channels = Channels.list_channels(brand_id: brand_id)
     render(conn, "index.json", channels: channels)
   end
 
   def create(conn, %{"channel" => channel_params, "brand_id" => brand_id}) do
-    brand = Bordo.Brands.get_brand!(brand_id)
-    channel_params = Map.merge(channel_params, %{"brand_id" => brand.id})
+    channel_params = Map.merge(channel_params, %{"brand_id" => brand_id})
 
     with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do
       conn

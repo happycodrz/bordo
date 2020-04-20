@@ -32,7 +32,7 @@ defmodule BordoWeb.Brands.PostControllerTest do
 
   describe "index" do
     test "lists all posts", %{conn: conn, brand: brand} do
-      conn = get(conn, Routes.brand_post_path(conn, :index, brand.slug))
+      conn = get(conn, Routes.brand_post_path(conn, :index, brand))
 
       assert json_response(conn, 200)["data"] == []
     end
@@ -47,7 +47,7 @@ defmodule BordoWeb.Brands.PostControllerTest do
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.brand_post_path(conn, :show, brand.slug, id))
+      conn = get(conn, Routes.brand_post_path(conn, :show, brand, id))
 
       assert %{
                "id" => id,
