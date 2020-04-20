@@ -1,5 +1,6 @@
 defmodule BordoWeb.Router do
   use BordoWeb, :router
+  import Bordo.Brands.Pipeline, only: [brand_resource: 2]
 
   pipeline :public do
     plug :accepts, ["json"]
@@ -12,6 +13,10 @@ defmodule BordoWeb.Router do
     plug Auth.Guardian.Pipeline
   end
 
+  pipeline :brands do
+    plug :brand_resource
+  end
+
   scope "/auth", BordoWeb do
     pipe_through :public
 
@@ -22,6 +27,8 @@ defmodule BordoWeb.Router do
     pipe_through :private
 
     resources "/brands", BrandController do
+      pipe_through :brands
+
       resources "/channels", Brands.ChannelController, except: [:update]
       resources "/media", Brands.MediaController
       resources "/posts", Brands.PostController
