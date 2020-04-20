@@ -20,7 +20,8 @@ defmodule BordoWeb.Brands.MediaView do
       bytes: media.bytes,
       width: media.width,
       height: media.height,
-      resource_type: media.resource_type
+      resource_type: media.resource_type,
+      inserted_at: media.inserted_at
     }
   end
 end
