@@ -46,7 +46,6 @@ defmodule BordoWeb.Router do
 
     get "/profile", ProfileController, :show
     resources "/teams", TeamController
-    resources "/users", UserController
     resources "/user-brands", BrandUserController, only: [:create]
   end
 end
