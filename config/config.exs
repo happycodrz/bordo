@@ -61,7 +61,7 @@ config :bordo, Oban,
   queues: [default: 10, events: 50, media: 20]
 
 config :appsignal, :config,
-  active: true,
+  active: Mix.env() == "prod",
   name: "Bordo",
   push_api_key: System.get_env("APPSIGNAL_PUSH_API_KEY"),
   env: Mix.env()
