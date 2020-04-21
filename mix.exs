@@ -40,6 +40,7 @@ defmodule Bordo.MixProject do
       {:ecto_autoslug_field, "~> 2.0"},
       {:ecto_sql, "~> 3.4"},
       {:extwitter, "~> 0.12.0"},
+      {:faker, "~> 0.13", only: :test},
       {:filtrex, "~> 0.4.3"},
       {:gettext, "~> 0.11"},
       {:guardian, "~> 2.1.1"},
