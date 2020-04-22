@@ -11,6 +11,15 @@ defmodule BordoWeb.PostVariantView do
   end
 
   def render("post_variant.json", %{post_variant: post_variant}) do
-    %{id: post_variant.id, content: post_variant.content, status: post_variant.status}
+    data = %{
+      id: post_variant.id,
+      content: post_variant.content,
+      status: post_variant.status,
+      external_id: post_variant.external_id
+    }
+
+    if Ecto.assoc_loaded?(post_variant.channel) do
+      Enum.into(data, %{channel_name: post_variant.channel.network})
+    end
   end
 end

@@ -35,7 +35,7 @@ defmodule Bordo.Posts do
 
     Filtrex.query(base_query, filter)
     |> Bordo.Repo.all()
-    |> Bordo.Repo.preload(:post_variants)
+    |> Bordo.Repo.preload(post_variants: :channel)
   end
 
   @doc """
@@ -52,7 +52,7 @@ defmodule Bordo.Posts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id), do: Repo.get!(Post, id) |> Repo.preload(:post_variants)
 
   def get_brand_post!(id, brand_id) do
     query =
@@ -61,7 +61,7 @@ defmodule Bordo.Posts do
         on: b.id == p.brand_id,
         where: b.id == ^brand_id and p.id == ^id
 
-    Repo.one!(query) |> Repo.preload(:post_variants)
+    Repo.one!(query) |> Repo.preload(post_variants: :channel)
   end
 
   @doc """
