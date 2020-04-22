@@ -10,32 +10,24 @@ defmodule Bordo.PostVariantsTest do
     @update_attrs %{content: "updated post content"}
     @invalid_attrs %{status: "invalid status"}
 
-    def post_variant_fixture(attrs \\ %{}) do
-      {:ok, post_variant} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> PostVariants.create_post_variant()
+    def post_variant_fixture() do
+      brand = fixture(:brand)
+      channel = fixture(:channel, brand: brand)
+
+      post_variant =
+        fixture(:post,
+          brand: brand,
+          post_variants: [
+            %{
+              content: "post content",
+              channel_id: channel.id
+            }
+          ]
+        )
+        |> Map.get(:post_variants)
+        |> Enum.at(0)
 
       post_variant
-    end
-
-    test "list_post_variants/0 returns all post_variants" do
-      post_variant = post_variant_fixture()
-      assert PostVariants.list_post_variants() == [post_variant]
-    end
-
-    test "get_post_variant!/1 returns the post_variant with given id" do
-      post_variant = post_variant_fixture()
-      assert PostVariants.get_post_variant!(post_variant.id) == post_variant
-    end
-
-    test "create_post_variant/1 with valid data creates a post_variant" do
-      assert {:ok, %PostVariant{} = post_variant} = PostVariants.create_post_variant(@valid_attrs)
-      assert post_variant.content == "post content"
-    end
-
-    test "create_post_variant/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = PostVariants.create_post_variant(@invalid_attrs)
     end
 
     test "update_post_variant/2 with valid data updates the post_variant" do
@@ -60,11 +52,6 @@ defmodule Bordo.PostVariantsTest do
       post_variant = post_variant_fixture()
       assert {:ok, %PostVariant{}} = PostVariants.delete_post_variant(post_variant)
       assert_raise Ecto.NoResultsError, fn -> PostVariants.get_post_variant!(post_variant.id) end
-    end
-
-    test "change_post_variant/1 returns a post_variant changeset" do
-      post_variant = post_variant_fixture()
-      assert %Ecto.Changeset{} = PostVariants.change_post_variant(post_variant)
     end
   end
 end

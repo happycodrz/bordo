@@ -27,6 +27,7 @@ defmodule BordoWeb.ConnCase do
       @endpoint BordoWeb.Endpoint
 
       import BordoWeb.GuardianSupport
+      import Bordo.Fixtures
     end
   end
 

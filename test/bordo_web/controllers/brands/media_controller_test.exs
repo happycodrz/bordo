@@ -15,13 +15,13 @@ defmodule BordoWeb.MediaControllerTest do
   }
   @invalid_attrs %{}
 
-  def fixture(:media, params) do
+  def cfixture(:media, params) do
     {:ok, media} = MediaResource.create_media(@create_attrs |> Map.merge(params))
     media
   end
 
   setup %{conn: conn} do
-    {:ok, user} = Bordo.Users.create_user(%{email: "xx", auth0_id: "1234"})
+    user = fixture(:user)
 
     {:ok, brand} =
       Bordo.Brands.create_brand(%{name: "test brand", owner_id: user.id, slug: "test-brand"})
@@ -75,7 +75,7 @@ defmodule BordoWeb.MediaControllerTest do
   end
 
   defp create_media(%{brand: brand}) do
-    media = fixture(:media, %{brand_id: brand.id})
+    media = cfixture(:media, %{brand_id: brand.id})
     {:ok, media: media}
   end
 end

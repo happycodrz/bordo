@@ -17,5 +17,6 @@ defmodule Bordo.Users.User do
     user
     |> cast(attrs, [:email, :auth0_id, :team_id])
     |> validate_required([:email])
+    |> unique_constraint(:email)
   end
 end

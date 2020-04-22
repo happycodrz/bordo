@@ -1,76 +1,82 @@
 defmodule Bordo.MediaTest do
   use Bordo.DataCase
 
-  alias Bordo.Media
+  alias Bordo.Media, as: MediaResource
 
-  describe "images" do
-    alias Bordo.Media.Image
+  describe "media" do
+    alias Bordo.Media.Media
 
     @valid_attrs %{
-      name: "some name",
-      s3_object_name: "some s3_object_name",
-      s3_path: "some s3_path"
+      title: "some title",
+      public_id: Ecto.UUID.generate(),
+      url: "http://bor.do/media/123.png",
+      thumbnail_url: "http://bor.do/media/123.png",
+      bytes: 1024,
+      width: 7,
+      height: 7,
+      resource_type: "image"
     }
     @update_attrs %{
-      name: "some updated name",
-      s3_object_name: "some updated s3_object_name",
-      s3_path: "some updated s3_path"
+      title: "some updated name"
     }
-    @invalid_attrs %{name: nil, s3_object_name: nil, s3_path: nil}
+    @invalid_attrs %{public_id: nil}
 
-    def image_fixture(attrs \\ %{}) do
-      {:ok, image} =
+    def media_fixture(attrs \\ %{}) do
+      brand = fixture(:brand)
+
+      {:ok, media} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Media.create_image()
+        |> Enum.into(%{brand_id: brand.id})
+        |> MediaResource.create_media()
 
-      image
+      media
     end
 
-    test "list_images/0 returns all images" do
-      image = image_fixture()
-      assert Media.list_images() == [image]
+    test "list_media/0 returns all media" do
+      media = media_fixture()
+      assert MediaResource.list_media() == [media]
     end
 
-    test "get_image!/1 returns the image with given id" do
-      image = image_fixture()
-      assert Media.get_image!(image.id) == image
+    test "get_media!/1 returns the media with given id" do
+      media = media_fixture()
+      assert MediaResource.get_media!(media.id) == media
     end
 
-    test "create_image/1 with valid data creates a image" do
-      assert {:ok, %Image{} = image} = Media.create_image(@valid_attrs)
-      assert image.name == "some name"
-      assert image.s3_object_name == "some s3_object_name"
-      assert image.s3_path == "some s3_path"
+    test "create_media/1 with valid data creates a media" do
+      brand = fixture(:brand)
+
+      assert {:ok, %Media{} = media} =
+               MediaResource.create_media(@valid_attrs |> Enum.into(%{brand_id: brand.id}))
+
+      assert media.title == "some title"
     end
 
-    test "create_image/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Media.create_image(@invalid_attrs)
+    test "create_media/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = MediaResource.create_media(@invalid_attrs)
     end
 
-    test "update_image/2 with valid data updates the image" do
-      image = image_fixture()
-      assert {:ok, %Image{} = image} = Media.update_image(image, @update_attrs)
-      assert image.name == "some updated name"
-      assert image.s3_object_name == "some updated s3_object_name"
-      assert image.s3_path == "some updated s3_path"
+    test "update_media/2 with valid data updates the media" do
+      media = media_fixture()
+      assert {:ok, %Media{} = media} = MediaResource.update_media(media, @update_attrs)
+      assert media.title == "some updated name"
     end
 
-    test "update_image/2 with invalid data returns error changeset" do
-      image = image_fixture()
-      assert {:error, %Ecto.Changeset{}} = Media.update_image(image, @invalid_attrs)
-      assert image == Media.get_image!(image.id)
+    test "update_media/2 with invalid data returns error changeset" do
+      media = media_fixture()
+      assert {:error, %Ecto.Changeset{}} = MediaResource.update_media(media, @invalid_attrs)
+      assert media == MediaResource.get_media!(media.id)
     end
 
-    test "delete_image/1 deletes the image" do
-      image = image_fixture()
-      assert {:ok, %Image{}} = Media.delete_image(image)
-      assert_raise Ecto.NoResultsError, fn -> Media.get_image!(image.id) end
+    test "delete_media/1 deletes the media" do
+      media = media_fixture()
+      assert {:ok, %Media{}} = MediaResource.delete_media(media)
+      assert_raise Ecto.NoResultsError, fn -> MediaResource.get_media!(media.id) end
     end
 
-    test "change_image/1 returns a image changeset" do
-      image = image_fixture()
-      assert %Ecto.Changeset{} = Media.change_image(image)
+    test "change_media/1 returns a media changeset" do
+      media = media_fixture()
+      assert %Ecto.Changeset{} = MediaResource.change_media(media)
     end
   end
 end

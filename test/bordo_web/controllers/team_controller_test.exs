@@ -1,7 +1,6 @@
 defmodule BordoWeb.TeamControllerTest do
   use BordoWeb.ConnCase
 
-  alias Bordo.Teams
   alias Bordo.Teams.Team
   alias Bordo.Users
 
@@ -12,17 +11,6 @@ defmodule BordoWeb.TeamControllerTest do
     name: "some updated name"
   }
   @invalid_attrs %{name: nil}
-
-  def fixture(:team) do
-    user = fixture(:user)
-    {:ok, team} = Teams.create_team(@create_attrs |> Map.put(:owner_id, user.id))
-    team
-  end
-
-  def fixture(:user) do
-    {:ok, user} = Users.create_user(%{email: "xx", auth0_id: "1234"})
-    user
-  end
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}

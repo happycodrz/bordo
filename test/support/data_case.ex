@@ -1,3 +1,9 @@
+defmodule Bordo.DataHelper do
+  def rand_id do
+    8 |> :crypto.strong_rand_bytes() |> Base.url_encode64(padding: false)
+  end
+end
+
 defmodule Bordo.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
@@ -24,6 +30,8 @@ defmodule Bordo.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Bordo.DataCase
+      import Bordo.DataHelper
+      import Bordo.Fixtures
     end
   end
 

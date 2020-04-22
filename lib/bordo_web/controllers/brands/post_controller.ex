@@ -43,8 +43,8 @@ defmodule BordoWeb.Brands.PostController do
     render(conn, "show.json", post: post)
   end
 
-  def update(conn, %{"id" => id, "post" => post_params}) do
-    post = Posts.get_post!(id)
+  def update(conn, %{"id" => id, "post" => post_params, "brand_id" => brand_id}) do
+    post = Posts.get_brand_post!(id, brand_id)
 
     with {:ok, %Post{} = post} <- Posts.update_post(post, post_params) do
       render(conn, "show.json", post: post)

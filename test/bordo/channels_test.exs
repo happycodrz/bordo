@@ -8,20 +8,22 @@ defmodule Bordo.ChannelsTest do
 
     @valid_attrs %{
       token: "some token",
-      network: "some network",
+      network: "twitter",
       token_secret: "some token_secret"
     }
     @update_attrs %{
       token: "some updated token",
-      network: "some updated network",
       token_secret: "some updated token_secret"
     }
     @invalid_attrs %{token: nil, network: nil, token_secret: nil}
 
     def channel_fixture(attrs \\ %{}) do
+      brand = fixture(:brand)
+
       {:ok, channel} =
         attrs
         |> Enum.into(@valid_attrs)
+        |> Enum.into(%{brand_id: brand.id})
         |> Channels.create_channel()
 
       channel
@@ -38,9 +40,12 @@ defmodule Bordo.ChannelsTest do
     end
 
     test "create_channel/1 with valid data creates a channel" do
-      assert {:ok, %Channel{} = channel} = Channels.create_channel(@valid_attrs)
+      brand = fixture(:brand)
+
+      assert {:ok, %Channel{} = channel} =
+               Channels.create_channel(@valid_attrs |> Enum.into(%{brand_id: brand.id}))
+
       assert channel.token == "some token"
-      assert channel.network == "some network"
       assert channel.token_secret == "some token_secret"
     end
 
@@ -52,7 +57,6 @@ defmodule Bordo.ChannelsTest do
       channel = channel_fixture()
       assert {:ok, %Channel{} = channel} = Channels.update_channel(channel, @update_attrs)
       assert channel.token == "some updated token"
-      assert channel.network == "some updated network"
       assert channel.token_secret == "some updated token_secret"
     end
 
