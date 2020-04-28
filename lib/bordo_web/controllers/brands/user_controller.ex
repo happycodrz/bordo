@@ -5,8 +5,8 @@ defmodule BordoWeb.Brands.UserController do
 
   action_fallback BordoWeb.FallbackController
 
-  def index(conn, %{"brand_id" => slug}) do
-    users = Users.list_users_for_brand(slug)
+  def index(conn, %{"brand_id" => brand_id}) do
+    users = Users.list_users_for_brand(brand_id)
     render(conn, "index.json", users: users)
   end
 

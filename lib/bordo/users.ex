@@ -31,7 +31,7 @@ defmodule Bordo.Users do
       [%User{}, ...]
 
   """
-  def list_users_for_brand(slug) do
+  def list_users_for_brand(brand_id) do
     query =
       from u in User,
         left_join: ub in BrandUser,
@@ -39,7 +39,7 @@ defmodule Bordo.Users do
         left_join: b in Brand,
         on: b.id == ub.brand_id,
         distinct: u.id,
-        where: b.slug == ^slug
+        where: b.id == ^brand_id
 
     Repo.all(query)
   end
