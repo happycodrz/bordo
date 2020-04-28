@@ -15,11 +15,20 @@ defmodule BordoWeb.PostVariantView do
       id: post_variant.id,
       content: post_variant.content,
       status: post_variant.status,
-      external_id: post_variant.external_id
+      external_id: post_variant.external_id,
+      media:
+        render_many(
+          post_variant.media,
+          BordoWeb.Brands.MediaView,
+          "media.json",
+          as: :media
+        )
     }
 
     if Ecto.assoc_loaded?(post_variant.channel) do
       Enum.into(data, %{channel_name: post_variant.channel.network})
     end
+
+    data
   end
 end

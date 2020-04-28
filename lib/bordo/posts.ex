@@ -35,7 +35,7 @@ defmodule Bordo.Posts do
 
     Filtrex.query(base_query, filter)
     |> Bordo.Repo.all()
-    |> Bordo.Repo.preload(post_variants: :channel)
+    |> Bordo.Repo.preload(post_variants: [:channel, :media])
   end
 
   @doc """
@@ -52,7 +52,7 @@ defmodule Bordo.Posts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id) |> Repo.preload(:post_variants)
+  def get_post!(id), do: Repo.get!(Post, id) |> Repo.preload(post_variants: [:media])
 
   def get_brand_post!(id, brand_id) do
     query =
@@ -78,7 +78,8 @@ defmodule Bordo.Posts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_scheduled_post!(id), do: Repo.get!(Post |> preload(post_variants: [:channel]), id)
+  def get_scheduled_post!(id),
+    do: Repo.get!(Post |> preload(post_variants: [:channel, :media]), id)
 
   @doc """
   Creates a post.
@@ -93,10 +94,15 @@ defmodule Bordo.Posts do
 
   """
   def create_post(attrs \\ %{}) do
-    %Post{}
-    |> Repo.preload(:post_variants)
-    |> Post.create_changeset(attrs)
-    |> Repo.insert()
+    {:ok, post} =
+      %Post{}
+      |> Repo.preload(post_variants: [:post_variant_media])
+      |> Post.create_changeset(attrs)
+      |> Repo.insert()
+
+    # Need to insert and then get the post so media will be preloaded
+    # maybe this can be done in one swoop, but I'm not sure how right now
+    {:ok, get_post!(post.id)}
   end
 
   def create_and_schedule_post(attrs \\ %{}) do
