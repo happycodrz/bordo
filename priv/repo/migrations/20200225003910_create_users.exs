@@ -8,6 +8,7 @@ defmodule Bordo.Repo.Migrations.CreateUsers do
       add :auth0_id, :string
       add :first_name, :string
       add :last_name, :string
+      add :image_url, :string
 
       timestamps()
     end

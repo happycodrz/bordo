@@ -6,6 +6,7 @@ defmodule Bordo.Repo.Migrations.CreateBrands do
       add :id, :binary_id, primary_key: true
       add :slug, :string, null: false, unique: true
       add :name, :string, null: false
+      add :image_url, :string
 
       add :owner_id, references(:users, column: :id, type: :uuid, on_delete: :nothing),
         null: false

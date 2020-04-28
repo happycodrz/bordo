@@ -7,6 +7,8 @@ defmodule Bordo.Brands.Brand do
   schema "brands" do
     field :name, :string
     field :slug, TitleSlug.Type
+    field :image_url
+
     belongs_to(:owner, Bordo.Users.User)
     has_many(:team_brands, Bordo.Brands.BrandTeam)
 
@@ -16,7 +18,7 @@ defmodule Bordo.Brands.Brand do
   @doc false
   def changeset(brand, attrs) do
     brand
-    |> cast(attrs, [:name, :owner_id])
+    |> cast(attrs, [:name, :owner_id, :image_url])
     |> foreign_key_constraint(:owner_id)
     |> validate_required([:name, :owner_id])
     |> unique_constraint(:name)
