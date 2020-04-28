@@ -1,4 +1,5 @@
 defmodule Bordo.Providers.Twitter do
+  require Logger
   alias ExTwitter.Model.Tweet
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
@@ -23,7 +24,11 @@ defmodule Bordo.Providers.Twitter do
       access_token_secret: channel.token_secret
     )
 
-    ExTwitter.update(status)
+    if Mix.env() == "prod" do
+      ExTwitter.update(status)
+    else
+      Logger.info("TWEET CREATED")
+    end
   end
 
   def destroy_tweet(tweet_id) do
