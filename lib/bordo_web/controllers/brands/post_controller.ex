@@ -24,8 +24,7 @@ defmodule BordoWeb.Brands.PostController do
   end
 
   def create(conn, %{"post" => post_params, "brand_id" => brand_id}) do
-    brand = Bordo.Brands.get_brand!(brand_id)
-    post_params = post_params |> Map.merge(%{"user_id" => user_id(conn), "brand_id" => brand.id})
+    post_params = post_params |> Map.merge(%{"user_id" => user_id(conn), "brand_id" => brand_id})
 
     with {:ok, %Post{} = post} <- Posts.create_and_schedule_post(post_params) do
       conn
