@@ -21,7 +21,7 @@ defmodule Bordo.Providers.Linkedin do
   defp create_share(channel, content, media, urn) do
     {:ok, body} = build_body(content, media, urn)
 
-    if Mix.env() == "prod" do
+    if Mix.env() == :prod do
       HTTPoison.post!(
         "https://api.linkedin.com/v2/shares",
         body,

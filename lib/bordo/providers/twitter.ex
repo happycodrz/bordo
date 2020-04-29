@@ -24,7 +24,7 @@ defmodule Bordo.Providers.Twitter do
       access_token_secret: channel.token_secret
     )
 
-    if Mix.env() == "prod" do
+    if Mix.env() == :prod do
       if length(media) > 0 do
         media = Enum.at(media, 0)
         file_name = media.url |> String.split("/") |> Enum.at(-1)
