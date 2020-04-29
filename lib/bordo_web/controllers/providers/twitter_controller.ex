@@ -79,7 +79,6 @@ defmodule BordoWeb.Providers.TwitterController do
     tokens
     |> Map.get(:oauth_token)
     |> ExTwitter.authenticate_url()
-    |> IO.inspect()
   end
 
   defp build_channel_params(access_token, brand_id) do
