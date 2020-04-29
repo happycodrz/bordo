@@ -4,8 +4,8 @@ defmodule Bordo.Providers.Twitter do
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
 
-  def handle_event(%PostVariant{channel: channel, content: content} = post_variant) do
-    with %Tweet{id: id} <- create_tweet(channel, content) do
+  def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
+    with %Tweet{id: id} <- create_tweet(channel, content, media) do
       string_id = Integer.to_string(id)
 
       post_variant
@@ -16,7 +16,7 @@ defmodule Bordo.Providers.Twitter do
     end
   end
 
-  def create_tweet(channel, status) do
+  def create_tweet(channel, status, media) do
     ExTwitter.configure(:process,
       consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
       consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
@@ -25,7 +25,17 @@ defmodule Bordo.Providers.Twitter do
     )
 
     if Mix.env() == "prod" do
-      ExTwitter.update(status)
+      if length(media) > 0 do
+        media = Enum.at(media, 0)
+        file_name = media.url |> String.split("/") |> Enum.at(-1)
+        %HTTPoison.Response{body: body} = HTTPoison.get!(media.url)
+        File.write!("/tmp/" <> file_name, body)
+
+        image = File.read!("/tmp/" <> file_name)
+        ExTwitter.update_with_media(status, image)
+      else
+        ExTwitter.update(status)
+      end
     else
       Logger.info("TWEET CREATED")
     end
