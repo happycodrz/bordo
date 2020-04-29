@@ -17,7 +17,7 @@ defmodule Bordo.PostVariants do
       iex> get_post_variant!(456)
       ** (Ecto.NoResultsError)
   """
-  def get_post_variant!(id), do: Repo.get!(PostVariant, id)
+  def get_post_variant!(id), do: Repo.get!(PostVariant, id) |> Repo.preload(:media)
 
   @doc """
   Updates a post_variant.
@@ -33,6 +33,7 @@ defmodule Bordo.PostVariants do
   """
   def update_post_variant(%PostVariant{} = post_variant, attrs) do
     post_variant
+    |> Repo.preload(:media)
     |> PostVariant.changeset(attrs)
     |> Repo.update()
   end
