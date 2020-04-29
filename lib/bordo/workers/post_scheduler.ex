@@ -19,7 +19,8 @@ defmodule Bordo.Workers.PostScheduler do
     Map.get(
       %{
         "slack" => Bordo.Channels.SlackBot,
-        "twitter" => Bordo.Providers.Twitter
+        "twitter" => Bordo.Providers.Twitter,
+        "linkedin" => Bordo.Providers.Linkedin
       },
       network
     )
