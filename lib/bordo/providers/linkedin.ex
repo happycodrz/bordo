@@ -1,4 +1,5 @@
 defmodule Bordo.Providers.Linkedin do
+  require Logger
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
 
@@ -20,13 +21,17 @@ defmodule Bordo.Providers.Linkedin do
   defp create_share(channel, content, media, urn) do
     {:ok, body} = build_body(content, media, urn)
 
-    HTTPoison.post!(
-      "https://api.linkedin.com/v2/shares",
-      body,
-      [{"X-Restli-Protocol-Version", "2.0.0"}, {"Authorization", "Bearer #{channel.token}"}]
-    )
-    |> Map.get(:body)
-    |> Jason.decode()
+    if Mix.env() == "prod" do
+      HTTPoison.post!(
+        "https://api.linkedin.com/v2/shares",
+        body,
+        [{"X-Restli-Protocol-Version", "2.0.0"}, {"Authorization", "Bearer #{channel.token}"}]
+      )
+      |> Map.get(:body)
+      |> Jason.decode()
+    else
+      Logger.info("LINKEDIN SHARE CREATED")
+    end
   end
 
   defp build_body(content, media, urn) do
@@ -63,8 +68,5 @@ defmodule Bordo.Providers.Linkedin do
     |> Jason.decode()
   end
 
-  defp get_profile_urn({:ok, profile}) do
-    %{"id" => id} = profile
-    "urn:li:person:" <> id
-  end
+  defp get_profile_urn({:ok, %{"id" => id}}), do: "urn:li:person:" <> id
 end
