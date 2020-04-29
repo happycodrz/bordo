@@ -94,15 +94,19 @@ defmodule Bordo.Posts do
 
   """
   def create_post(attrs \\ %{}) do
-    {:ok, post} =
-      %Post{}
-      |> Repo.preload(post_variants: [:post_variant_media])
-      |> Post.create_changeset(attrs)
-      |> Repo.insert()
-
     # Need to insert and then get the post so media will be preloaded
     # maybe this can be done in one swoop, but I'm not sure how right now
-    {:ok, get_post!(post.id)}
+
+    with {:ok, post} <-
+           %Post{}
+           |> Repo.preload(post_variants: [:post_variant_media])
+           |> Post.create_changeset(attrs)
+           |> Repo.insert() do
+      {:ok, get_post!(post.id)}
+    else
+      changeset ->
+        changeset
+    end
   end
 
   def create_and_schedule_post(attrs \\ %{}) do
