@@ -66,6 +66,16 @@ config :appsignal, :config,
   push_api_key: System.get_env("APPSIGNAL_PUSH_API_KEY"),
   env: Mix.env()
 
+####
+# Integration configuration
+####
+config :facebook,
+  app_id: System.get_env("FACEBOOK_APP_ID"),
+  app_secret: System.get_env("FACEBOOK_APP_SECRET"),
+  app_access_token: System.get_env("FACEBOOK_CLIENT_TOKEN"),
+  graph_url: "https://graph.facebook.com",
+  graph_video_url: "https://graph-video.facebook.com"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
