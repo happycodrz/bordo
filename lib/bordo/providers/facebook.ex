@@ -17,14 +17,30 @@ defmodule Bordo.Providers.Facebook do
 
   def create_post(channel, content, media) do
     if Mix.env() == :prod do
-      {:ok, page_info} = Facebook.page(channel.resource_id, channel.token, ["access_token"])
+      {:ok, page_info} =
+        Facebook.page(channel.resource_id, channel.token, ["access_token"]) |> IO.inspect()
 
-      Facebook.publish(
-        :feed,
-        channel.resource_id,
-        [message: content],
-        page_info["access_token"]
-      )
+      if length(media) > 0 do
+        media = Enum.at(media, 0)
+        file_name = media.url |> String.split("/") |> Enum.at(-1)
+        %HTTPoison.Response{body: body} = HTTPoison.get!(media.url)
+        File.write!("/tmp/" <> file_name, body)
+
+        Facebook.publish(
+          :photo,
+          channel.resource_id,
+          "/tmp/" <> file_name,
+          [],
+          page_info["access_token"]
+        )
+      else
+        Facebook.publish(
+          :feed,
+          channel.resource_id,
+          [message: content],
+          page_info["access_token"]
+        )
+      end
     else
       Logger.info("FACEBOOK POST CREATED")
     end
