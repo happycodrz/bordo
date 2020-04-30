@@ -20,7 +20,8 @@ defmodule Bordo.Workers.PostScheduler do
       %{
         "slack" => Bordo.Channels.SlackBot,
         "twitter" => Bordo.Providers.Twitter,
-        "linkedin" => Bordo.Providers.Linkedin
+        "linkedin" => Bordo.Providers.Linkedin,
+        "facebook" => Bordo.Providers.Facebook
       },
       network
     )
