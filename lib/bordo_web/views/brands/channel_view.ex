@@ -15,7 +15,8 @@ defmodule BordoWeb.Brands.ChannelView do
       id: channel.id,
       token: channel.token,
       token_secret: channel.token_secret,
-      network: channel.network
+      network: channel.network,
+      resource_id: channel.resource_id
     }
   end
 end
