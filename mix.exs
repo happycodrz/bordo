@@ -55,7 +55,7 @@ defmodule Bordo.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
       {:timex, "~> 3.6.1"},
-      {:slack, "~> 0.22.0"}
+      {:slack, "~> 0.23.2"}
     ]
   end
 
