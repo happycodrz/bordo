@@ -25,10 +25,6 @@ defmodule BordoWeb.PostVariantView do
         )
     }
 
-    if Ecto.assoc_loaded?(post_variant.channel) do
-      Enum.into(data, %{channel_name: post_variant.channel.network})
-    end
-
-    data
+    Enum.into(data, %{channel_name: post_variant.channel.network})
   end
 end

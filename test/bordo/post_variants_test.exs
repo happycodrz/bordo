@@ -6,7 +6,6 @@ defmodule Bordo.PostVariantsTest do
   describe "post_variants" do
     alias Bordo.PostVariants.PostVariant
 
-    @valid_attrs %{content: "post content"}
     @update_attrs %{content: "updated post content"}
     @invalid_attrs %{status: "invalid status"}
 
@@ -45,7 +44,14 @@ defmodule Bordo.PostVariantsTest do
       assert {:error, %Ecto.Changeset{}} =
                PostVariants.update_post_variant(post_variant, @invalid_attrs)
 
-      assert post_variant == PostVariants.get_post_variant!(post_variant.id)
+      assert Map.merge(post_variant, %{
+               channel: %Ecto.Association.NotLoaded{
+                 __cardinality__: :one,
+                 __field__: :channel,
+                 __owner__: Bordo.PostVariants.PostVariant
+               }
+             }) ==
+               PostVariants.get_post_variant!(post_variant.id)
     end
 
     test "delete_post_variant/1 deletes the post_variant" do
