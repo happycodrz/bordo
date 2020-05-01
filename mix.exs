@@ -49,10 +49,10 @@ defmodule Bordo.MixProject do
       {:jason, "~> 1.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:oban, "~> 1.2.0"},
-      {:phoenix, "~> 1.4.12"},
+      {:phoenix, "~> 1.5.1"},
       {:phoenix_ecto, "~> 4.1"},
-      {:phoenix_pubsub, "~> 1.1"},
-      {:plug_cowboy, "~> 2.0"},
+      {:phoenix_pubsub, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:postgrex, ">= 0.0.0"},
       {:timex, "~> 3.6.1"},
       {:slack, "~> 0.23.2"}

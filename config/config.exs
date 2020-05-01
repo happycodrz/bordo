@@ -15,7 +15,7 @@ config :bordo, BordoWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "d6e5ngspqBijQHX/VSd2HX66Jop3fO9FIyfu7XglCVBf2moc7Zw0eDsynS9rQSFq",
   render_errors: [view: BordoWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: Bordo.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: Bordo.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
