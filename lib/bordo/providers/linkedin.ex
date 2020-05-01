@@ -1,10 +1,12 @@
 defmodule Bordo.Providers.Linkedin do
+  import Linkedin
   require Logger
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
 
   def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
-    urn = get_profile(channel) |> get_profile_urn()
+    {:ok, %{"id" => id}} = Linkedin.me(channel.token)
+    urn = "urn:li:person:" <> id
 
     with {:ok, post} <- create_share(channel, content, media, urn) do
       string_id = post["id"]
@@ -59,14 +61,4 @@ defmodule Bordo.Providers.Linkedin do
       }
     })
   end
-
-  defp get_profile(%{token: token}) do
-    HTTPoison.get!("https://api.linkedin.com/v2/me", [
-      {"Authorization", "Bearer #{token}"}
-    ])
-    |> Map.get(:body)
-    |> Jason.decode()
-  end
-
-  defp get_profile_urn({:ok, %{"id" => id}}), do: "urn:li:person:" <> id
 end
