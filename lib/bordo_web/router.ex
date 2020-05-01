@@ -1,6 +1,20 @@
 defmodule BordoWeb.Router do
   use BordoWeb, :router
+  import Phoenix.LiveDashboard.Router
+  import Plug.BasicAuth
   import Bordo.Brands.Pipeline, only: [brand_resource: 2]
+
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
+  pipeline :admins_only do
+    plug :basic_auth, username: "admin", password: "din0saur@bordo"
+  end
 
   pipeline :public do
     plug :accepts, ["json"]
@@ -15,6 +29,11 @@ defmodule BordoWeb.Router do
 
   pipeline :brands do
     plug :brand_resource
+  end
+
+  scope "/" do
+    pipe_through [:browser, :admins_only]
+    live_dashboard "/dashboard"
   end
 
   scope "/auth", BordoWeb do
