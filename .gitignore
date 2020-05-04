@@ -29,3 +29,8 @@ bordo-*.tar
 # we ignore priv/static. You may want to comment
 # this depending on your deployment strategy.
 /priv/static/
+
+# Ignore asset node_modules
+/assets/node_modules/
+
+*.DS_Store
