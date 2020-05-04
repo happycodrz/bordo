@@ -51,7 +51,10 @@ defmodule Bordo.MixProject do
       {:oban, "~> 1.2.0"},
       {:phoenix, "~> 1.5.1"},
       {:phoenix_ecto, "~> 4.1"},
+      {:phoenix_html, "2.14.2"},
+      # LiveView pulled in from dashboard
       {:phoenix_live_dashboard, "~> 0.1"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_pubsub, "~> 2.0"},
       {:plug_cowboy, "~> 2.1"},
       {:postgrex, ">= 0.0.0"},
