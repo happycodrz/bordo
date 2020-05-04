@@ -11,6 +11,11 @@ defmodule BordoWeb.TeamView do
   end
 
   def render("team.json", %{team: team}) do
-    %{id: team.id, name: team.name}
+    %{
+      id: team.id,
+      name: team.name,
+      last_paid_at: team.last_paid_at,
+      inserted_at: team.inserted_at
+    }
   end
 end
