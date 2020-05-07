@@ -25,6 +25,6 @@ defmodule BordoWeb.PostVariantView do
         )
     }
 
-    Enum.into(data, %{channel_name: post_variant.channel.network})
+    Enum.into(data, %{network: post_variant.channel.network})
   end
 end
