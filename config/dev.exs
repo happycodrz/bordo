@@ -17,7 +17,7 @@ config :bordo, Bordo.Repo,
 # with webpack to recompile .js and .css sources.
 config :bordo, BordoWeb.Endpoint,
   http: [port: 4000, protocol_options: [idle_timeout: :infinity]],
-  debug_errors: false,
+  debug_errors: true,
   code_reloader: true,
   check_origin: false,
   watchers: [
