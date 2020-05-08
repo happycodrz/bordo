@@ -4,6 +4,7 @@ defmodule Bordo.Teams.Team do
 
   schema "teams" do
     field :name, :string
+    field :last_paid_at, :naive_datetime
 
     belongs_to :owner, Bordo.Users.User
     timestamps()
