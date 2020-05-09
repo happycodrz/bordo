@@ -17,6 +17,7 @@ import 'alpinejs'
 import { Socket } from 'phoenix'
 import NProgress from 'nprogress'
 import { LiveSocket } from 'phoenix_live_view'
+const feather = require('feather-icons')
 import Choices from 'choices.js'
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content')
 let liveSocket = new LiveSocket('/live', Socket, { params: { _csrf_token: csrfToken } })
@@ -34,6 +35,7 @@ liveSocket.connect()
 window.liveSocket = liveSocket
 
 document.addEventListener('DOMContentLoaded', () => {
+  feather.replace()
   const element = document.querySelector('.js-choice')
   new Choices(element, {
     searchEnabled: true,
