@@ -8,6 +8,15 @@ defmodule Bordo.Users do
 
   alias Bordo.Brands.{Brand, BrandUser}
   alias Bordo.Users.User
+  @topic inspect(__MODULE__)
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Bordo.PubSub, @topic)
+  end
+
+  def subscribe(user_id) do
+    Phoenix.PubSub.subscribe(Bordo.PubSub, @topic <> "#{user_id}")
+  end
 
   @doc """
   Returns the list of users.
@@ -19,7 +28,7 @@ defmodule Bordo.Users do
 
   """
   def list_users do
-    Repo.all(User)
+    User |> order_by(desc: :inserted_at) |> Repo.all() |> Bordo.Repo.preload(:team)
   end
 
   @doc """
@@ -93,6 +102,7 @@ defmodule Bordo.Users do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+    |> notify_subscribers([:user, :created])
   end
 
   @doc """
@@ -142,6 +152,7 @@ defmodule Bordo.Users do
     user
     |> User.changeset(attrs)
     |> Repo.update()
+    |> notify_subscribers([:user, :updated])
   end
 
   @doc """
@@ -169,7 +180,15 @@ defmodule Bordo.Users do
       %Ecto.Changeset{source: %User{}}
 
   """
-  def change_user(%User{} = user) do
+  def change_user(user, attrs \\ %{}) do
     User.changeset(user, %{})
   end
+
+  defp notify_subscribers({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(Bordo.PubSub, @topic, {__MODULE__, event, result})
+    Phoenix.PubSub.broadcast(Bordo.PubSub, @topic <> "#{result.id}", {__MODULE__, event, result})
+    {:ok, result}
+  end
+
+  defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
 end
