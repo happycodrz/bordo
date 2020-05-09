@@ -13,7 +13,7 @@ defmodule Bordo.Teams.Team do
   @doc false
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:name, :owner_id])
+    |> cast(attrs, [:name, :owner_id, :last_paid_at])
     |> validate_required([:name, :owner_id])
   end
 end

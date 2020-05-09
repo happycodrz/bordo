@@ -62,6 +62,7 @@ defmodule Bordo.Teams do
     %Team{}
     |> Team.changeset(attrs)
     |> Repo.insert()
+    |> notify_subscribers([:team, :created])
   end
 
   @doc """
@@ -80,6 +81,7 @@ defmodule Bordo.Teams do
     team
     |> Team.changeset(attrs)
     |> Repo.update()
+    |> notify_subscribers([:team, :updated])
   end
 
   @doc """
@@ -107,7 +109,7 @@ defmodule Bordo.Teams do
       %Ecto.Changeset{source: %Team{}}
 
   """
-  def change_team(%Team{} = team) do
+  def change_team(team, attrs \\ %{}) do
     Team.changeset(team, %{})
   end
 

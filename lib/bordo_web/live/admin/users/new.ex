@@ -22,9 +22,7 @@ defmodule BordoWeb.Admin.UsersLive.New do
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    case Users.create_user(
-           Map.merge(user_params, %{"team_id" => "13c06fd4-71aa-4816-befa-f73515b571a1"})
-         ) do
+    case Users.create_user(user_params) do
       {:ok, _user} ->
         {:noreply,
          socket
