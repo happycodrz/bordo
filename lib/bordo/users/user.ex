@@ -16,7 +16,7 @@ defmodule Bordo.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :auth0_id, :team_id, :image_url])
+    |> cast(attrs, [:email, :auth0_id, :team_id, :image_url, :first_name, :last_name, :team_id])
     |> validate_required([:email])
     |> unique_constraint(:email)
   end
