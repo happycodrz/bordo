@@ -10,4 +10,12 @@ defmodule BordoWeb.Admin.UserView do
     default = "mm"
     "https://www.gravatar.com/avatar/" <> hash <> "?d=" <> default
   end
+
+  def full_name(user) do
+    try do
+      user.first_name <> " " <> user.last_name
+    after
+      "unknown"
+    end
+  end
 end
