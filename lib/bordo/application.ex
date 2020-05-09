@@ -12,6 +12,8 @@ defmodule Bordo.Application do
       {Phoenix.PubSub, name: Bordo.PubSub},
       # Start the Ecto repository
       Bordo.Repo,
+      # Start telemetry for live dashboard
+      Bordo.Telemetry,
       # Start the endpoint when the application starts
       BordoWeb.Endpoint,
       {Oban, oban_config()}
