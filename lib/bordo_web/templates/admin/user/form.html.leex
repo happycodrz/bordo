@@ -19,7 +19,7 @@
     <div class="col-span-6 sm:col-span-4">
       <div phx-update="ignore">
         <%= label f, :team_id, class: "block text-sm font-medium leading-5 text-gray-700" %>
-        <%= live_component(@socket, BordoWeb.Admin.Select, id: "hi", form: f) %>
+        <%= live_component(@socket, BordoWeb.Admin.Select, selection: "admin_list_teams", form: f) %>
       </div>
     </div>
   </div>
