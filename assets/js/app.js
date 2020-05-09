@@ -37,7 +37,9 @@ window.liveSocket = liveSocket
 document.addEventListener('DOMContentLoaded', () => {
   feather.replace()
   const element = document.querySelector('.js-choice')
-  new Choices(element, {
-    searchEnabled: true,
-  })
+  if (element) {
+    new Choices(element, {
+      searchEnabled: true,
+    })
+  }
 })
