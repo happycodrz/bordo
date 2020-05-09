@@ -40,10 +40,12 @@
     </div>
   </div>
   <div class="mt-8">
+    <%= if assigns[:user] do %>
     <span phx-click="delete" phx-value-user_id=<%=assigns.user.id %> class="inline-flex justify-center py-2
     px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white
     bg-red-700 hover:bg-red-800 focus:outline-none focus:border-red-800
     focus:shadow-outline-red cursor-pointer active:bg-red-700 transition duration-150 ease-in-out"
     data-confirm="Are you sure, this will remove this user and all associated records?">DELETE</span>
+    <% end %>
   </div>
 </form>
