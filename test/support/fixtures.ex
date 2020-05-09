@@ -3,10 +3,11 @@ defmodule Bordo.Fixtures do
 
   def fixture(:user) do
     {:ok, user} =
-      Users.create_user(%{
+      %{
         email: Faker.Internet.email(),
         auth0_id: Faker.Blockchain.Bitcoin.address()
-      })
+      }
+      |> Users.create_user()
 
     user
   end
