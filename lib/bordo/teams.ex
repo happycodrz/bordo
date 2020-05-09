@@ -7,6 +7,15 @@ defmodule Bordo.Teams do
   alias Bordo.Repo
 
   alias Bordo.Teams.Team
+  @topic inspect(__MODULE__)
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Bordo.PubSub, @topic)
+  end
+
+  def subscribe(team_id) do
+    Phoenix.PubSub.subscribe(Bordo.PubSub, @topic <> "#{team_id}")
+  end
 
   @doc """
   Returns the list of teams.
@@ -101,4 +110,12 @@ defmodule Bordo.Teams do
   def change_team(%Team{} = team) do
     Team.changeset(team, %{})
   end
+
+  defp notify_subscribers({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(Bordo.PubSub, @topic, {__MODULE__, event, result})
+    Phoenix.PubSub.broadcast(Bordo.PubSub, @topic <> "#{result.id}", {__MODULE__, event, result})
+    {:ok, result}
+  end
+
+  defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
 end

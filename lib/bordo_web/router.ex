@@ -41,6 +41,10 @@ defmodule BordoWeb.Router do
       live "/:id/edit", Edit
       live "/new", New
     end
+
+    scope "/teams", TeamsLive do
+      live "/", Index
+    end
   end
 
   scope "/" do
