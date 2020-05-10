@@ -6,6 +6,7 @@ defmodule Bordo.Teams.Team do
     field :name, :string
     field :last_paid_at, :naive_datetime
 
+    field :timezone, :string, virtual: true, default: "America/Chicago"
     belongs_to :owner, Bordo.Users.User
     timestamps()
   end
