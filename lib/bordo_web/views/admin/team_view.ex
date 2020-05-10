@@ -2,6 +2,17 @@ defmodule BordoWeb.Admin.TeamView do
   use BordoWeb, :view
   import Phoenix.HTML
 
+  def trialing_tag(team) do
+    two_weeks_ago = Timex.subtract(Timex.now(), Timex.Duration.from_weeks(2))
+    diff = Timex.compare(team.inserted_at, two_weeks_ago)
+
+    if diff == 1 do
+      ~e"""
+        <span class="text-xs text-gray-500"> Trialing</span>
+      """
+    end
+  end
+
   def payment_status(team) do
     if is_nil(team.last_paid_at) do
       payment_not_current(team.last_paid_at)
