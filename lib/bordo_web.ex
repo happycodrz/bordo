@@ -88,6 +88,7 @@ defmodule BordoWeb do
       import Phoenix.LiveView.Helpers
       import BordoWeb.ErrorHelpers
       import BordoWeb.Gettext
+      import BordoWeb.Admin.SharedView
       alias BordoWeb.Router.Helpers, as: Routes
     end
   end

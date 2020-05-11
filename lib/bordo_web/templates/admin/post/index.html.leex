@@ -1,0 +1,38 @@
+<div class="bg-white shadow overflow-hidden sm:rounded-md">
+  <ul>
+    <%= for post <- @posts do %>
+    <li>
+      <a
+        href="#"
+        class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out"
+      >
+        <div class="flex items-center px-4 py-4 sm:px-6">
+          <div class="min-w-0 flex-1 flex items-center">
+            <div class="flex-shrink-0">
+              <%= brand_avatar(post.brand.image_url) %>
+            </div>
+            <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+              <div>
+                <div class="text-sm leading-5 font-medium text-indigo-600 truncate">
+                  <%= post.title %>
+                </div>
+                <div class="mt-2 flex items-center text-sm leading-5 text-gray-500">
+                  <%= post.brand.name %>
+                </div>
+              </div>
+              <div class="hidden md:block">
+                <div class="flex content-center h-full">
+                  <%= table_status(post.post_variants, post.scheduled_for) %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <%= feather_icon("chevron-right", "h5 w-5 text-gray-400") %>
+          </div>
+        </div>
+      </a>
+    </li>
+    <% end %>
+  </ul>
+</div>

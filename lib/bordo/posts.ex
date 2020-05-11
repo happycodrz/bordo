@@ -11,6 +11,16 @@ defmodule Bordo.Posts do
   alias Bordo.Posts.Post
   alias Bordo.Brands.Brand
 
+  @topic inspect(__MODULE__)
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Bordo.PubSub, @topic)
+  end
+
+  def subscribe(post_id) do
+    Phoenix.PubSub.subscribe(Bordo.PubSub, @topic <> "#{post_id}")
+  end
+
   def filter_options(:brand_index) do
     defconfig do
       datetime([:scheduled_for])
@@ -101,7 +111,8 @@ defmodule Bordo.Posts do
            %Post{}
            |> Repo.preload(post_variants: [:post_variant_media])
            |> Post.create_changeset(attrs)
-           |> Repo.insert() do
+           |> Repo.insert()
+           |> notify_subscribers([:post, :created]) do
       {:ok, get_post!(post.id)}
     else
       changeset ->
@@ -149,6 +160,7 @@ defmodule Bordo.Posts do
     post
     |> Post.changeset(attrs)
     |> Repo.update()
+    |> notify_subscribers([:post, :updated])
   end
 
   @doc """
@@ -179,4 +191,12 @@ defmodule Bordo.Posts do
   def change_post(%Post{} = post) do
     Post.changeset(post, %{})
   end
+
+  defp notify_subscribers({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(Bordo.PubSub, @topic, {__MODULE__, event, result})
+    Phoenix.PubSub.broadcast(Bordo.PubSub, @topic <> "#{result.id}", {__MODULE__, event, result})
+    {:ok, result}
+  end
+
+  defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
 end

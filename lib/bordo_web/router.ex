@@ -36,6 +36,10 @@ defmodule BordoWeb.Router do
   scope "/admin", BordoWeb.Admin, as: :admin do
     pipe_through [:browser, :admins_only]
 
+    scope "/posts", PostsLive do
+      live "/", Index
+    end
+
     scope "/users", UsersLive do
       live "/", Index
       live "/:id/edit", Edit
