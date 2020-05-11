@@ -38,6 +38,7 @@ defmodule Bordo.Providers.Twitter do
       end
     else
       Logger.info("TWEET CREATED")
+      %Tweet{id: Enum.random(0..1000)}
     end
   end
 
