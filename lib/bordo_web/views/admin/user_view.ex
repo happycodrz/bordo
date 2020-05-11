@@ -11,6 +11,9 @@ defmodule BordoWeb.Admin.UserView do
     "https://www.gravatar.com/avatar/" <> hash <> "?d=" <> default
   end
 
+  def team_name(team) when is_nil(team), do: "unassigned"
+  def team_name(%{name: name}), do: name
+
   def full_name(%{first_name: first_name, last_name: last_name})
       when is_nil(first_name)
       when is_nil(last_name) do
