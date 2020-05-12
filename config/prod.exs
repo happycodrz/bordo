@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :bordo, BordoWeb.Endpoint,
   url: [host: "https://api.bor.do/", port: 4000],
-  check_origin: ["https://api.bor.do/", "https://api.bor.do", "http://api.bor.do"]
+  check_origin: ["https://api.bor.do/", "https://staging-api.bor.do"]
 
 # Do not print debug messages in production
 config :logger, level: :debug
