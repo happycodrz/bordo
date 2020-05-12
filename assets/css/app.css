@@ -2,3 +2,23 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 998;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Foreground container */
+.modal-inner-container {
+  position: relative;
+  z-index: 999;
+}

@@ -10,7 +10,7 @@ defmodule BordoWeb.Admin.PostsLive.Index do
   def mount(_params, _session, socket) do
     if connected?(socket), do: Posts.subscribe()
 
-    {:ok, assign(socket, posts: Posts.list_posts())}
+    {:ok, assign(socket, posts: Posts.list_posts(), show_modal: false)}
   end
 
   @impl true
@@ -21,5 +21,14 @@ defmodule BordoWeb.Admin.PostsLive.Index do
   defp fetch(socket) do
     posts = Posts.list_posts()
     assign(socket, posts: posts)
+  end
+
+  @impl true
+  def handle_event("modal-open", _, socket) do
+    {:noreply, assign(socket, show_modal: true)}
+  end
+
+  def handle_event("modal-close", _, socket) do
+    {:noreply, assign(socket, show_modal: false)}
   end
 end
