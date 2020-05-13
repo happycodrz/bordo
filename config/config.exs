@@ -65,7 +65,8 @@ config :appsignal, :config,
   active: Mix.env() == :prod,
   name: "Bordo",
   push_api_key: System.get_env("APPSIGNAL_PUSH_API_KEY"),
-  env: Mix.env()
+  env: Mix.env(),
+  revision: System.get_env("APP_REVISION")
 
 ####
 # Integration configuration
