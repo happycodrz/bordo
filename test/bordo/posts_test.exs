@@ -1,5 +1,6 @@
 defmodule Bordo.PostsTest do
   use Bordo.DataCase
+  use Oban.Testing, repo: Bordo.Repo
 
   alias Bordo.Posts
 
@@ -35,6 +36,19 @@ defmodule Bordo.PostsTest do
                )
 
       assert post.title == "some title"
+    end
+
+    test "create_and_schedule_post/1" do
+      user = fixture(:user)
+      brand = fixture(:brand)
+
+      assert {:ok, %Post{} = post} =
+               Posts.create_and_schedule_post(
+                 @valid_attrs
+                 |> Enum.into(%{brand_id: brand.id, user_id: user.id})
+               )
+
+      assert_enqueued(worker: Bordo.Workers.PostScheduler, args: %{"post_id" => post.id})
     end
 
     test "create_post/1 with invalid data returns error changeset" do
