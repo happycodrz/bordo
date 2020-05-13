@@ -10,8 +10,8 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :bordo, BordoWeb.Endpoint,
-  url: [host: "https://bordo-stage.gigalixirapp.com/", port: 4000],
-  check_origin: ["https://bordo-stage.gigalixirapp.com/"]
+  url: [scheme: "https", host: "staging-api.bor.do/", port: 433],
+  check_origin: ["https://staging-api.bor.do"]
 
 # Do not print debug messages in production
 config :logger, level: :debug
