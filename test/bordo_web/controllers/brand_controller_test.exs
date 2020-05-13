@@ -14,11 +14,6 @@ defmodule BordoWeb.BrandControllerTest do
   }
   @invalid_attrs %{icon_url: nil, name: nil}
 
-  def cfixture(:brand, params) do
-    {:ok, brand} = Brands.create_brand(@create_attrs |> Map.merge(params))
-    brand
-  end
-
   setup %{conn: conn} do
     {:ok, user} = Bordo.Users.create_user(%{email: "xx", auth0_id: "1234"})
     {:ok, team} = Bordo.Teams.create_team(%{name: "Bordo!", owner_id: user.id})
@@ -99,7 +94,7 @@ defmodule BordoWeb.BrandControllerTest do
   end
 
   defp create_brand(%{user: user}) do
-    brand = cfixture(:brand, %{owner_id: user.id})
+    {:ok, brand} = Brands.create_brand(@create_attrs |> Map.merge(%{owner_id: user.id}))
     {:ok, brand: brand}
   end
 end

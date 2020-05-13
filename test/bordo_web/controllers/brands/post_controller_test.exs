@@ -13,11 +13,6 @@ defmodule BordoWeb.Brands.PostControllerTest do
   }
   @invalid_attrs %{title: nil}
 
-  def cfixture(:post, params) do
-    {:ok, post} = Posts.create_post(@create_attrs |> Map.merge(params))
-    post
-  end
-
   setup %{conn: conn} do
     user = fixture(:user)
 
@@ -101,7 +96,9 @@ defmodule BordoWeb.Brands.PostControllerTest do
   end
 
   defp create_post(%{brand: brand, user: user}) do
-    post = cfixture(:post, %{brand_id: brand.id, user_id: user.id})
+    {:ok, post} =
+      Posts.create_post(@create_attrs |> Map.merge(%{brand_id: brand.id, user_id: user.id}))
+
     {:ok, post: post}
   end
 end
