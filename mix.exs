@@ -20,7 +20,7 @@ defmodule Bordo.MixProject do
   def application do
     [
       mod: {Bordo.Application, []},
-      extra_applications: [:cloudex, :logger, :runtime_tools]
+      extra_applications: [:cloudex, :logger, :runtime_tools, :os_mon]
     ]
   end
 
