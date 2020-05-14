@@ -28,15 +28,7 @@ defmodule BordoWeb.Providers.FacebookController do
   def callback(conn, %{"code" => code, "state" => state}) do
     %{"brand_id" => brand_id} = URI.decode_query(state)
 
-    query =
-      URI.encode_query(%{
-        code: code,
-        client_id: System.get_env("FACEBOOK_APP_ID"),
-        redirect_uri: System.get_env("FACEBOOK_REDIRECT_URI"),
-        client_secret: System.get_env("FACEBOOK_APP_SECRET")
-      })
-
-    with {:ok, %{"access_token" => access_token}} <- auth(query) do
+    with {:ok, %{"access_token" => access_token}} <- get_access_token(code) do
       channel_params =
         Map.merge(
           %{
@@ -69,17 +61,12 @@ defmodule BordoWeb.Providers.FacebookController do
     end
   end
 
-  defp auth(query) do
-    %URI{
-      host: "graph.facebook.com",
-      path: "/v6.0/oauth/access_token",
-      port: 443,
-      query: query,
-      scheme: "https"
-    }
-    |> URI.to_string()
-    |> HTTPoison.get!()
-    |> Map.get(:body)
-    |> Jason.decode()
+  defp get_access_token(code) do
+    Facebook.access_token(
+      System.get_env("FACEBOOK_APP_ID"),
+      System.get_env("FACEBOOK_APP_SECRET"),
+      System.get_env("FACEBOOK_REDIRECT_URI"),
+      code
+    )
   end
 end
