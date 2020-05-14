@@ -8,14 +8,14 @@ defmodule BordoWeb.Admin.Select do
     render_select(assigns, :owner_id, selection)
   end
 
-  def render(%{selection: "admin_list_teams"} = assigns) do
+  def render(%{selection: "admin_list_teams", prompt: prompt} = assigns) do
     selection = teams()
-    render_select(assigns, :team_id, selection)
+    render_select(assigns, :team_id, selection, prompt: prompt)
   end
 
-  defp render_select(assigns, form_for, selection) do
+  defp render_select(assigns, form_for, selection, opts \\ []) do
     ~L"""
-      <%= select(assigns.form, form_for, selection, class: "js-choice") %>
+      <%= select(assigns.form, form_for, selection, [{:class, "js-choice"}| opts]) %>
     """
   end
 
