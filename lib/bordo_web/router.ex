@@ -2,7 +2,10 @@ defmodule BordoWeb.Router do
   use BordoWeb, :router
   import Phoenix.LiveView.Router
   import Phoenix.LiveDashboard.Router
-  import Plug.BasicAuth
+
+  import BordoWeb.Plug.Session,
+    only: [redirect_unauthorized: 2, validate_session: 2, redirect_authorized: 2]
+
   import Bordo.Brands.Pipeline, only: [brand_resource: 2]
 
   pipeline :browser do
@@ -14,8 +17,18 @@ defmodule BordoWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :admins_only do
-    plug :basic_auth, username: "admin", password: "din0saur@bordo"
+  pipeline :unauthenticated do
+    plug :put_root_layout, {BordoWeb.LayoutView, :unauthenticated_root}
+    plug :redirect_authorized
+  end
+
+  pipeline :admin_session do
+    plug :browser
+    plug :validate_session
+  end
+
+  pipeline :restricted do
+    plug :redirect_unauthorized
   end
 
   pipeline :public do
@@ -34,7 +47,16 @@ defmodule BordoWeb.Router do
   end
 
   scope "/admin", BordoWeb.Admin, as: :admin do
-    pipe_through [:browser, :admins_only]
+    pipe_through [:admin_session, :unauthenticated]
+
+    live "/login", AuthLive.Login
+  end
+
+  scope "/admin", BordoWeb.Admin, as: :admin do
+    pipe_through [:admin_session, :restricted]
+    live_dashboard "/dashboard", metrics: Bordo.Telemetry
+
+    get "/logout", AuthController, :index
 
     scope "/posts", PostsLive do
       live "/", Index
@@ -51,11 +73,6 @@ defmodule BordoWeb.Router do
       live "/:id/edit", Edit
       live "/new", New
     end
-  end
-
-  scope "/" do
-    pipe_through [:browser, :admins_only]
-    live_dashboard "/dashboard", metrics: Bordo.Telemetry
   end
 
   scope "/auth", BordoWeb do

@@ -1,7 +1,7 @@
 defmodule Auth do
   @moduledoc """
   This module is responsible to authenticate client credentials against Auth0
-  and provide access_token and expires_in as a result
+  and provide access_token and expires_in as a result. This is for normal users, not admin.
   """
   alias Auth.{Credentials, TokenResult}
   alias Bordo.Users

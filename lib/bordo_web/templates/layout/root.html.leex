@@ -45,7 +45,7 @@
                     </button>
 
                     <!-- Profile dropdown -->
-                    <div class="ml-3 relative" x-data="{open: false}">
+                    <div class="ml-3 relative z-10" x-data="{open: false}">
                       <div>
                         <button @click="open = !open" @click.away="open = false" class="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid" id="user-menu" aria-label="User menu" aria-haspopup="true">
                           <img class="h-8 w-8 rounded-full" src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" alt="" />
@@ -55,7 +55,7 @@
                         <div class="py-1 rounded-md bg-white shadow-xs">
                           <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
                           <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                          <%= link "Sign out", to: Routes.admin_auth_path(@conn, :index), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                         </div>
                       </div>
                     </div>
