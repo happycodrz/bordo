@@ -88,6 +88,10 @@ defmodule BordoWeb.Router do
   end
 
   scope "/", BordoWeb do
+    post("/hooks", WebhookController, :hook)
+  end
+
+  scope "/", BordoWeb do
     pipe_through :private
 
     resources "/brands", BrandController do
