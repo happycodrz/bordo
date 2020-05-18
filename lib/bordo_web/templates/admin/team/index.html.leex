@@ -8,7 +8,7 @@
       </div>
       <div class="ml-4 mt-2 flex-shrink-0">
         <span class="inline-flex rounded-md shadow-sm">
-          <%= link "Create new Team", to: Routes.admin_live_path(@socket,
+          <%= link "Add New Team", to: Routes.admin_live_path(@socket,
           BordoWeb.Admin.TeamsLive.New), class: "relative inline-flex items-center px-4 py-2 border
           border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600
           hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700
@@ -17,52 +17,50 @@
       </div>
     </div>
   </div>
-  <div class="">
-    <table class="min-w-full">
-      <thead>
-        <tr>
-          <th
-            class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Name
-          </th>
-          <th
-            class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Payment Status
-          </th>
-          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
-        </tr>
-      </thead>
-      <tbody class="bg-white">
-        <%= for team <- @teams do %>
-        <tr>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div class="flex items-center">
-              <div class="ml-4">
-                <div class="text-sm leading-5 font-medium text-gray-900">
-                  <%= team.name %> <%= trialing_tag(team) %>
-                </div>
+  <table class="min-w-full">
+    <thead>
+      <tr>
+        <th
+          class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Name
+        </th>
+        <th
+          class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Payment Status
+        </th>
+        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <%= for team <- @teams do %>
+      <tr>
+        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+          <div class="flex items-center">
+            <div class="ml-4">
+              <div class="text-sm leading-5 font-medium text-gray-900">
+                <%= team.name %> <%= trialing_tag(team) %>
               </div>
             </div>
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <%= payment_status(team) %>
-          </td>
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+          <%= payment_status(team) %>
+        </td>
 
-          <td
-            class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium"
+        <td
+          class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium"
+        >
+          <span
+            ><%= link "Edit", to: Routes.admin_live_path(@socket, BordoWeb.Admin.TeamsLive.Edit,
+            team), class: "text-indigo-600 hover:text-indigo-900" %></span
           >
-            <span
-              ><%= link "Edit", to: Routes.admin_live_path(@socket, BordoWeb.Admin.TeamsLive.Edit,
-              team), class: "text-indigo-600 hover:text-indigo-900" %></span
-            >
-          </td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
   <div class="px-4 py-4 sm:px-6">
     <!-- Content goes here -->
     <!-- We use less vertical padding on card footers at all sizes than on headers or body sections -->
