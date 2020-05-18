@@ -7,7 +7,7 @@ defmodule Bordo.Repo.Migrations.CreatePosts do
       add :title, :string, null: false
       add :slug, :integer, null: false, unique: true
       add :scheduled_for, :utc_datetime
-      add :brand_id, references(:brands, type: :uuid, on_delete: :nothing), null: false
+      add :brand_id, references(:brands, type: :uuid, on_delete: :delete_all), null: false
       add :user_id, references(:users, type: :uuid, on_delete: :nothing), null: false
 
       timestamps()
