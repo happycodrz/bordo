@@ -73,6 +73,17 @@ defmodule BordoWeb.Plug.Session do
     end
   end
 
+  def assign_current_admin(conn, _opts) do
+    user_id = Map.get(conn.assigns, :user_id)
+
+    if is_nil(user_id) do
+      conn
+    else
+      admin = Bordo.Users.get_user!(user_id)
+      assign(conn, :current_admin, admin)
+    end
+  end
+
   def signing_salt do
     BordoWeb.Endpoint.config(:live_view)[:signing_salt] ||
       raise BordoWeb.AuthenticationError, message: "missing signing_salt"

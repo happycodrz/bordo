@@ -4,7 +4,12 @@ defmodule BordoWeb.Router do
   import Phoenix.LiveDashboard.Router
 
   import BordoWeb.Plug.Session,
-    only: [redirect_unauthorized: 2, validate_session: 2, redirect_authorized: 2]
+    only: [
+      redirect_unauthorized: 2,
+      validate_session: 2,
+      redirect_authorized: 2,
+      assign_current_admin: 2
+    ]
 
   import Bordo.Brands.Pipeline, only: [brand_resource: 2]
 
@@ -25,6 +30,7 @@ defmodule BordoWeb.Router do
   pipeline :admin_session do
     plug :browser
     plug :validate_session
+    plug :assign_current_admin
   end
 
   pipeline :restricted do
