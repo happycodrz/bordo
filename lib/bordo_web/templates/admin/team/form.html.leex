@@ -12,11 +12,18 @@
       <%= live_component(@socket, BordoWeb.Admin.Select, selection: "admin_list_users", form: f) %>
     </div>
   </div>
-  <div class="col-span-6 sm:col-span-4">
-    <%= label f, :last_paid_at, class: "block text-sm font-medium leading-5 text-gray-700" %>
-    <%= text_input f, :last_paid_at, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
-    <p class="mt-2 text-sm text-gray-500" id="email-description">Must be YYYY-MM-DD HH:MM and is not tz-aware.</p>
-    <%= error_tag f, :last_paid_at %>
+  <div class="mt-6 grid grid-cols-1 row-gap-6 col-gap-4 sm:grid-cols-6">
+    <div class="sm:col-span-3">
+      <%= label f, :stripe_customer_id, class: "block text-sm font-medium leading-5 text-gray-700" %>
+      <%= text_input f, :stripe_customer_id, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
+      <%= error_tag f, :stripe_customer_id %>
+    </div>
+    <div class="sm:col-span-3">
+      <%= label f, :last_paid_at, class: "block text-sm font-medium leading-5 text-gray-700" %>
+      <%= text_input f, :last_paid_at, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
+      <p class="mt-2 text-sm text-gray-500" id="email-description">Must be YYYY-MM-DD HH:MM and is not tz-aware.</p>
+      <%= error_tag f, :last_paid_at %>
+    </div>
   </div>
   <div class="mt-8 border-t border-gray-200 pt-5">
     <div class="flex justify-end">
