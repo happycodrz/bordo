@@ -103,6 +103,8 @@ defmodule BordoWeb.Router do
       resources "/users", Brands.UserController
     end
 
+    resources "/brand-users", BrandUserController, only: [:create]
+
     scope "/providers" do
       get "/linkedin/auth", Providers.LinkedinController, :auth
       get "/linkedin/callback", Providers.LinkedinController, :callback
@@ -114,6 +116,5 @@ defmodule BordoWeb.Router do
 
     get "/profile", ProfileController, :show
     resources "/teams", TeamController
-    resources "/user-brands", BrandUserController, only: [:create]
   end
 end

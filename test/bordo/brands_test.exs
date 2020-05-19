@@ -80,7 +80,7 @@ defmodule Bordo.BrandsTest do
   #     {:ok, user_brand} =
   #       attrs
   #       |> Enum.into(@valid_attrs)
-  #       |> Brands.create_user_brand()
+  #       |> Brands.create_brand_user()
 
   #     user_brand
   #   end
@@ -95,12 +95,12 @@ defmodule Bordo.BrandsTest do
   #     assert Brands.get_user_brand!(user_brand.id) == user_brand
   #   end
 
-  #   test "create_user_brand/1 with valid data creates a user_brand" do
-  #     assert {:ok, %BrandUser{} = user_brand} = Brands.create_user_brand(@valid_attrs)
+  #   test "create_brand_user/1 with valid data creates a user_brand" do
+  #     assert {:ok, %BrandUser{} = user_brand} = Brands.create_brand_user(@valid_attrs)
   #   end
 
-  #   test "create_user_brand/1 with invalid data returns error changeset" do
-  #     assert {:error, %Ecto.Changeset{}} = Brands.create_user_brand(@invalid_attrs)
+  #   test "create_brand_user/1 with invalid data returns error changeset" do
+  #     assert {:error, %Ecto.Changeset{}} = Brands.create_brand_user(@invalid_attrs)
   #   end
 
   #   test "update_user_brand/2 with valid data updates the user_brand" do

@@ -117,7 +117,7 @@ defmodule Bordo.Users do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user_brand(attrs \\ %{}) do
+  def create_brand_user(attrs \\ %{}) do
     %BrandUser{}
     |> BrandUser.changeset(attrs)
     |> Repo.insert()

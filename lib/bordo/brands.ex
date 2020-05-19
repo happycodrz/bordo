@@ -162,14 +162,14 @@ defmodule Bordo.Brands do
 
   ## Examples
 
-      iex> create_user_brand(%{field: value})
+      iex> create_brand_user(%{field: value})
       {:ok, %BrandUser{}}
 
-      iex> create_user_brand(%{field: bad_value})
+      iex> create_brand_user(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user_brand(attrs \\ %{}) do
+  def create_brand_user(attrs \\ %{}) do
     %BrandUser{}
     |> BrandUser.changeset(attrs)
     |> Repo.insert()

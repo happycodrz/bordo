@@ -15,6 +15,7 @@ defmodule Bordo.Brands.BrandUser do
     |> cast(attrs, [:brand_id, :user_id])
     |> foreign_key_constraint(:brand_id)
     |> foreign_key_constraint(:user_id)
+    |> unique_constraint([:brand_id, :user_id])
     |> validate_required([])
   end
 end
