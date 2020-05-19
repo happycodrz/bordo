@@ -16,7 +16,8 @@ module.exports = (env, options) => {
       ]
     },
     entry: {
-      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
+      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js']),
+      'react': './js/react/index.js'
     },
     output: {
       filename: '[name].js',
@@ -30,23 +31,40 @@ module.exports = (env, options) => {
           test: /\.js$/,
           exclude: /node_modules/,
           use: {
-            loader: 'babel-loader'
+            loaders: 'babel-loader'
           }
         },
         {
-          test: /\.[s]?css$/,
+          test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader',
             'sass-loader',
-            'postcss-loader',
+            'postcss-loader'
           ],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader'
+          ],
+        },
+        {
+        test: /\.(png|svg|jpg|gif)$/,
+         use: [
+           'file-loader',
+         ],
         }
       ]
     },
     plugins: [
-      new MiniCssExtractPlugin({ filename: '../css/app.css' }),
+      new MiniCssExtractPlugin({ filename: '[name].css', chunkFilename: '[id].css' }),
       new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
-    ]
+    ],
+    resolve: {
+        extensions: ['.js', '.scss']
+    }
   }
 };

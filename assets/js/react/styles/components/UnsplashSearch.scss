@@ -1,0 +1,9 @@
+.bdo-unsplashSearch {
+    &__card {
+        cursor: pointer;
+
+        &--selected {
+            box-shadow: 0 0 0 3px $primary;
+        }
+    }
+}

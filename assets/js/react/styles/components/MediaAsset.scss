@@ -1,0 +1,84 @@
+.bdo-mediaAsset {
+    $root: &;
+
+    cursor: pointer;
+    overflow: hidden;
+
+    > * {
+        pointer-events: none;
+    }
+
+    &__thumbnail {
+        object-fit: cover;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        transition: $transition-base;
+    }
+
+    &__header {
+        height: 0;
+        padding-bottom: 56.25%;
+        overflow: hidden;
+        position: relative;
+
+        @extend .bg-light;
+        @extend .border-bottom;
+    }
+
+    &__date {
+        @extend .mb-1;
+        @extend .text-muted;
+        @extend .small;
+    }
+
+    &__title {
+        @extend .text-truncate;
+        @extend .m-0;
+    }
+
+    &__iconBar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(rgba($black, 0.6), rgba($black, 0));
+        z-index: 9;
+        
+        @extend .p-3;
+        @extend .pb-4;
+        
+    }
+    
+    &__icon {
+        transition: $transition-base;
+        @extend .text-white;
+
+        &--type {
+            opacity: 0.75;
+        }
+
+        &--edit {
+            opacity: 0;
+        }
+    }
+
+    &:hover & {
+        &__icon {
+            &--edit {
+                opacity: 1;
+            }
+        }
+
+        &__thumbnail {
+            transform: scale(1.1);
+        }
+    }
+
+    &[data-selected="true"] {
+        box-shadow: 0 0 0 3px $danger;
+    }
+}

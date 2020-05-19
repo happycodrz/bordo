@@ -1,0 +1,172 @@
+// Variables
+@import './variables';
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+// Utilities
+@import './utilities';
+// Components
+@import './components/Avatar';
+@import './components/MediaAsset';
+@import './components/MediaNavbar';
+@import './components/MediaDetailModal';
+@import './components/LoaderButton';
+@import './components/FileUpload';
+@import './components/NewPostSchedule';
+@import './components/BrandSidebar';
+@import './components/BrandNavigation';
+@import './components/BrandWorkspace';
+@import './components/TeamNavigation';
+@import './components/ScheduleCalendar';
+@import './components/NewPostModal';
+@import './components/UnsplashSearch';
+@import './components/Notification';
+@import './components/ContentEditor';
+@import './components/EditableInput';
+@import './components/LaunchpadCard';
+// Freestyle
+html,
+body {
+    overscroll-behavior: none;
+}
+
+.app__container {
+    display: grid;
+    grid-template-columns: 75px 350px auto;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.team__sidebar {
+    z-index: 999;
+    height: 100vh;
+}
+
+.brand__sidebar {
+    z-index: 99;
+    box-shadow: 0 0 15px 5px rgba($gray-800, 0.2);
+}
+
+.brand__container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.brand-nav__button.active {
+    background: theme-color('primary');
+}
+
+.calendar {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+.calendar__loader {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar__header {
+    display: grid;
+    grid-template-columns: repeat(7, 14.38%);
+
+    div {
+        text-align: right;
+        
+        @extend .p-3;
+    }
+}
+
+.calendar__body {
+    display: grid;
+    grid-template-columns: repeat(7, 14.38%);
+    grid-auto-rows: 125px;
+}
+
+.calendar__day {
+    text-align: right;
+
+    @extend .p-3;
+
+    &:nth-child(7n+1),
+    &:nth-child(7n+7) {
+        background-color: $gray-100;
+    }
+
+    sup {
+        font-weight: bolder;
+    }
+
+    &--today {
+        sup {
+
+            @extend .badge;
+            @extend .badge-danger;
+        }
+    }
+
+    &--muted {
+        color: $gray-400;
+    }
+}
+
+.brand__container {
+    position: relative;
+}
+
+.drawer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 450px;
+    box-shadow: 0 0 15px 5px rgba($gray-800, 0.2);
+    background: $white;
+    transform: translateX(100%);
+    transition: 0.3s all cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    &__content {
+        @extend .px-4;
+        @extend .py-5;
+    }
+    
+    &__header {
+        display: flex;
+        justify-content: space-between;
+
+        @extend .px-4;
+        @extend .py-5;
+        @extend .bg-primary;
+        @extend .text-white;
+    }
+
+    &__title {
+        @extend .m-0;
+    }
+
+    &__container {
+        position: fixed;
+        z-index: 9;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba($gray-800, 0);
+        pointer-events: none;
+        transition: 0.2s all;
+
+        &.active {
+            background: rgba($gray-800, 0.3);
+            pointer-events: all;
+
+            .drawer {
+                transform: translateX(0);
+            }
+        }
+    }
+}

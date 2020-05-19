@@ -1,0 +1,17 @@
+.wave {
+    display: inline-block;
+    transform-origin: 75% 75%;
+    animation: wave .75s 3 ease-in-out;
+}
+
+@keyframes wave {
+    0% {
+        transform: rotate(0deg)
+    }
+    50% {
+        transform: rotate(20deg);
+    }
+    100% {
+        transform: rotate(0deg)
+    }
+}

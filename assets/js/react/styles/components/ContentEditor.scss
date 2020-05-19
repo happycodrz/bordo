@@ -1,0 +1,11 @@
+.DraftEditor-root {
+    border-radius: $input-border-radius;
+    padding: $input-padding-y $input-padding-x $input-padding-y $input-padding-x;
+    border: $input-border-width solid $input-border-color;
+
+    .DraftEditor-editorContainer {
+        .public-DraftEditor-content {
+            min-height: $input-line-height * 5em;
+        }
+    }
+}

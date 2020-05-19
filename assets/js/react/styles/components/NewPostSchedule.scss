@@ -1,0 +1,30 @@
+.bdo-newPostSchedule {
+    &__dateSelect {
+        text-align: center;
+
+        label {
+            @extend .btn;
+            @extend .btn-outline-secondary;
+            @extend .btn-block;
+            @extend .rounded-pill;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+            
+        input:checked + label {
+            @extend .btn-danger;
+        }
+    }
+
+    &__timeSelect {
+        @extend .align-items-center;
+        
+        .form-control {
+            width: auto;
+            
+            @extend .mr-2;
+        }
+    }
+}

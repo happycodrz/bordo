@@ -1,0 +1,21 @@
+.nav--modal {
+	margin-left: -16px;
+	margin-right: -16px;
+
+    .nav-item {
+        margin-left: 16px;
+        margin-right: 16px;
+        
+        a {
+            padding-left: 0;
+            padding-right: 0;
+            border-bottom: 3px solid transparent;
+            color: $secondary;
+
+            &.active {
+                color: $danger;
+                border-color: $danger;
+            }
+        }
+    }
+}

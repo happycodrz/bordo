@@ -1,0 +1,13 @@
+.bdo-mediaDetailModal {
+    &__image {
+        @extend .img-fluid;
+        @extend .rounded-top;
+    }
+
+    &__label {
+        color: $secondary;
+        &--small {
+            font-size: 0.875em;
+        }
+    }
+}

@@ -1,0 +1,9 @@
+.bdo-launchpadCard {
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: $box-shadow-lg;
+    }
+}
