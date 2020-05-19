@@ -30,9 +30,7 @@ defmodule BordoWeb.Plug.Session do
     if is_nil(user_id) do
       conn
       |> put_session(:return_to, conn.request_path)
-      |> redirect(
-        to: BordoWeb.Router.Helpers.admin_live_path(conn, BordoWeb.Admin.AuthLive.Login)
-      )
+      |> redirect(to: BordoWeb.Router.Helpers.live_path(conn, BordoWeb.AuthLive.Login))
       |> halt()
     else
       conn

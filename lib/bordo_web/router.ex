@@ -1,4 +1,9 @@
 defmodule BordoWeb.Router do
+  @moduledoc """
+  TODO:
+  1. organize pipes
+  2. organize routes
+  """
   use BordoWeb, :router
   import Phoenix.LiveView.Router
   import Phoenix.LiveDashboard.Router
@@ -17,9 +22,12 @@ defmodule BordoWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {BordoWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+  end
+
+  pipeline :react do
+    plug :put_layout, {BordoWeb.LayoutView, :react_root}
   end
 
   pipeline :unauthenticated do
@@ -29,6 +37,7 @@ defmodule BordoWeb.Router do
 
   pipeline :admin_session do
     plug :browser
+    plug :put_root_layout, {BordoWeb.LayoutView, :root}
     plug :validate_session
     plug :assign_current_admin
   end
@@ -54,8 +63,6 @@ defmodule BordoWeb.Router do
 
   scope "/admin", BordoWeb.Admin, as: :admin do
     pipe_through [:admin_session, :unauthenticated]
-
-    live "/login", AuthLive.Login
   end
 
   scope "/admin", BordoWeb.Admin, as: :admin do
@@ -89,6 +96,17 @@ defmodule BordoWeb.Router do
 
   scope "/", BordoWeb do
     post("/hooks", WebhookController, :hook)
+  end
+
+  scope "/", BordoWeb do
+    pipe_through [:browser, :unauthenticated]
+    live "/login", AuthLive.Login
+  end
+
+  scope "/", BordoWeb do
+    pipe_through [:browser, :react]
+
+    get "/", ReactController, :index
   end
 
   scope "/", BordoWeb do

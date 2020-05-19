@@ -1,4 +1,4 @@
-defmodule BordoWeb.Admin.AuthLive.Login do
+defmodule BordoWeb.AuthLive.Login do
   use BordoWeb, :live_view
   require Logger
   alias Auth
