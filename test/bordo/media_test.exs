@@ -19,7 +19,7 @@ defmodule Bordo.MediaTest do
     @update_attrs %{
       title: "some updated name"
     }
-    @invalid_attrs %{public_id: nil}
+    @invalid_attrs %{title: nil}
 
     def media_fixture(attrs \\ %{}) do
       brand = fixture(:brand)
@@ -56,12 +56,14 @@ defmodule Bordo.MediaTest do
       assert {:error, %Ecto.Changeset{}} = MediaResource.create_media(@invalid_attrs)
     end
 
+    @tag :focus
     test "update_media/2 with valid data updates the media" do
       media = media_fixture()
       assert {:ok, %Media{} = media} = MediaResource.update_media(media, @update_attrs)
       assert media.title == "some updated name"
     end
 
+    @tag :focus
     test "update_media/2 with invalid data returns error changeset" do
       media = media_fixture()
       assert {:error, %Ecto.Changeset{}} = MediaResource.update_media(media, @invalid_attrs)

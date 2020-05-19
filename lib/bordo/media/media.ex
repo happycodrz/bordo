@@ -45,4 +45,11 @@ defmodule Bordo.Media.Media do
     |> cast(attrs, @fields)
     |> validate_required(@required_fields)
   end
+
+  @doc false
+  def update_changeset(image, attrs) do
+    image
+    |> cast(attrs, [:title])
+    |> validate_required([:title])
+  end
 end

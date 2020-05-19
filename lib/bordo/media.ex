@@ -81,7 +81,7 @@ defmodule Bordo.Media do
   """
   def update_media(%Media{} = media, attrs) do
     media
-    |> Media.changeset(attrs)
+    |> Media.update_changeset(attrs)
     |> Repo.update()
   end
 

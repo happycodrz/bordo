@@ -26,6 +26,14 @@ defmodule BordoWeb.Brands.MediaController do
     render(conn, "show.json", media: media)
   end
 
+  def update(conn, %{"id" => id, "media" => media_params}) do
+    media = MediaResource.get_media!(id)
+
+    with {:ok, %Media{} = media} <- MediaResource.update_media(media, media_params) do
+      render(conn, "show.json", media: media)
+    end
+  end
+
   def delete(conn, %{"id" => id}) do
     media = MediaResource.get_media!(id)
 
