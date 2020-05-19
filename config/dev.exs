@@ -26,6 +26,7 @@ config :bordo, BordoWeb.Endpoint,
       "--mode",
       "development",
       "--watch-stdin",
+      "--colors",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]
