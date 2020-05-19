@@ -60,7 +60,7 @@ module.exports = (env, options) => {
       ]
     },
     plugins: [
-      new MiniCssExtractPlugin({ filename: '[name].css', chunkFilename: '[id].css' }),
+      new MiniCssExtractPlugin({ filename: '../css/[name].css', chunkFilename: '../css/[id].css' }),
       new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
     ],
     resolve: {
