@@ -16,7 +16,9 @@ defmodule Bordo.Posts.Post do
     timestamps()
   end
 
-  @doc false
+  @doc """
+  Default changeset, should not be unused in production application.
+  """
   def changeset(post, attrs) do
     post
     |> cast(attrs, [:title, :brand_id, :user_id, :scheduled_for])
@@ -25,6 +27,15 @@ defmodule Bordo.Posts.Post do
     |> validate_required([:title, :brand_id, :user_id])
   end
 
+  @doc false
+  def update_changeset(post, attrs) do
+    post
+    |> cast(attrs, [:title, :scheduled_for])
+    |> cast_assoc(:post_variants, with: &Bordo.PostVariants.PostVariant.update_content_changeset/2)
+    |> validate_required([:title])
+  end
+
+  @doc false
   def create_changeset(post, attrs) do
     post
     |> cast(attrs, [:title, :brand_id, :user_id, :scheduled_for])

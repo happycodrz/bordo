@@ -24,6 +24,19 @@ defmodule Bordo.PostVariants.PostVariant do
     |> validate_inclusion(:status, @post_statuses)
   end
 
+  @doc """
+  Used to update the post-variant before it is published. Published posts cannot be changed, except to update the status.
+  """
+  def update_content_changeset(post_variant, attrs) do
+    post_variant
+    |> cast(attrs, [:status, :post_id, :content])
+    |> cast_assoc(:post_variant_media)
+    |> validate_not_published(post_variant)
+    |> put_change(:status, "scheduled")
+    |> validate_required([:status, :content])
+    |> validate_inclusion(:status, @post_statuses)
+  end
+
   def create_changeset(post_variant, attrs) do
     post_variant
     |> cast(attrs, [:channel_id, :status, :post_id, :content])
@@ -31,5 +44,12 @@ defmodule Bordo.PostVariants.PostVariant do
     |> put_change(:status, "scheduled")
     |> validate_required([:channel_id, :status, :content])
     |> validate_inclusion(:status, @post_statuses)
+  end
+
+  def validate_not_published(changeset, post_variant) do
+    case post_variant.status == "published" do
+      true -> add_error(changeset, :status, "cannot update a published post")
+      false -> changeset
+    end
   end
 end

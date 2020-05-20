@@ -130,6 +130,19 @@ defmodule Bordo.Posts do
     end
   end
 
+  def update_and_schedule_post(post, attrs \\ %{}) do
+    # TODO: clear out old schedule posts
+    clear_queued_post(post)
+
+    with {:ok, %Post{} = post} <- update_post(post, attrs),
+         {:ok, %Oban.Job{}} <- schedule_post(post) do
+      {:ok, post}
+    else
+      {:error, err} ->
+        {:error, err}
+    end
+  end
+
   defp schedule_post(%Post{} = post) do
     %{"post_id" => post.id}
     |> Bordo.Workers.PostScheduler.new(scheduled_at: post.scheduled_for)
@@ -150,7 +163,8 @@ defmodule Bordo.Posts do
   """
   def update_post(%Post{} = post, attrs) do
     post
-    |> Post.changeset(attrs)
+    |> Repo.preload(post_variants: [:media])
+    |> Post.update_changeset(attrs)
     |> Repo.update()
     |> notify_subscribers([:post, :updated])
   end
@@ -191,4 +205,15 @@ defmodule Bordo.Posts do
   end
 
   defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
+
+  defp clear_queued_post(post) do
+    IO.inspect(post.id, label: "finding post")
+
+    job = Repo.get_by(Oban.Job, args: %{"post_id" => post.id})
+
+    if is_nil(job) do
+    else
+      Repo.delete(job)
+    end
+  end
 end
