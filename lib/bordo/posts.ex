@@ -182,6 +182,7 @@ defmodule Bordo.Posts do
 
   """
   def delete_post(%Post{} = post) do
+    clear_queued_post(post)
     Repo.delete(post)
   end
 
