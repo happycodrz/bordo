@@ -208,8 +208,6 @@ defmodule Bordo.Posts do
   defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
 
   defp clear_queued_post(post) do
-    IO.inspect(post.id, label: "finding post")
-
     job = Repo.get_by(Oban.Job, args: %{"post_id" => post.id})
 
     if is_nil(job) do

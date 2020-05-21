@@ -21,3 +21,5 @@ config :mix_test_watch,
   clear: true
 
 config :bordo, Oban, queues: false
+
+config :bordo, twitter_live: false
