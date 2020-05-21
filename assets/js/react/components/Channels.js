@@ -4,7 +4,7 @@ import { Plus } from 'react-feather'
 import { useStateValue } from '../state'
 import Channel from './Channel'
 import PopoutWindow from 'react-popout'
-import { getChannelAuth, getChannels, getChannelCallback, deleteChannel } from "../utilities/api"
+import { getChannelAuth, getChannels, getChannelCallback, deleteChannel, addNewChannel } from "../utilities/api"
 import { createSlug, randomNotificationTitle, sentenceCase } from "../utilities/helpers"
 
 const Channels = () => {
@@ -44,16 +44,6 @@ const Channels = () => {
     }, [currentChannelToAdd])
 
     useEffect(() => {
-        if (window.opener && window.location.search) {
-            window.opener.postMessage({
-                type: 'oAuthComplete',
-                queryString: window.location.search
-            }, window.location.origin)
-
-            window.close()
-            return
-        }
-
         getChannels(activeBrand.id)
             .then(json => {
                 setChannels(json)
@@ -61,8 +51,8 @@ const Channels = () => {
     }, [])
 
     useEffect(() => {
-        if (!channels.length)
-            return 
+        // if (!channels.length)
+        //     return 
 
         const authorizedChannels = channels.map(channel => channel.network)
         const filteredChannels = ["twitter", "facebook", "linkedin"].filter(channel => !authorizedChannels.includes(createSlug(channel)))
@@ -82,8 +72,37 @@ const Channels = () => {
         )
     }
 
+    const facebookLoginModal = () => {
+        window.FB.login(response => {
+            if (response.authResponse) {
+                console.log(response)
+                window.FB.api('/me?fields=accounts', res => {
+                    addNewChannel(activeBrand.id, {
+                        token: res.accounts.data[0].access_token,
+                        resource_id: res.accounts.data[0].id,
+                        network: 'facebook'
+                    })
+                        .then(channel => {
+                            setChannels([...channels, channel])
+                        })
+                });
+            } else {
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        }, {
+            enable_profile_selector: true,
+            scope: 'pages_manage_posts,pages_manage_engagement,pages_manage_ads,pages_read_engagement,pages_show_list'
+        });
+    }
+
     const handleAddChannelClick = channel => {
         let channel_slug = createSlug(channel)
+
+        if (channel_slug === 'facebook') {
+            facebookLoginModal()
+            return
+        }
+
         setCurrentChannelToAdd(channel)
 
         //close the popover, by losing focus

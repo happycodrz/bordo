@@ -46,10 +46,11 @@ const NewPostModal = ({ show, handleShow }) => {
     ]
 
     const handleSchedule = () => {
+        console.log(dateTime)
         const body = {
             "post": {
                 "title": title,
-                "scheduled_for": new Date(dateTime).toISOString(),
+                "scheduled_for": dateTime.utc(),
                 "post_variants": Object.values(variants).filter(v => v.active)
             }
         }

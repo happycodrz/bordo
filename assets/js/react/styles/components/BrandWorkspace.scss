@@ -1,13 +1,14 @@
 .bdo-brandWorkspace {
     overflow: scroll;
     overscroll-behavior: auto;
+    height: 100%;
 
     > div {
         min-height: 100%;
         
         > section {
-            min-height: 100vh;
             @extend .p-5;
+            min-height: 100vh;
         }
     }
 }

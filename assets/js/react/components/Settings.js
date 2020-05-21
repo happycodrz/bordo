@@ -12,6 +12,7 @@ import Channels from "./Channels";
 import UserIcon from "./UserIcon"
 import { randomNotificationTitle } from "../utilities/helpers"
 import { EditableInput } from "./EditableInput"
+import { navigate } from "@reach/router"
 
 const Settings = () => {
     const [{ activeBrand }, dispatch] = useStateValue()
@@ -60,7 +61,7 @@ const Settings = () => {
         if(window.confirm(`Are you sure you want to delete the brand ${activeBrand.name}?`)) {
             deleteBrand(activeBrand.id)
                 .then(() => {
-                    window.location.reload()
+                    window.location.replace('/')
                 })
         } else {
             return

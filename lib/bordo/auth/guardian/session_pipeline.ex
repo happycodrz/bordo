@@ -1,4 +1,4 @@
-defmodule Auth.Guardian.Pipeline do
+defmodule Auth.Guardian.SessionPipeline do
   @moduledoc """
   Configures a set of plugs to be used with Guardian based authentication / authorisation
   """
@@ -7,13 +7,7 @@ defmodule Auth.Guardian.Pipeline do
     error_handler: Auth.Guardian.ErrorHandler,
     module: Auth.Guardian
 
-  # Verify authorisation header and make sure management is allowed for Identity
-  plug Guardian.Plug.VerifyHeader
-
-  # Make sure the token is found and authenticated
-  plug Guardian.Plug.EnsureAuthenticated
-
-  # Load the Identity
+  plug Guardian.Plug.VerifySession
   plug Guardian.Plug.LoadResource
 
   # Add :current_identity to the connection

@@ -46,9 +46,12 @@ export const Content = ({ show }) => {
                     <Form.Control as="textarea" style={{ resize: 'none' }} rows="6" value={description} onChange={e => setDescription(e.target.value)} placeholder="Description" />
                     <Form.Text className="text-muted text-right">{!description ? 0 : description.length}</Form.Text>
                 </Form.Group> */}
-                <ContentEditor onChange={e => {
-                    setDescription(e)
-                }} />
+                <ContentEditor
+                    placeholder="The content of your posts – say something nice!"
+                    onChange={e => {
+                        setDescription(e)
+                    }}
+                />
             </Col>
         </Row>
     </div>)

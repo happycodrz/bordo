@@ -13,13 +13,17 @@ defmodule Auth.Guardian do
     {:ok, to_string(user.id)}
   end
 
-  @doc false
+  @doc """
+  Based on the current_claims (jwt from auth0), this will build the current_resource.
+  This can be very robust, and can essentially handle the entire state of the current_resource.
+  """
   def resource_from_claims(%{"sub" => "auth0|" <> id}) do
-    # user_with_brands = Repo.get_by(User, auth0_id: id) |> Repo.preload([:brands])
-    # TODO:
-    # expand to cache user & current_brand?
-    # expand %Identity to include better/more information as a session cache
     user = Repo.get_by!(User, auth0_id: id)
+    {:ok, %Identity{id: id, user_id: user.id, team_id: user.team_id}}
+  end
+
+  def resource_from_claims(%{"sub" => id}) do
+    user = Repo.get_by!(User, id: id)
     {:ok, %Identity{id: id, user_id: user.id, team_id: user.team_id}}
   end
 end

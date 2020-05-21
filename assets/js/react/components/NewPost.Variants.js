@@ -32,7 +32,6 @@ export const Variants = ({ show }) => {
     useEffect(() => {
         getChannels(activeBrand.id)
             .then(channels => {
-                console.log(channels)
                 if (channels && channels.length) {
                     setChannels(channels)
                 }
@@ -80,7 +79,6 @@ export const Variants = ({ show }) => {
     }
     
     const variantArray = Object.values(variants)
-    console.log(variants)
     
     return (<div style={{ display: show ? 'block' : 'none' }} className="py-4">
         <p class="text-center mb-5">

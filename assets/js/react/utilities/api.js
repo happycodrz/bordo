@@ -1,9 +1,8 @@
 import { createSlug } from '../utilities/helpers'
-import Cookies from 'js-cookie'
 
-const AUTH_TOKEN = Cookies.get('bdo-logged-in')
+const AUTH_TOKEN = document.querySelector(`meta[name="auth-token"]`).getAttribute('content')
 
-const API_ROOT_URL = process.env.REACT_APP_API_ENDPOINT
+const API_ROOT_URL = process.env.REACT_APP_API_ENDPOINT || ''
 
 const GET_OPTIONS = {
     headers: {
@@ -252,6 +251,25 @@ export const createMedia = (brandId, title, {public_id, width, height, resource_
                     return res.json()
                 } else {
                     reject({message: 'Could not add media. Try again later.'})
+                }
+            })
+            .then(json => resolve(json.data))
+            .catch(err => reject(err))
+    })
+}
+
+export const updateMedia = (brandId, mediaId, {title}) => {
+    return new Promise((resolve, reject) => {
+        fetch(`${API_ROOT_URL}/brands/${brandId}/media/${mediaId}`, PUT_OPTIONS({
+            "media": {
+                "title": title
+            }
+        }))
+            .then(res => {
+                if(res.status === 200) {
+                    return res.json()
+                } else {
+                    reject({message: 'Could not update media. Try again later.'})
                 }
             })
             .then(json => resolve(json.data))

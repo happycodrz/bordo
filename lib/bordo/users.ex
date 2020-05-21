@@ -124,15 +124,14 @@ defmodule Bordo.Users do
   end
 
   def find_or_create(attrs) do
-    {:ok, user} =
+    existing_user = Repo.one(from u in User, where: u.auth0_id == ^attrs.auth0_id)
+
+    if is_nil(existing_user) do
       %User{}
       |> User.changeset(attrs)
       |> Repo.insert(on_conflict: :nothing)
-
-    if is_nil(user.id) do
-      {:ok, user}
     else
-      {:ok, Repo.one(from u in User, where: u.id == ^user.id)}
+      {:ok, existing_user}
     end
   end
 

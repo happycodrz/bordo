@@ -32,13 +32,16 @@ body {
 .app__container {
     display: grid;
     grid-template-columns: 75px 350px auto;
-    height: 100vh;
     overflow: hidden;
+    height: 100vh;
+
+    > * {
+        height: 100vh;
+    }
 }
 
 .team__sidebar {
     z-index: 999;
-    height: 100vh;
 }
 
 .brand__sidebar {

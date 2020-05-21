@@ -1,21 +1,32 @@
 import React, { useEffect } from "react"
 import { useStateValue } from './state'
 
-import BrandWorkspace from "./components/BrandWorkspace"
 import TeamSidebar from "./components/TeamSidebar"
 import BrandSidebar from "./components/BrandSidebar"
 import Loader from "./components/Loader"
 import NotificationsList from "./components/Notifications"
+import { navigate } from "@reach/router"
 
-const Layout = ({children, brandSlug}) => {
+const Layout = ({children}) => {
     const [{ loadingBrand, activeBrand, brands }, dispatch] = useStateValue()
-
+    
     useEffect(() => {
-        dispatch({
-            type: 'setActiveBrand',
-            data: brands.filter(b => b.slug === brandSlug)[0]
-        })
-    }, [brandSlug])
+        let brandSlug = window.location.pathname.split('/')[1]
+
+        if(!brandSlug) {
+            navigate(`/${brands[0].slug}/`, {}, true)
+            dispatch({
+                type: 'setActiveBrand',
+                data: brands.filter(b => b.slug === brands[0].slug)[0]
+            })
+        }
+        else {
+            dispatch({
+                type: 'setActiveBrand',
+                data: brands.filter(b => b.slug === brandSlug)[0]
+            })
+        }
+    }, [])
 
     return (
         !activeBrand ? <Loader /> :
@@ -24,10 +35,7 @@ const Layout = ({children, brandSlug}) => {
                 {loadingBrand ? <Loader /> : null}
                 <TeamSidebar />
                 <BrandSidebar />
-                {/* <BrandWorkspace /> */}
-                <div className="bdo-brandWorkspace">
-                    {children}
-                </div>
+                {children}
             </div>
             <NotificationsList />
         </>

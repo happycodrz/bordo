@@ -17,7 +17,7 @@ defmodule BordoWeb.AuthController do
     Logger.debug(fn -> "Login attempt with user: #{credentials["username"]}" end)
 
     with {:ok, credentials} <- Credentials.validate(credentials),
-         {:ok, %TokenResult{} = result} <- Auth.sign_in(credentials) do
+         {:ok, %TokenResult{} = result, _} <- Auth.sign_in(credentials) do
       conn
       |> put_status(:ok)
       |> render(:show, token_result: result)

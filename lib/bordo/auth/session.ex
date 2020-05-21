@@ -10,7 +10,7 @@ defmodule BordoWeb.Plug.Session do
   alias Bordo.Sessions.Session
 
   def redirect_authorized(conn, _opts) do
-    user_id = Map.get(conn.assigns, :user_id)
+    user_id = Map.get(conn.assigns, :current_identity)
 
     if is_nil(user_id) do
       conn
@@ -72,12 +72,12 @@ defmodule BordoWeb.Plug.Session do
   end
 
   def assign_current_admin(conn, _opts) do
-    user_id = Map.get(conn.assigns, :user_id)
+    current_identity = Map.get(conn.assigns, :current_identity)
 
-    if is_nil(user_id) do
+    if is_nil(current_identity) do
       conn
     else
-      admin = Bordo.Users.get_user!(user_id)
+      admin = Bordo.Users.get_user!(current_identity.user_id)
       assign(conn, :current_admin, admin)
     end
   end

@@ -4,7 +4,7 @@ import { Calendar, Clock } from 'react-feather'
 import Form from 'react-bootstrap/Form'
 
 import { NewPostContext } from './NewPostModal'
-import { months } from '../utilities/helpers'
+import * as Helpers from '../utilities/helpers'
 
 import moment from 'moment'
 import { Button } from 'react-bootstrap'
@@ -12,6 +12,8 @@ import { Button } from 'react-bootstrap'
 const Schedule = ({ show }) => {
     const [{ dateTime }, dispatch] = useContext(NewPostContext)
     const [times, setTimes] = useState()
+    const [dates, setDates] = useState([])
+    const [months, setMonths] = useState([])
 
     const handleDateSelect = dateTime => {
         console.log(dateTime)
@@ -25,7 +27,9 @@ const Schedule = ({ show }) => {
     today.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
 
     const daysInMonth = today.daysInMonth()
-    const days = Array.from(Array(daysInMonth).keys())
+    const allDates = Array.from(Array(daysInMonth).keys())
+
+    const allMonths = [...Helpers.months]
 
     const years = [today.year(), today.add(1, 'y').year()]
 
@@ -48,12 +52,17 @@ const Schedule = ({ show }) => {
     useEffect(() => {
         let startTime = dateTime.format('YYYYMD') === moment().format('YYYYMD') ? (moment().format('k') * 60) + (Math.ceil(moment().minute() / 15) * 15) : 0
         setTimes(allTimes.slice(startTime / 15))
-        console.log(startTime)
+        
+        let startDate = dateTime.month() === moment().month() ? moment().date() - 1 : 0
+        setDates(allDates.slice(startDate))
+        
+        let startMonth = dateTime.year() === moment().year() ? moment().month() : 0
+        setMonths(allMonths.slice(startMonth))
     }, [dateTime])
 
     const presets = [
         {
-            dateTime: moment().set({ hour: 12, minute: 0, second: 0, millisecond: 0 }),
+            dateTime: moment().add(1, 'hour').set({ minute: 0, second: 0, millisecond: 0 }),
             label: "Today"
         },
         {
@@ -89,12 +98,12 @@ const Schedule = ({ show }) => {
                 <Calendar className="mr-2 text-muted" />
                 <Form.Control as="select" className="mr-2" size="lg" onChange={e => handleDateSelect(dateTime.month(e.target.value))}>
                     {months.map((month, i) => {
-                        let selected = dateTime.month() === i
+                        let selected = dateTime.format('MMMM') === i
                         return <option value={i} selected={selected}>{month}</option>
                     })}
                 </Form.Control>
                 <Form.Control as="select" className="mr-2" size="lg" onChange={e => handleDateSelect(dateTime.date(e.target.value))}>
-                    {days.map(day => {
+                    {dates.map(day => {
                         day = day + 1
                         let selected = dateTime.date() === day
                         return <option value={day} selected={selected}>{day}</option>

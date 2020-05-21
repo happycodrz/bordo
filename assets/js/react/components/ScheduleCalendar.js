@@ -97,14 +97,14 @@ const CalendarDayPosts = ({ index, today, post, onClick }) => {
     )
 }
 
-const CalendarDay = ({ date, today, muted, posts, handlePostClick }) => {
+const CalendarDay = ({ date, today, muted, past, posts, handlePostClick }) => {
     let todayClass = today ? " calendar__day--today" : ""
     let mutedClass = muted ? " calendar__day--muted" : ""
 
     return (
         <div className={`calendar__day ${todayClass} ${mutedClass}`} key={date}>
             <sup>{date}</sup>
-            {muted ? 
+            {past && !muted ? 
                 <div>
                     {!posts ? null :
                         posts.map((post, i) => <CalendarDayPosts post={post} onClick={() => handlePostClick(post)} index={i} />)
@@ -112,7 +112,7 @@ const CalendarDay = ({ date, today, muted, posts, handlePostClick }) => {
                 </div>
             :
                 <Droppable
-                    droppableId={`${date}`}
+                    droppableId={`${!muted ? '' : '_'}${date}`}
                 >
                     {(provided, snapshot) => (
                         <div
@@ -121,7 +121,9 @@ const CalendarDay = ({ date, today, muted, posts, handlePostClick }) => {
                             {...provided.droppableProps}
                         >
                             {!posts ? null :
-                                posts.map((post, i) => <CalendarDayPosts post={post} onClick={() => handlePostClick(post)} index={i} />)
+                                posts
+                                    .sort((a, b) => new Date(a.scheduled_for) - new Date(b.scheduled_for))
+                                    .map((post, i) => <CalendarDayPosts post={post} onClick={() => handlePostClick(post)} index={i} />)
                             }
                             {provided.placeholder}
                         </div>
@@ -176,9 +178,6 @@ const CalendarDays = ({ year, month }) => {
                     if (destination.droppableId === source.droppableId)
                         return
 
-                    console.log(draggableId)
-                    console.log(destination.droppableId)
-
                     let newPosts = [...posts]
                     let updatedPost = newPosts.filter(p => p.id === draggableId)[0]
                     let newDate = moment.utc(updatedPost.scheduled_for).set('date', destination.droppableId).format()
@@ -205,7 +204,15 @@ const CalendarDays = ({ year, month }) => {
                     })}
                     {days.map(e => {
                         return (
-                            <CalendarDay posts={e.posts} muted={e.muted} today={currentDay === new Date(year, month, e.date + 1).getTime()} date={e.date !== null ? e.date + 1 : ''} handlePostClick={handlePostClick} />
+                            <CalendarDay
+                                posts={e.posts}
+                                muted={e.muted}
+                                // past={!moment().isSameOrAfter(moment().date(e.date))}
+                                past={moment(`${e.date + 1} 00:00:00`, 'DD hh:mm:ss').isBefore(moment('00:00:00', 'hh:mm:ss'))}
+                                today={currentDay === new Date(year, month, e.date + 1).getTime()}
+                                date={e.date !== null ? e.date + 1 : ''}
+                                handlePostClick={handlePostClick}
+                            />  
                         )
                     })}
                     {nextMonthDays.map(e => {

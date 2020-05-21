@@ -2,7 +2,7 @@ import React from "react"
 
 import { EIStateProvider } from './state'
 
-import { Router } from "@reach/router"
+import { Router, Redirect } from "@reach/router"
 
 import Layout from "./Layout"
 import Loader from "./components/Loader"
@@ -14,6 +14,9 @@ import Schedule from "./components/Schedule"
 import Reports from "./components/Reports"
 import Settings from "./components/Settings"
 import Media from './components/Media'
+import Complete from "./components/OAuth/Complete"
+import LinkedIn from "./components/OAuth/LinkedIn"
+import OAuth from "./components/OAuth/OAuth"
 
 const App = () => {
 
@@ -145,23 +148,27 @@ const App = () => {
 
     return (
         <EIStateProvider initialState={initialState} reducer={reducer}>
-                <StateInitializer
-                    loading={<Loader />}
-                    >
-                    <Router>
-                    <Layout
-                        path="/:brandSlug"
-                    >
-                        {navigationList.map((e, i) => {
-                            const Component = pageComponents[e.componentName]
-                            
-                            return (
-                                <Component path={e.path} key={i} />
-                            )
-                        })}
+            <StateInitializer
+                loading={<Loader />}
+            >
+                <Router>
+                    <OAuth path="oauth">
+                        <Complete path="complete"/>
+                        <LinkedIn path="linkedin" />
+                    </OAuth>
+                    <Layout path="/">
+                        <div className="bdo-brandWorkspace" path=":brandSlug">
+                            {navigationList.map((e, i) => {
+                                const Component = pageComponents[e.componentName]
+
+                                return (
+                                    <Component path={e.path} key={i} />
+                                )
+                            })}
+                        </div>
                     </Layout>
-            </Router>
-                </StateInitializer>
+                </Router>
+            </StateInitializer>
         </EIStateProvider>
     )
 }

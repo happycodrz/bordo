@@ -14,7 +14,7 @@ import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import LoaderButton from './LoaderButton'
 
-import { getMedia, deleteMedia, createMedia } from '../utilities/api'
+import { getMedia, deleteMedia, createMedia, updateMedia } from '../utilities/api'
 import { dateFormat, componentPrefix, randomNotificationTitle } from '../utilities/helpers'
 import { useStateValue } from '../state'
 import CanvaButton from './CanvaButton'
@@ -184,9 +184,6 @@ const MediaDetailModal = ({ media, show, handleShow, handleSave, handleDelete })
     return (
         !media ? null :
             <Modal centered show={show} onHide={handleShow} {...classes()}>
-                {/* <Modal.Header closeButton>
-                <Modal.Title>{title}</Modal.Title>
-            </Modal.Header> */}
                 <Modal.Body className="pt-0">
                     <Row className="mb-4" style={{ marginLeft: "-16px", marginRight: "-16px" }}>
                         {media.resource_type === 'image' ?
@@ -197,9 +194,6 @@ const MediaDetailModal = ({ media, show, handleShow, handleSave, handleDelete })
                         }
                     </Row>
                     <Row>
-                        {/* <Col>
-                        <img src={media.thumbnail_url} className="img-fluid" />
-                    </Col> */}
                         <Col>
                             <Form>
                                 <Form.Group controlId="editMediaTitle" as={Row}>
@@ -252,7 +246,15 @@ const MediaDetailModal = ({ media, show, handleShow, handleSave, handleDelete })
                 </Button>
                     <div>
                         <Button variant="outline-secondary" className="mr-2" onClick={handleShow}>Cancel</Button>
-                        <LoaderButton variant="success" onClick={handleSave}>Save</LoaderButton>
+                        <LoaderButton variant="success"
+                            onClick={() => {
+                                let updatedMedia = media
+                                updatedMedia.title = title
+                                handleSave(updatedMedia)
+                            }}
+                        >
+                            Save
+                        </LoaderButton>
                     </div>
                 </Modal.Footer>
             </Modal>
@@ -364,9 +366,21 @@ export const MediaGallery = ({ isSelecter, onSelect }) => {
         }
     }
 
-    const handleMediaSave = () => {
-        setShowEditModal(false)
-        return null
+    const handleMediaSave = media => {
+        updateMedia(activeBrand.id, media.id, { title: media.title })
+            .then(json => {
+                setShowEditModal(false)
+            })
+            .catch(error => {
+                dispatch({
+                    type: 'addNotification',
+                    data: {
+                        title: randomNotificationTitle('failure'),
+                        body: error.message,
+                        variant: 'danger'
+                    }
+                })
+            })
     }
 
     const handleMediaUpload = (res, title) => {
@@ -429,7 +443,7 @@ export const MediaGallery = ({ isSelecter, onSelect }) => {
                     activeFilter={activeFilter}
                     upload={!isSelecter}
                 />
-                <MediaDetailModal media={activeMedia} show={showEditModal} handleShow={handleEditModalShow} handleSave={handleMediaSave} handleDelete={() => handleMediaDelete(activeMedia.id)} />
+                <MediaDetailModal media={activeMedia} show={showEditModal} handleShow={handleEditModalShow} handleSave={data => handleMediaSave(data)} handleDelete={() => handleMediaDelete(activeMedia.id)} />
                 <Row>
                     {!filteredAssets ? 'Loading...' :
                         !filteredAssets.length ?

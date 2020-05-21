@@ -56,23 +56,27 @@ const PostEditorModal = ({ post, show, handleShow }) => {
     }
 
     const handleDeleteClick = () => {
-        deletePost(activeBrand.id, post.id)
-            .then(json => {
-                dispatch({
-                    type: 'deletePost',
-                    postId: post.id
+        if(window.confirm('Are you sure you want to delete this post?')) {
+            deletePost(activeBrand.id, post.id)
+                .then(json => {
+                    dispatch({
+                        type: 'deletePost',
+                        postId: post.id
+                    })
+    
+                    dispatch({
+                        type: 'addNotification',
+                        data: {
+                            title: randomNotificationTitle('success'),
+                            body: json.message,
+                            variant: 'success'
+                        }
+                    })
+                    handleShow()
                 })
-
-                dispatch({
-                    type: 'addNotification',
-                    data: {
-                        title: randomNotificationTitle('success'),
-                        body: json.message,
-                        variant: 'success'
-                    }
-                })
-                handleShow()
-            })
+        } else {
+            return
+        }
     }
 
     const updateVariant = (network, field, value) => {

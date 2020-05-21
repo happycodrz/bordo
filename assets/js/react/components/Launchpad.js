@@ -22,7 +22,7 @@ const LaunchpadCard = ({icon, title, variant, link, action}) => {
 }
 
 const Launchpad = () => {
-    const [{ activeUser }] = useStateValue()
+    const [{ activeUser, activeBrand }] = useStateValue()
 
     let greetings = ['Hello', 'Welcome back', 'Howdy', 'What\'s up', 'Hola', 'Sup', 'Hey', 'Hey there']
     let greeting = greetings[Math.floor(Math.random() * greetings.length)]
@@ -30,8 +30,8 @@ const Launchpad = () => {
 
     let launchpadCards = [
         { icon: <Send size={40} />, title: 'Schedule a new post', variant: 'primary', action: () => document.getElementById('newPostButton').click() },
-        { icon: <Calendar size={40} />, title: 'See my upcoming posts', variant: 'danger', link: '/schedule' },
-        { icon: <Image size={40} />, title: 'Upload a new image or graphic', variant: 'success', link: '/media' },
+        { icon: <Calendar size={40} />, title: 'See my upcoming posts', variant: 'danger', link: `/${activeBrand.slug}/schedule` },
+        { icon: <Image size={40} />, title: 'Upload a new image or graphic', variant: 'success', link: `/${activeBrand.slug}/media` },
     ]
 
     return (

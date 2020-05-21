@@ -8,6 +8,7 @@ import { Plus } from "react-feather";
 import { Modal, Button, FormControl } from "react-bootstrap";
 
 import { addNewBrand } from '../utilities/api'
+import { navigate } from "@reach/router";
 
 const AddNewBrandButton = () => {
     const [{ brands }, dispatch] = useStateValue()
@@ -49,7 +50,7 @@ const AddNewBrandButton = () => {
                                         data: newBrand
                                     })
 
-                                    Cookies.set('bdo-activeBrandId', newBrand.id)
+                                    navigate(`/${newBrand.slug}/`)
 
                                     setBrandName('')
                                     toggleShow()
