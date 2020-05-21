@@ -11,7 +11,7 @@ defmodule BordoWeb.Providers.LinkedinController do
         client_id: System.get_env("LINKEDIN_CLIENT_ID"),
         redirect_uri: System.get_env("LINKEDIN_REDIRECT_URI"),
         response_type: "code",
-        scope: "w_member_social,r_liteprofile"
+        scope: "w_member_social,r_liteprofile,rw_organization_admin"
       })
 
     auth_url =
