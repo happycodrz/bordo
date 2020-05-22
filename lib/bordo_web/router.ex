@@ -82,7 +82,7 @@ defmodule BordoWeb.Router do
     pipe_through [:api, :private_api]
 
     resources "/brands", BrandController do
-      resources "/channels", Brands.ChannelController, except: [:update]
+      resources "/channels", Brands.ChannelController
       resources "/media", Brands.MediaController
       resources "/posts", Brands.PostController
       resources "/users", Brands.UserController
