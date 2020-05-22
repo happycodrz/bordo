@@ -1,7 +1,6 @@
 defmodule BordoWeb.LoginController do
   use BordoWeb, :controller
 
-  alias Bordo.Users.User
   alias Auth.Credentials
 
   def index(conn, _params) do

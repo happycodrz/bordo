@@ -39,29 +39,30 @@ defmodule BordoWeb.Providers.LinkedinController do
         grant_type: "authorization_code"
       })
 
-    with {:ok, %{"access_token" => access_token}} <- auth(query) do
-      channel_params =
-        Map.merge(
-          %{
-            "token" => access_token,
-            "network" => "linkedin"
-          },
-          %{"brand_id" => brand_id}
-        )
+    case auth(query) do
+      {:ok, %{"access_token" => access_token}} ->
+        channel_params =
+          Map.merge(
+            %{
+              "token" => access_token,
+              "network" => "linkedin"
+            },
+            %{"brand_id" => brand_id}
+          )
 
-      with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do
-        conn
-        |> put_status(:created)
-        |> put_resp_header(
-          "location",
-          Routes.brand_channel_path(conn, :show, brand_id, channel)
-        )
-        |> put_view(BordoWeb.Brands.ChannelView)
-        |> render("show.json", channel: channel)
-      end
+        with {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params) do
+          conn
+          |> put_status(:created)
+          |> put_resp_header(
+            "location",
+            Routes.brand_channel_path(conn, :show, brand_id, channel)
+          )
+          |> put_view(BordoWeb.Brands.ChannelView)
+          |> render("show.json", channel: channel)
+        end
 
-      json(conn, %{token: access_token})
-    else
+        json(conn, %{token: access_token})
+
       {:ok, err} ->
         json(conn, %{
           error: %{detail: "Auth failed", message: err}

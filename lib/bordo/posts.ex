@@ -107,14 +107,14 @@ defmodule Bordo.Posts do
     # Need to insert and then get the post so media will be preloaded
     # maybe this can be done in one swoop, but I'm not sure how right now
 
-    with {:ok, post} <-
-           %Post{}
-           |> Repo.preload(post_variants: [:post_variant_media])
-           |> Post.create_changeset(attrs)
-           |> Repo.insert()
-           |> notify_subscribers([:post, :created]) do
-      {:ok, get_post!(post.id)}
-    else
+    case %Post{}
+         |> Repo.preload(post_variants: [:post_variant_media])
+         |> Post.create_changeset(attrs)
+         |> Repo.insert()
+         |> notify_subscribers([:post, :created]) do
+      {:ok, post} ->
+        {:ok, get_post!(post.id)}
+
       changeset ->
         changeset
     end

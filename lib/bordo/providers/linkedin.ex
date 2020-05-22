@@ -1,5 +1,5 @@
 defmodule Bordo.Providers.Linkedin do
-  import Linkedin
+  alias Linkedin
   require Logger
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
@@ -8,12 +8,13 @@ defmodule Bordo.Providers.Linkedin do
     {:ok, %{"id" => id}} = Linkedin.me(channel.token)
     urn = "urn:li:person:" <> id
 
-    with {:ok, post} <- create_share(channel, content, media, urn) do
-      string_id = post["id"]
+    case create_share(channel, content, media, urn) do
+      {:ok, post} ->
+        string_id = post["id"]
 
-      post_variant
-      |> PostVariants.update_post_variant(%{external_id: string_id, status: "published"})
-    else
+        post_variant
+        |> PostVariants.update_post_variant(%{external_id: string_id, status: "published"})
+
       _error ->
         post_variant
         |> PostVariants.update_post_variant(%{status: "published"})

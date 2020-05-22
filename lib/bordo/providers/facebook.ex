@@ -4,12 +4,13 @@ defmodule Bordo.Providers.Facebook do
   alias Bordo.PostVariants.PostVariant
 
   def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
-    with {:ok, post} <- create_post(channel, content, media) do
-      string_id = post["id"]
+    case create_post(channel, content, media) do
+      {:ok, post} ->
+        string_id = post["id"]
 
-      post_variant
-      |> PostVariants.update_post_variant(%{external_id: string_id, status: "published"})
-    else
+        post_variant
+        |> PostVariants.update_post_variant(%{external_id: string_id, status: "published"})
+
       _error ->
         post_variant |> PostVariants.update_post_variant(%{status: "failed"})
     end

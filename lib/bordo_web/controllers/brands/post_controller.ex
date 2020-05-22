@@ -26,12 +26,13 @@ defmodule BordoWeb.Brands.PostController do
   def create(conn, %{"post" => post_params, "brand_id" => brand_id}) do
     post_params = post_params |> Map.merge(%{"user_id" => user_id(conn), "brand_id" => brand_id})
 
-    with {:ok, %Post{} = post} <- Posts.create_and_schedule_post(post_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.brand_post_path(conn, :show, brand_id, post))
-      |> render("show.json", post: post)
-    else
+    case Posts.create_and_schedule_post(post_params) do
+      {:ok, %Post{} = post} ->
+        conn
+        |> put_status(:created)
+        |> put_resp_header("location", Routes.brand_post_path(conn, :show, brand_id, post))
+        |> render("show.json", post: post)
+
       {:error, err} ->
         {:error, err}
     end
