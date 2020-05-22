@@ -1,4 +1,4 @@
-defmodule Auth.Guardian.ErrorHandler do
+defmodule Auth.Guardian.ApiErrorHandler do
   @moduledoc """
   This is a fallback module for Guardian errors. If pipeline fails, we'll fallback here.
   """

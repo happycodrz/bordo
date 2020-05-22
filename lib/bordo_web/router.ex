@@ -2,7 +2,7 @@ defmodule BordoWeb.Router do
   use BordoWeb, :router
   import Phoenix.LiveView.Router
   import Phoenix.LiveDashboard.Router
-  import BordoWeb.Plug.Session, only: [redirect_authorized: 2, assign_current_admin: 2]
+  import BordoWeb.Plug.Session, only: [assign_current_admin: 2]
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -10,7 +10,6 @@ defmodule BordoWeb.Router do
     plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug Auth.Guardian.SessionPipeline
   end
 
   pipeline :react do
@@ -19,7 +18,7 @@ defmodule BordoWeb.Router do
 
   pipeline :unauthenticated do
     plug :put_root_layout, {BordoWeb.LayoutView, :unauthenticated_root}
-    plug :redirect_authorized
+    plug Guardian.Plug.EnsureNotAuthenticated
   end
 
   pipeline :admin do
@@ -31,13 +30,17 @@ defmodule BordoWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :private do
+    plug Auth.Guardian.SessionPipeline
+  end
+
   # Pipeline for private apis, requires Authorisation header with Bearer token
   pipeline :private_api do
     plug Auth.Guardian.ApiPipeline
   end
 
   scope "/admin", BordoWeb.Admin, as: :admin do
-    pipe_through [:browser, :admin]
+    pipe_through [:browser, :private, :admin]
     live_dashboard "/dashboard", metrics: Bordo.Telemetry
 
     get "/logout", AuthController, :index
@@ -102,7 +105,7 @@ defmodule BordoWeb.Router do
 
   # This must be defined last as a catchall /*path so react-routing will work
   scope "/", BordoWeb do
-    pipe_through [:browser, :react]
+    pipe_through [:browser, :private, :react]
 
     get "/", ReactController, :index
     get "/*path", ReactController, :index

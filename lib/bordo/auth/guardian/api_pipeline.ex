@@ -4,7 +4,7 @@ defmodule Auth.Guardian.ApiPipeline do
   """
   use Guardian.Plug.Pipeline,
     otp_app: :bordo,
-    error_handler: Auth.Guardian.ErrorHandler,
+    error_handler: Auth.Guardian.ApiErrorHandler,
     module: Auth.Guardian
 
   plug Guardian.Plug.VerifyHeader
