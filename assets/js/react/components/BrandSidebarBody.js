@@ -19,7 +19,7 @@ const BrandSidebarBody = () => {
     return (
         <div className="d-flex flex-column h-100">
             <BrandNavigation />
-            <div class="px-3 pb-2 mt-auto">
+            <div className="px-3 pb-2 mt-auto">
                 <button
                     className="btn btn-danger btn-lg btn-block d-flex align-items-center justify-content-center mb-2"
                     id="newPostButton"

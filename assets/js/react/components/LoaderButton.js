@@ -19,7 +19,7 @@ const LoaderButton = (props) => {
     return (
         <Button {...props} {...classes(null, loading ? 'loading' : null)} onClick={handleClick}>
             <span {...classes('icon')}>
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             </span>
             <span {...classes('text')}>
                 {props.children}

@@ -92,7 +92,7 @@ const Schedule = ({ show }) => {
     ]
 
     return (<div style={{ display: show ? 'block' : 'none' }} className="py-5">
-        <p class="lead text-center mb-5">When do you want this post to go out?</p>
+        <p className="lead text-center mb-5">When do you want this post to go out?</p>
         <Form inline>
             <Form.Row className="justify-content-center align-items-center w-100 mb-4">
                 <Calendar className="mr-2 text-muted" />

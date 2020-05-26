@@ -20,11 +20,11 @@ const BrandNavigation = () => {
     const [{activeBrand}] = useStateValue()
     return (
         <nav className="nav flex-column">
-            {navigationList.map(e => {
+            {navigationList.map((e, i) => {
                 const IconElement = Icon[e.icon]
 
                 return (
-                    <div className="nav-item">
+                    <div className="nav-item" key={i}>
                         <NavLink to={`/${activeBrand.slug}${e.path}`} className="bdo-brandNav__link nav-link p-3 d-flex align-items-center">
                             <IconElement size={20} className="mr-3" />
                             {e.label}

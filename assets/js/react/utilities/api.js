@@ -35,12 +35,22 @@ const DELETE_OPTIONS = {
     }
 }
 
+const errorHandler = (error, reject) => {
+    if (error.status === 401) {
+        window.location = process.env.REACT_APP_LOGIN_URL
+    } else {
+        reject(error)
+    }
+}
+
+/* --- */
+
 export const getUser = uuid => {
     return new Promise((resolve, reject) => {
         fetch(`${API_ROOT_URL}/profile`, GET_OPTIONS)
             .then(res => res.json())
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -55,7 +65,7 @@ export const getAllUsers = brandUuid => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -70,7 +80,7 @@ export const getAllBrands = () => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -88,7 +98,7 @@ export const getPosts = (brandId, year, month) => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -103,16 +113,16 @@ export const schedulePost = (brandId, body) => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
 export const updatePost = (brandId, postId, body) => {
     return new Promise((resolve, reject) => {
-        fetch(`${API_ROOT_URL}/brands/${brandId}/posts/${postId}`, POST_OPTIONS(body))
+        fetch(`${API_ROOT_URL}/brands/${brandId}/posts/${postId}`, PUT_OPTIONS(body))
             .then(res => res.json())
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -120,7 +130,7 @@ export const deletePost = (brandId, postId) => {
     return new Promise((resolve, reject) => {
         fetch(`${API_ROOT_URL}/brands/${brandId}/posts/${postId}`, DELETE_OPTIONS)
             .then(() => resolve({ message: `Post has been deleted.` }) )
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -140,7 +150,7 @@ export const addNewBrand = brandName => {
             }
         })
         .then(json => resolve(json.data))
-        .catch(err => reject(err))
+        .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -148,7 +158,7 @@ export const deleteBrand = (brandId) => {
     return new Promise((resolve, reject) => {
         fetch(`${API_ROOT_URL}/brands/${brandId}`, DELETE_OPTIONS)
             .then(() => resolve({ message: `Brand has been deleted.` }) )
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -163,7 +173,7 @@ export const getChannels = brandId => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -172,7 +182,7 @@ export const getChannelAuth = (brandId, channel) => {
         fetch(`${API_ROOT_URL}/providers/${channel}/auth?brand_id=${brandId}`, GET_OPTIONS)
             .then(res => res.json())
             .then(json => resolve(json))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -187,7 +197,7 @@ export const getChannelCallback = (channel, queryString) => {
                     resolve(json.data)
                 }
             })
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -204,7 +214,22 @@ export const addNewChannel = (brandId, channel) => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
+    })
+}
+
+export const updateChannel = (brandId, channelId, data) => {
+    return new Promise((resolve, reject) => {
+        fetch(`${API_ROOT_URL}/brands/${brandId}/channels/${channelId}`, PUT_OPTIONS(data))
+            .then(res => {
+                if(res.status === 200) {
+                    return res.json()
+                } else {
+                    reject({message: 'Could not update channel. Try again later.'})
+                }
+            })
+            .then(json => resolve(json.data))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -212,7 +237,7 @@ export const deleteChannel = (brandId, channelId) => {
     return new Promise((resolve, reject) => {
         fetch(`${API_ROOT_URL}/brands/${brandId}/channels/${channelId}`, DELETE_OPTIONS)
             .then(() => resolve({ message: `Channel has been deleted.` }) )
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -227,7 +252,7 @@ export const getMedia = brandId => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -254,7 +279,7 @@ export const createMedia = (brandId, title, {public_id, width, height, resource_
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -273,7 +298,7 @@ export const updateMedia = (brandId, mediaId, {title}) => {
                 }
             })
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -282,7 +307,7 @@ export const deleteMedia = (brandId, mediaId) => {
         fetch(`${API_ROOT_URL}/brands/${brandId}/media/${mediaId}`, DELETE_OPTIONS)
             // .then(re s => res.json())
             .then(() => resolve({ message: `Media item #${mediaId} has been deleted.` }) )
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }
 
@@ -291,6 +316,6 @@ export const updateBrand = (brandId, body) => {
         fetch(`${API_ROOT_URL}/brands/${brandId}`, PUT_OPTIONS(body))
             .then(res => res.json())
             .then(json => resolve(json.data))
-            .catch(err => reject(err))
+            .catch(err => errorHandler(err, reject))
     })
 }

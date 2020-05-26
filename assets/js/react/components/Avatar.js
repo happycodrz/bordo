@@ -2,12 +2,12 @@ import React from 'react'
 import { hexToRgb } from '../utilities/helpers'
 
 const Avatar = props => {
-    let { alt, src, shape, color, children, textColor } = props
+    let { alt, src, shape, color, children, textcolor } = props
 
     let rgb = hexToRgb(color)
 
-    if (!textColor) {
-        textColor = rgb && (rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114) > 186 ? '#000000' : '#ffffff'
+    if (!textcolor) {
+        textcolor = rgb && (rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114) > 186 ? '#000000' : '#ffffff'
     }
 
     return (
@@ -15,7 +15,7 @@ const Avatar = props => {
             className={`bdo-avatar bdo-avatar--${shape}`}
             style={{
                 background: src ? `url(${src})` : color,
-                color: textColor,
+                color: textcolor,
             }}
             {...props}
         >
@@ -25,6 +25,7 @@ const Avatar = props => {
 }
 
 Avatar.defaultProps = {
+    textcolor: '#ccc',
     color: '#ffffff',
     shape: 'circle'
 }

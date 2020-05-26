@@ -100,9 +100,10 @@ const App = () => {
 
             case 'updatePost': {
                 let posts = [...state.posts]
-                let postIndex = posts.findIndex(p => p.id === action.data.postId)
-                posts.splice(postIndex, 1)
-                posts.push(action.data.post)
+                let postIndex = posts.findIndex(p => p.id === action.data.id)
+                posts.splice(postIndex, 1, action.data.post)
+
+                console.log(posts)
 
                 return {
                     ...state,

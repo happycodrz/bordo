@@ -28,7 +28,7 @@ const CalendarHeader = ({ view }) => {
 
     return (
         <div className="calendar__header">
-            {days[view].map(e => <div>{e}</div>)}
+            {days[view].map((e, i) => <div key={i}>{e}</div>)}
         </div>
     )
 }
@@ -36,7 +36,8 @@ const CalendarHeader = ({ view }) => {
 const CalendarDayPosts = ({ index, today, post, onClick }) => {
     let { scheduled_for, title, post_variants } = post
     
-    let isPast = new Date(scheduled_for).getDate() < new Date().getDate()
+    // let isPast = new Date(scheduled_for).getDate() < new Date().getDate()
+    let isPast = moment(scheduled_for).isBefore(moment())
     let variant = isPast ? 'past' : 'future'
 
     const statusIcons = {
@@ -107,7 +108,7 @@ const CalendarDay = ({ date, today, muted, past, posts, handlePostClick }) => {
             {past && !muted ? 
                 <div>
                     {!posts ? null :
-                        posts.map((post, i) => <CalendarDayPosts post={post} onClick={() => handlePostClick(post)} index={i} />)
+                        posts.map((post, i) => <CalendarDayPosts key={i} post={post} onClick={() => handlePostClick(post)} index={i} />)
                     }
                 </div>
             :
@@ -123,7 +124,7 @@ const CalendarDay = ({ date, today, muted, past, posts, handlePostClick }) => {
                             {!posts ? null :
                                 posts
                                     .sort((a, b) => new Date(a.scheduled_for) - new Date(b.scheduled_for))
-                                    .map((post, i) => <CalendarDayPosts post={post} onClick={() => handlePostClick(post)} index={i} />)
+                                    .map((post, i) => <CalendarDayPosts key={i} post={post} onClick={() => handlePostClick(post)} index={i} />)
                             }
                             {provided.placeholder}
                         </div>
@@ -178,10 +179,11 @@ const CalendarDays = ({ year, month }) => {
                     if (destination.droppableId === source.droppableId)
                         return
 
-                    let newPosts = [...posts]
-                    let updatedPost = newPosts.filter(p => p.id === draggableId)[0]
+                    let updatedPost = posts.filter(p => p.id === draggableId)[0]
                     let newDate = moment.utc(updatedPost.scheduled_for).set('date', destination.droppableId).format()
                     updatedPost.scheduled_for = newDate
+
+                    console.log(updatedPost)
 
                     dispatch({
                         type: 'updatePost',
@@ -192,22 +194,27 @@ const CalendarDays = ({ year, month }) => {
                     })
 
                     updatePost(activeBrand.id, draggableId, {
-                        scheduled_for: newDate
+                        post: updatedPost
                     })
                 }}
             >
-                <div class="calendar__body">
-                    {previousMonthDays.map(e => {
-                        return (
-                            <CalendarDay posts={e.posts} muted={true} date={e.date !== null ? e.date + 1 : ''} />
-                        )
-                    })}
-                    {days.map(e => {
+                <div className="calendar__body">
+                    {previousMonthDays.map((e, i) => {
                         return (
                             <CalendarDay
+                                key={i}
+                                posts={e.posts}
+                                muted={true}
+                                date={e.date !== null ? e.date + 1 : ''}
+                            />
+                        )
+                    })}
+                    {days.map((e, i) => {
+                        return (
+                            <CalendarDay
+                                key={i}
                                 posts={e.posts}
                                 muted={e.muted}
-                                // past={!moment().isSameOrAfter(moment().date(e.date))}
                                 past={moment(`${e.date + 1} 00:00:00`, 'DD hh:mm:ss').isBefore(moment('00:00:00', 'hh:mm:ss'))}
                                 today={currentDay === new Date(year, month, e.date + 1).getTime()}
                                 date={e.date !== null ? e.date + 1 : ''}
@@ -215,9 +222,14 @@ const CalendarDays = ({ year, month }) => {
                             />  
                         )
                     })}
-                    {nextMonthDays.map(e => {
+                    {nextMonthDays.map((e, i) => {
                         return (
-                            <CalendarDay posts={e.posts} muted={true} date={e.date !== null ? e.date + 1 : ''} />
+                            <CalendarDay
+                                key={i}
+                                posts={e.posts}
+                                muted={true}
+                                date={e.date !== null ? e.date + 1 : ''}
+                            />
                         )
                     })}
                 </div>
@@ -277,7 +289,7 @@ const ScheduleCalendar = () => {
     }
 
     return (
-        <section class="bdo-scheduleCalendar">
+        <section className="bdo-scheduleCalendar">
             <header className="d-flex align-items-center justify-content-between">
                 <h1><strong>{months[month]}</strong> {year}</h1>
                 <div>
@@ -286,8 +298,8 @@ const ScheduleCalendar = () => {
                 </div>
             </header>
             <div className="calendar__loader" style={{ display: showSpinner ? 'flex' : 'none' }}>
-                <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
+                <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
                 </div>
             </div>
             <CalendarHeader view="full" />

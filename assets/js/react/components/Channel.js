@@ -19,7 +19,7 @@ const Channel = ({ channel, handleRemoveClick }) => {
                 {channel.resource_id ? `@${channel.resource_id}` : sentenceCase(channel.network)}
             </Card.Header>
             <Card.Body className="text-center d-flex align-items-center justify-content-center">
-                <div class="w-75">
+                <div className="w-75">
                     {socialLogos[channel.network]}
                 </div>
             </Card.Body>

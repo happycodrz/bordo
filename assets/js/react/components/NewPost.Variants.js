@@ -81,8 +81,8 @@ export const Variants = ({ show }) => {
     const variantArray = Object.values(variants)
     
     return (<div style={{ display: show ? 'block' : 'none' }} className="py-4">
-        <p class="text-center mb-5">
-            <span class="lead">Where do you want to post this?</span>
+        <p className="text-center mb-5">
+            <span className="lead">Where do you want to post this?</span>
             {!dateTime || !title ? null : <span className="small d-block text-muted">{title}<span className="mx-2">|</span>{dateFormat(dateTime)} at {timeFormat(dateTime)}</span>}
         </p>
         <Row>

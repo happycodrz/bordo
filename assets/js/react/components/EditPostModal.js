@@ -1,24 +1,19 @@
-import React, { useState, useReducer, useContext, createContext } from 'react'
+import React, { useState, createContext } from 'react'
 import Modal from 'react-bootstrap/Modal'
 
-// import { schedulePost } from '../utilities/api'
-// import { getChannels } from '../api'
-import { schedulePost, deletePost } from '../utilities/api'
+import { deletePost, updatePost } from '../utilities/api'
 import { dateFormat, timeFormat, sentenceCase, randomNotificationTitle } from '../utilities/helpers'
 
-import Button from 'react-bootstrap/Button'
-import { Calendar, Facebook, Twitter, Instagram, Linkedin, Globe, MapPin, Save, Edit2, Trash2 } from 'react-feather'
+import { Calendar, Facebook, Twitter, Instagram, Linkedin, Globe, MapPin, Save, Trash2 } from 'react-feather'
 
 
 import { useStateValue } from '../state'
 import LoaderButton from './LoaderButton'
-import Schedule from './NewPost.Schedule'
-import moment from 'moment'
-import { Content } from './NewPost.Content'
 import { VariantEditor } from './NewPost.Variants'
 import Form from 'react-bootstrap/Form'
 import { Badge } from 'react-bootstrap'
 import { EditableInput } from './EditableInput'
+import moment from 'moment'
 
 export const socialIcons = {
     facebook: Facebook,
@@ -33,26 +28,21 @@ export const PostContext = createContext()
 
 const PostEditorModal = ({ post, show, handleShow }) => {
     const [{activeBrand}, dispatch] = useStateValue()
-    const [title, setTitle] = useState('')
+    const [postData, setPostData] = useState(post)
 
-    const handleSchedule = () => {
-        // const body = {
-        //     "post": {
-        //         "title": title,
-        //         "scheduled_for": new Date(dateTime).toISOString(),
-        //         "post_variants": Object.values(variants).filter(v => v.active)
-        //     }
-        // }
+    const handleSaveClick = () => {
+        updatePost(activeBrand.id, postData.id, { post: postData })
+            .then(post => {
+                dispatch({
+                    type: 'updatePost',
+                    data: {
+                        id: postData.id,
+                        post: postData
+                    }
+                })
 
-        // schedulePost(activeBrand.id, body)
-        //     .then(post => {
-        //         dispatch({
-        //             type: 'addPosts',
-        //             posts: post
-        //         })
-
-        //         handleShow()
-        //     })
+                handleShow()
+            })
     }
 
     const handleDeleteClick = () => {
@@ -80,12 +70,22 @@ const PostEditorModal = ({ post, show, handleShow }) => {
     }
 
     const updateVariant = (network, field, value) => {
-        dispatch({
-            type: 'updateVariant',
-            network: network,
-            field: field,
-            value: value
-        })
+        const newPostData = {...postData}
+
+        if (network) {
+            newPostData.post_variants.map(pv => {
+                if (pv.network === network) {
+                    pv[field] = value
+                }
+
+                return pv
+            })
+        } else {
+            newPostData[field] = value
+        }
+
+        console.log(newPostData)
+        setPostData(newPostData)
     }
 
     return (
@@ -97,15 +97,24 @@ const PostEditorModal = ({ post, show, handleShow }) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title className="w-100">
-                    {/* <Form.Control type="text" size="lg" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" className="border-0 p-0 mb-1" /> */}
-                    <EditableInput defaultValue={post.title} onSave={e => setTitle(e)} />
-                    <div className="text-muted d-block" style={{ fontSize: 12 }}><Calendar size={12} /> {dateFormat(post.scheduled_for)} at {timeFormat(post.scheduled_for)}</div>
+                    <EditableInput defaultValue={post.title} onSave={e => updateVariant(null, 'title', e)} />
+                    {/* <div className="text-muted d-block" style={{ fontSize: 12 }}>
+                        <Calendar size={12} /> {dateFormat(postData.scheduled_for)} at {timeFormat(postData.scheduled_for)}
+                    </div> */}
+                    <input
+                        style={{ fontSize: 12 }}
+                        class="text-muted border-0"
+                        type="datetime-local"
+                        id="scheduled_for"
+                        name="scheduled_for"
+                        value={moment(postData.scheduled_for).format('YYYY-MM-DDTHH:MM')}
+                        min={moment.utc().format('YYYY-MM-DDTHH:MM')}
+                        onChange={e => updateVariant(null, 'scheduled_for', moment(e.target.value).format())}
+                    />
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group controlId="title">
-                    </Form.Group>
                     {post.post_variants.map(pv => {
                         let statusVariant
                         switch (pv.status) {
@@ -138,7 +147,7 @@ const PostEditorModal = ({ post, show, handleShow }) => {
             </Modal.Body>
             <Modal.Footer className="justify-content-between">
                 <LoaderButton variant="danger" onClick={handleDeleteClick}><Trash2 size={16} /> Delete Post</LoaderButton>
-                <LoaderButton variant="success" onClick={handleSchedule}><Save size={16} /> Save Post</LoaderButton>
+                <LoaderButton variant="success" onClick={handleSaveClick}><Save size={16} /> Save Post</LoaderButton>
             </Modal.Footer>
         </Modal>
     )

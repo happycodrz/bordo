@@ -29,8 +29,8 @@ export const Content = ({ show }) => {
         })
     }
     return (<div style={{ display: show ? 'block' : 'none' }} className="py-4">
-        <p class="text-center mb-5">
-            <span class="lead">What do you want to post about?</span>
+        <p className="text-center mb-5">
+            <span className="lead">What do you want to post about?</span>
             {!dateTime ? null : <span className="small d-block text-muted">{dateFormat(dateTime)} at {timeFormat(dateTime)}</span>}
         </p>
         <Row>

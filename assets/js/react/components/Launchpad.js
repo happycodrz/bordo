@@ -13,8 +13,8 @@ const LaunchpadCard = ({icon, title, variant, link, action}) => {
     return (
         <Card onClick={() => action ? action() : navigate(link)} style={{ textDecoration: 'none' }} className="text-dark bdo-launchpadCard">
             <Card.Body>
-                <div class={`mb-5 bg-${variant} rounded-circle d-flex align-items-center justify-content-center mx-auto text-white`} style={{ width: 75, height: 75, marginTop: '-24%' }}>{icon}</div>
-                <Card.Title class="mb-5 h5">{title}</Card.Title>
+                <div className={`mb-5 bg-${variant} rounded-circle d-flex align-items-center justify-content-center mx-auto text-white`} style={{ width: 75, height: 75, marginTop: '-24%' }}>{icon}</div>
+                <Card.Title className="mb-5 h5">{title}</Card.Title>
             </Card.Body>
             <Card.Footer className={`bg-${variant} text-light`}>Let's go!</Card.Footer>
         </Card>

@@ -4,7 +4,7 @@ import BrandSidebar from "./BrandSidebar"
 
 const Sidebar = () => {
     return (
-        <aside class="sidebar">
+        <aside className="sidebar">
             <TeamSidebar />
             <BrandSidebar />
         </aside>

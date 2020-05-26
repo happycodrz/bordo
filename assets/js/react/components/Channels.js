@@ -4,7 +4,7 @@ import { Plus } from 'react-feather'
 import { useStateValue } from '../state'
 import Channel from './Channel'
 import PopoutWindow from 'react-popout'
-import { getChannelAuth, getChannels, getChannelCallback, deleteChannel, addNewChannel } from "../utilities/api"
+import { getChannelAuth, getChannels, getChannelCallback, deleteChannel, addNewChannel, updateChannel } from "../utilities/api"
 import { createSlug, randomNotificationTitle, sentenceCase } from "../utilities/helpers"
 
 const Channels = () => {
@@ -20,24 +20,46 @@ const Channels = () => {
             return
 
         const authComplete = e => {
-            if (e.data.type !== 'oAuthComplete')
-                return
-    
-            getChannelCallback(currentChannelToAdd, e.data.queryString)
-                .then(data => {
-                    setCurrentChannelToAdd(null)
-                    setChannels([...channels, data])
-                })
-                .catch(error => {
-                    dispatch({
-                        type: 'addNotification',
-                        data: {
-                            title: randomNotificationTitle('failure'),
-                            body: error.message,
-                            variant: 'danger'
-                        }
-                    })
-                })
+            switch (e.data.type) {
+                case 'oAuthComplete':
+                    getChannelCallback(currentChannelToAdd, e.data.queryString)
+                        .then(data => {
+                            setCurrentChannelToAdd(null)
+                            setChannels([...channels, data])
+                        })
+                        .catch(error => {
+                            dispatch({
+                                type: 'addNotification',
+                                data: {
+                                    title: randomNotificationTitle('failure'),
+                                    body: error.message,
+                                    variant: 'danger'
+                                }
+                            })
+                        })
+                    break;
+
+                case 'updateChannel':
+                    updateChannel(activeBrand.id, e.data.channel_id, e.data.data)
+                        .then(data => {
+                            setCurrentChannelToAdd(null)
+                            setChannels([...channels, data])
+                        })
+                        .catch(error => {
+                            dispatch({
+                                type: 'addNotification',
+                                data: {
+                                    title: randomNotificationTitle('failure'),
+                                    body: error.message,
+                                    variant: 'danger'
+                                }
+                            })
+                        })
+                    break;
+            
+                default:
+                    return
+            }
         }
 
         window.addEventListener('message', authComplete, false)

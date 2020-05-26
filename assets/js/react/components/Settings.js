@@ -9,10 +9,13 @@ import MediaUploadModal from "./MediaUploadModal"
 
 import { updateBrand, getAllUsers, deleteBrand } from "../utilities/api"
 import Channels from "./Channels";
-import UserIcon from "./UserIcon"
+import {Icon} from "./UserIcon"
 import { randomNotificationTitle } from "../utilities/helpers"
 import { EditableInput } from "./EditableInput"
 import { navigate } from "@reach/router"
+import Avatar from "./Avatar"
+import { Plus } from "react-feather"
+import Users from './Users.js'
 
 const Settings = () => {
     const [{ activeBrand }, dispatch] = useStateValue()
@@ -106,23 +109,7 @@ const Settings = () => {
                     <Button variant="danger" onClick={handleDeleteBrandClick}>Delete Brand</Button>
                 </Col>
             </Row>
-            <Row className="mb-3">
-                <Col><h2>Team Members</h2></Col>
-            </Row>
-            <Row>
-                {!brandUsers ? null : brandUsers.map(user => (
-                    <Col className="d-flex align-items-center mb-4" sm={6}>
-                        <div style={{ width: 140 }} className="mr-3">
-                            <UserIcon />
-                        </div>
-                        <div>
-                            <h3>{user.first_name} {user.last_name}</h3>
-                            <p className="text-muted">{user.email}</p>
-                            {/* <a onClick={() => handleRemove(user.id)} className="text-danger">Remove</a> */}
-                        </div>
-                    </Col>
-                ))}
-            </Row>
+            <Users brandUsers={brandUsers} />
             <Channels />
         </section>
     )

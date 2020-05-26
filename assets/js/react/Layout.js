@@ -31,7 +31,7 @@ const Layout = ({children}) => {
     return (
         !activeBrand ? <Loader /> :
         <>
-            <div class="app__container">
+            <div className="app__container">
                 {loadingBrand ? <Loader /> : null}
                 <TeamSidebar />
                 <BrandSidebar />

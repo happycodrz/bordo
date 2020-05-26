@@ -7,7 +7,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import InputGroup from 'react-bootstrap/InputGroup'
-import { List, Grid, Search, Edit2, Image, Video, Download, ExternalLink, Trash2 } from 'react-feather'
+import { Search, Edit2, Image, Video, Download, ExternalLink, Trash2 } from 'react-feather'
 import MediaUploadModal from './MediaUploadModal'
 import Row from 'react-bootstrap/Row'
 import Card from 'react-bootstrap/Card'
@@ -24,7 +24,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios'
 
 
-const MediaNavbar = ({ handleUploadModalShow, activeFilter, handleFiltering, activeSearch, handleSearch, upload }) => {
+const MediaNavbar = ({ handleUploadModalShow, activeFilter, handleFiltering, activeSearch, handleSearch }) => {
     const [{activeBrand, assets}, dispatch] = useStateValue()
 
     const classes = new BEMHelper({
@@ -96,16 +96,6 @@ const MediaNavbar = ({ handleUploadModalShow, activeFilter, handleFiltering, act
 
             </Form>
             <div>
-                {/* <ButtonGroup className="mr-2">
-                    <Button variant="secondary"><List size={18} /></Button>
-                    <Button variant="secondary" disabled><Grid size={18} /></Button>
-                </ButtonGroup> */}
-                {/* <Button
-                    variant="primary"
-                    onClick={() => handleUploadModalShow()}
-                >
-                        New
-                </Button> */}
                 <DropdownButton
                     alignRight
                     title="Add Media Items"
@@ -187,7 +177,7 @@ const MediaDetailModal = ({ media, show, handleShow, handleSave, handleDelete })
                 <Modal.Body className="pt-0">
                     <Row className="mb-4" style={{ marginLeft: "-16px", marginRight: "-16px" }}>
                         {media.resource_type === 'image' ?
-                            <img src={media.thumbnail_url} {...classes('image')} /> :
+                            <img alt='' src={media.thumbnail_url} {...classes('image')} /> :
                             <div className='embed-responsive embed-responsive-16by9'>
                                 <video src={media.url} controls className='embed-responsive-item' {...classes('video')} />
                             </div>
@@ -299,10 +289,7 @@ export const MediaGallery = ({ isSelecter, onSelect }) => {
     }, [])
 
     const handleUploadModalShow = () => {
-        if (showUploadModal === true) {
-            setKey(key + 1)
-        }
-
+        setKey(key + 1)
         setShowUploadModal(!showUploadModal)
     }
 
@@ -433,7 +420,7 @@ export const MediaGallery = ({ isSelecter, onSelect }) => {
 
     return (
         <>
-            {!isSelecter ? <MediaUploadModal show={showUploadModal} handleShow={handleUploadModalShow} onUpload={handleMediaUpload} key={key} /> : null}
+            <MediaUploadModal show={showUploadModal} handleShow={handleUploadModalShow} onUpload={handleMediaUpload} key={key} />
             <section>
                 <MediaNavbar
                     handleUploadModalShow={handleUploadModalShow}
@@ -441,7 +428,6 @@ export const MediaGallery = ({ isSelecter, onSelect }) => {
                     activeSearch={activeSearch}
                     handleFiltering={handleFiltering}
                     activeFilter={activeFilter}
-                    upload={!isSelecter}
                 />
                 <MediaDetailModal media={activeMedia} show={showEditModal} handleShow={handleEditModalShow} handleSave={data => handleMediaSave(data)} handleDelete={() => handleMediaDelete(activeMedia.id)} />
                 <Row>

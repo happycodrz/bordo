@@ -23,7 +23,7 @@ const AddNewBrandButton = () => {
                 <Avatar
                     shape='rounded'
                     color="#1A7EBD"
-                    textColor="#A7DAFA"
+                    textcolor="#A7DAFA"
                     onClick={toggleShow}
                 >
                     <Plus size={30} />
@@ -73,8 +73,8 @@ const TeamNavigation = () => {
 
     return (
         <div style={{ overflow: 'scroll', width: '100%' }}>
-            {brands.map(brand => (
-                <BrandNavButton brand={brand} />
+            {brands.map((brand, i) => (
+                <BrandNavButton brand={brand} key={i} />
             ))}
             <AddNewBrandButton />
         </div>

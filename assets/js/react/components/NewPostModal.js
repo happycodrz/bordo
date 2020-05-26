@@ -98,7 +98,7 @@ const NewPostModal = ({ show, handleShow }) => {
             <Modal.Header className="flex-column pb-0">
                 <div className="d-flex w-100">
                     <Modal.Title>{"Let's create a new post."}</Modal.Title>
-                    <button type="button" class="close" onClick={handleShow}><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <button type="button" className="close" onClick={handleShow}><span aria-hidden="true">×</span><span className="sr-only">Close</span></button>
                 </div>
                 <Nav
                     className="nav--modal"
@@ -106,7 +106,7 @@ const NewPostModal = ({ show, handleShow }) => {
                     onSelect={e => setActivePage(Number(e))}
                 >
                     {pages.map((page, i) => (
-                        <Nav.Item>
+                        <Nav.Item key={i}>
                             <Nav.Link eventKey={i}>{page.props.label}</Nav.Link>
                         </Nav.Item>
                     ))}
@@ -119,7 +119,7 @@ const NewPostModal = ({ show, handleShow }) => {
             </Modal.Body>
             <Modal.Footer className="justify-content-between">
                 {activePage < 1 ? <span></span> : <Button variant="secondary" onClick={prevPage}>‹ Back</Button>}
-                {activePage + 1 >= pages.length ? <span></span> : <Button variant="primary" onClick={nextPage} disabled={!dateTime}>Next ›</Button>}
+                {activePage + 1 >= pages.length ? <span></span> : <Button variant="primary" onClick={nextPage} disabled={!title}>Next ›</Button>}
                 {/* {activePage + 1 < pages.length ? null : <Button variant="success" onClick={handleSchedule}><Calendar size={16} /> Schedule Post</Button>} */}
                 {activePage + 1 < pages.length ? null : <LoaderButton variant="success" onClick={handleSchedule}><Calendar size={16} /> Schedule Post</LoaderButton>}
             </Modal.Footer>
@@ -127,7 +127,7 @@ const NewPostModal = ({ show, handleShow }) => {
     )
 }
 
-const NewPost = ({ show, handleShow, key }) => {
+const NewPost = ({ show, handleShow }) => {
     const initialState = {
         title: '',
         description: '',
@@ -207,7 +207,7 @@ const NewPost = ({ show, handleShow, key }) => {
     }
 
     return (
-        <NewPostContext.Provider value={useReducer(reducer, initialState)} key={key}>
+        <NewPostContext.Provider value={useReducer(reducer, initialState)}>
             <NewPostModal show={show} handleShow={handleShow} />
         </NewPostContext.Provider>
     )

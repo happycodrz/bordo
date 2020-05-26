@@ -20,6 +20,7 @@ const MediaSelectModal = ({ show, handleShow, handleSelect, key }) => {
             show={show}
             onHide={handleShow}
             key={key}
+            dialogClassName="mediaSelectModal"
         >
             <Modal.Body style={{ overflow: 'hidden' }}>
                 <MediaGallery isSelecter={true} onSelect={e => setSelectedImage(e)} />

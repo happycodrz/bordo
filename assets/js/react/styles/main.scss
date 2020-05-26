@@ -23,7 +23,13 @@
 @import './components/ContentEditor';
 @import './components/EditableInput';
 @import './components/LaunchpadCard';
+@import './components/MediaSelectModal';
 // Freestyle
+
+.modal-content {
+    box-shadow: $box-shadow;
+}
+
 html,
 body {
     overscroll-behavior: none;
