@@ -24,10 +24,24 @@ defmodule BordoWeb.LoginController do
     )
   end
 
-  defp login_reply({:ok, _token_resp, user}, conn) do
-    conn
-    |> put_flash(:success, "Welcome back!")
-    |> Auth.Guardian.Plug.sign_in(user)
-    |> redirect(to: "/")
+  defp login_reply({:ok, %{access_token: token}, user}, conn) do
+    case Auth.Guardian.decode_and_verify(token) do
+      {:ok, %{"permissions" => permissions}} ->
+        conn
+        |> put_flash(:success, "Welcome back!")
+        |> Auth.Guardian.Plug.sign_in(user, %{pem: build_pem(permissions)})
+        |> redirect(to: "/")
+
+      _ ->
+        login_reply({:error, "Problem logging in"}, conn)
+    end
+  end
+
+  defp build_pem(permissions) do
+    if permissions == ["admin:all"] do
+      %{admin: permissions}
+    else
+      %{default: ["read:all"]}
+    end
   end
 end

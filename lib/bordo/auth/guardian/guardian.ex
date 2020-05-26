@@ -4,7 +4,12 @@ defmodule Auth.Guardian do
   identity, token, etc.
   Implements callback to properly integrate with Auth0.
   """
-  use Guardian, otp_app: :bordo
+  use Guardian,
+    otp_app: :bordo,
+    permissions: %{default: ["read:all"], admin: ["admin:all"]}
+
+  use Guardian.Permissions, encoding: Guardian.Permissions.BitwiseEncoding
+
   alias Auth.Identity
   alias Bordo.Repo
   alias Bordo.Users.User
@@ -26,4 +31,8 @@ defmodule Auth.Guardian do
     user = Repo.get_by!(User, id: id)
     {:ok, %Identity{id: id, user_id: user.id, team_id: user.team_id}}
   end
+
+  # def build_claims(claims, _resource, opts) do
+  #   {:ok, encode_permissions_into_claims!(claims, Keyword.get(opts, :permissions))}
+  # end
 end

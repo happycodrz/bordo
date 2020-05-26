@@ -1,4 +1,4 @@
-defmodule BordoWeb.Admin.AuthController do
+defmodule BordoWeb.LogoutController do
   use BordoWeb, :controller
 
   import Plug.Conn, only: [clear_session: 1, configure_session: 2]

@@ -24,6 +24,7 @@ defmodule BordoWeb.Router do
   pipeline :admin do
     plug :put_root_layout, {BordoWeb.LayoutView, :root}
     plug :assign_current_admin
+    plug Guardian.Permissions.Plug, ensure: %{admin: ["admin:all"]}
   end
 
   pipeline :api do
@@ -42,8 +43,6 @@ defmodule BordoWeb.Router do
   scope "/admin", BordoWeb.Admin, as: :admin do
     pipe_through [:browser, :private, :admin]
     live_dashboard "/dashboard", metrics: Bordo.Telemetry
-
-    get "/logout", AuthController, :index
 
     scope "/posts", PostsLive do
       live "/", Index
@@ -76,6 +75,7 @@ defmodule BordoWeb.Router do
     pipe_through [:browser, :unauthenticated]
     get "/login", LoginController, :index
     post "/login", LoginController, :login
+    get "/logout", LogoutController, :index
   end
 
   scope "/", BordoWeb do
