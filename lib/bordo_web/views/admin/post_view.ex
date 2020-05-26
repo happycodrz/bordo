@@ -1,6 +1,18 @@
 defmodule BordoWeb.Admin.PostView do
   use BordoWeb, :view
 
+  def filter_tab(text, link, status) do
+    ~e"""
+    <div class="<%= filter_tab_class(text, status) %>">
+      <%= live_patch to: link do %>
+      <dt class="order-2 mt-1 text-lg leading-6 font-medium" id="item-1">
+        <%= text %>
+      </dt>
+      <% end %>
+    </div>
+    """
+  end
+
   def table_network_cluster(post_variants) when is_list(post_variants) do
     Enum.map(post_variants, fn variant -> feather_icon(variant.channel.network) end)
   end
@@ -33,6 +45,27 @@ defmodule BordoWeb.Admin.PostView do
           Published on <%= friendly_time_tag(scheduled_for) %>
         </div>
         """
+    end
+  end
+
+  defp filter_tab_class(text, status) do
+    text_status = String.downcase(text)
+
+    default_css =
+      "flex flex-col border-b gray-indigo-100 p-3 text-center text-gray-400 sm:border-0 sm:border-r"
+
+    selected_css =
+      "flex flex-col text-indigo-900 border-b gray-indigo-100 p-3 text-center sm:border-0 sm:border-r"
+
+    cond do
+      text_status == status ->
+        selected_css
+
+      status == nil && text_status == "all" ->
+        selected_css
+
+      true ->
+        default_css
     end
   end
 end

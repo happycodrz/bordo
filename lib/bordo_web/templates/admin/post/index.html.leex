@@ -1,44 +1,74 @@
-<div class="bg-white shadow overflow-hidden sm:rounded-md">
-  <ul>
-    <%= for post <- @posts do %>
-    <li>
-      <a
-        href="#"
-        class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out"
-        phx-click="modal-open"
-      >
-        <div class="flex items-center px-4 py-4 sm:px-6">
-          <div class="min-w-0 flex-1 flex items-center">
-            <div class="flex-shrink-0">
-              <%= brand_avatar(post.brand.image_url) %>
-            </div>
-            <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-              <div>
-                <div class="text-sm leading-5 font-medium text-indigo-600 truncate">
-                  <%= post.title %>
-                </div>
-                <div class="mt-2 flex items-center text-sm leading-5 text-gray-500">
-                  <%= post.brand.name %>
-                </div>
-              </div>
-              <div class="hidden md:block">
-                <div class="flex content-center h-full">
-                  <%= table_status(post.post_variants, post.scheduled_for) %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <%= feather_icon("chevron-right", "h5 w-5 text-gray-400") %>
-          </div>
-        </div>
-      </a>
-    </li>
-    <% end %>
-  </ul>
+<!-- Status filters -->
+<div class="pb-6">
+  <div class="relative">
+    <div class="absolute inset-0 h-1/2 "></div>
+    <div class="relative max-w-screen-xl mx-auto">
+      <div class="mx-auto">
+        <dl class="rounded-lg bg-white shadow-lg sm:grid sm:grid-cols-4">
+          <%= filter_tab("All", Routes.admin_live_path(@socket, BordoWeb.Admin.PostsLive.Index, %{}), @status) %>
+          <%= filter_tab("Published", Routes.admin_live_path(@socket, BordoWeb.Admin.PostsLive.Index, %{status: "published"}), @status) %>
+          <%= filter_tab("Scheduled", Routes.admin_live_path(@socket, BordoWeb.Admin.PostsLive.Index, %{status: "scheduled"}), @status) %>
+          <%= filter_tab("Failed", Routes.admin_live_path(@socket, BordoWeb.Admin.PostsLive.Index, %{status: "failed"}), @status) %>
+        </dl>
+      </div>
+    </div>
+  </div>
 </div>
-<%= if @show_modal do %> 
-  <%= live_component(@socket, BordoWeb.Components.ModalLive, id: "modal") do %> 
-    <%= render("modal_body.html") %>
-  <% end %> 
+<!-- End status filters -->
+<div class="bg-white overflow-hidden shadow rounded-lg">
+  <div class="border-b border-gray-200 px-4 py-3 sm:px-6">
+    <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-no-wrap">
+      <div class="ml-4 mt-2">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Posts
+        </h3>
+      </div>
+      <div class="ml-4 mt-2 flex-shrink-0">
+        <span class="inline-flex rounded-md shadow-sm">
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white shadow overflow-hidden sm:rounded-md">
+    <ul>
+      <%= for post <- @posts do %>
+      <li>
+        <a href="#"
+          class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out"
+          phx-click="modal-open">
+          <div class="flex items-center px-4 py-4 sm:px-6">
+            <div class="min-w-0 flex-1 flex items-center">
+              <div class="flex-shrink-0">
+                <%= brand_avatar(post.brand.image_url) %>
+              </div>
+              <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                <div>
+                  <div class="text-sm leading-5 font-medium text-indigo-600 truncate">
+                    <%= post.title %>
+                  </div>
+                  <div class="mt-2 flex items-center text-sm leading-5 text-gray-500">
+                    <%= post.brand.name %>
+                  </div>
+                </div>
+                <div class="hidden md:block">
+                  <div class="flex content-center h-full">
+                    <%= table_status(post.post_variants, post.scheduled_for) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <%= feather_icon("chevron-right", "h5 w-5 text-gray-400") %>
+            </div>
+          </div>
+        </a>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<%= if @show_modal do %>
+<%= live_component(@socket, BordoWeb.Components.ModalLive, id: "modal") do %>
+<%= render("modal_body.html") %>
+<% end %>
 <% end %>
