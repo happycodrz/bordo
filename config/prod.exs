@@ -10,8 +10,8 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :bordo, BordoWeb.Endpoint,
-  url: [scheme: "https", host: "api.bor.do/", port: 443],
-  check_origin: ["https://api.bor.do/"],
+  url: [scheme: "https", host: "bor.do/", port: 443],
+  check_origin: ["https://bor.do/"],
   force_ssl: [rewrite_on: [:x_forwarded_proto]]
 
 # Do not print debug messages in production
