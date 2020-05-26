@@ -55,7 +55,7 @@
                         <div class="py-1 rounded-md bg-white shadow-xs">
                           <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
                           <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                          <%= link "Sign out", to: Routes.admin_auth_path(@conn, :index), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                          <%= link "Sign out", to: Routes.logout_path(@conn, :index), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                         </div>
                       </div>
                     </div>
