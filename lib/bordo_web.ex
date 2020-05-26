@@ -50,6 +50,8 @@ defmodule BordoWeb do
       use Phoenix.LiveView,
         layout: {BordoWeb.LayoutView, "app.html"}
 
+      import Phoenix.LiveView.Helpers
+
       unquote(view_helpers())
     end
   end
