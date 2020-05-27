@@ -24,11 +24,23 @@ defmodule BordoWeb.Admin.UserView do
     [first_name, last_name] |> Enum.reject(&(&1 == "" || is_nil(&1))) |> Enum.join(" ")
   end
 
-  # def full_name(%{first_name: first_name, last_name: last_name}) do
-  #   try do
-  #     user.first_name <> " " <> user.last_name
-  #   after
-  #     "unknown"
-  #   end
-  # end
+  def active_tag(%{auth0_id: auth0_id}) do
+    if is_nil(auth0_id) do
+      ~e"""
+      <span
+        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+      >
+        Auth0 not connected
+      </span>
+      """
+    else
+      ~e"""
+      <span
+        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+      >
+        Auth0 connected
+      </span>
+      """
+    end
+  end
 end
