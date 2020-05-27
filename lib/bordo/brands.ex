@@ -21,6 +21,11 @@ defmodule Bordo.Brands do
     Repo.all(Brand)
   end
 
+  def fuzzy_list_brands(name) do
+    query = from b in Brand, where: ilike(b.name, ^"%#{name}%")
+    Repo.all(query)
+  end
+
   def list_brands_for_team(team_id) do
     query =
       from b in Brand,

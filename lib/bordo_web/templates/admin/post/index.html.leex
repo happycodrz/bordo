@@ -24,13 +24,30 @@
         </h3>
       </div>
       <div class="ml-4 mt-2 flex-shrink-0">
-        <span class="inline-flex rounded-md shadow-sm">
-        </span>
+        <form phx-change="suggest-brand" phx-submit="select-brand">
+          <input autocomplete="off" name="brand_name" phx-debounce="300" type="text" list="brands"
+            class="form-input block w-full sm:text-sm sm:leading-5" placeholder="Brand name"
+            value="<%= @brand_name %>"></input>
+          <input type="hidden" name="status" value="<%= @status %>"></input>
+        </form>
+        <datalist id="brands">
+          <%= for brand <- @brands do %>
+          <option value="<%= brand.name %>"><%= brand.name %></option>
+          <% end %>
+        </datalist>
       </div>
     </div>
   </div>
   <div class="bg-white shadow overflow-hidden sm:rounded-md">
     <ul>
+      <%= if Enum.empty?(@posts) do %>
+      <li class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
+        <div class="flex items-center px-4 py-4 sm:px-6">
+          <div class="w-full text-center text-gray-500">No results...
+          </div>
+        </div>
+      </li>
+      <% else %>
       <%= for post <- @posts do %>
       <li>
         <a href="#"
@@ -63,6 +80,7 @@
           </div>
         </a>
       </li>
+      <% end %>
       <% end %>
     </ul>
   </div>

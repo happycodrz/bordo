@@ -6,6 +6,7 @@ defmodule Bordo.Admin.Posts do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
+  alias Bordo.Brands.Brand
   alias Bordo.Posts.Post
   alias Bordo.PostVariants.PostVariant
   @topic inspect(Bordo.Posts)
@@ -22,7 +23,13 @@ defmodule Bordo.Admin.Posts do
 
   def filter_options(:admin_posts) do
     defconfig do
-      text([:brand_id])
+      text([:brand_name])
+    end
+  end
+
+  def filter_options(:admin_brands) do
+    defconfig do
+      text([:name])
     end
   end
 
@@ -42,19 +49,25 @@ defmodule Bordo.Admin.Posts do
 
   """
 
-  def list_posts(post_filter, post_variants_filter) do
-    post_query =
-      Post
-      |> Filtrex.query(post_filter)
+  def list_posts(brand_filter, post_variants_filter) do
+    brand_query =
+      Brand
+      |> Filtrex.query(brand_filter)
 
     post_variant_query =
       PostVariant
       |> Filtrex.query(post_variants_filter)
 
-    base_query = from(p in post_query, join: pv in ^post_variant_query, on: p.id == pv.post_id)
+    base_query =
+      from(p in Post,
+        join: pv in ^post_variant_query,
+        on: p.id == pv.post_id,
+        join: b in ^brand_query,
+        on: b.id == p.brand_id
+      )
 
     base_query
-    |> Bordo.Repo.all()
+    |> Repo.all()
     |> Repo.preload([:brand, post_variants: [:channel, :media]])
   end
 end
