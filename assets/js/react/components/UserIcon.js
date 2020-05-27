@@ -1,6 +1,5 @@
 import React from 'react'
 import { useStateValue } from '../state'
-import Cookies from 'js-cookie'
 
 import { LogOut } from 'react-feather'
 
@@ -23,11 +22,6 @@ export const Icon = () => {
     )
 }
 const UserIcon = () => {
-    const logOut = () => {
-        Cookies.remove('bdo-logged-in')
-        window.location = process.env.REACT_APP_LOGIN_URL + '?logged_out=true'
-    }
-
     const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
         <button
             className='bdo-avatar bdo-avatar--circle'
@@ -52,7 +46,7 @@ const UserIcon = () => {
                     {/* <Dropdown.Item eventKey="1">Settings</Dropdown.Item>
                     <Dropdown.Item eventKey="2">Help</Dropdown.Item>
                     <Dropdown.Divider /> */}
-                    <Dropdown.Item eventKey="3" className="text-danger d-flex justify-content-between align-items-center" onClick={logOut}>Log Out<LogOut size={14}/></Dropdown.Item>
+                    <Dropdown.Item eventKey="3" className="text-danger d-flex justify-content-between align-items-center" href="/logout">Log Out<LogOut size={14}/></Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
             {/* <button className="btn text-center bg-white py-3 btn-block rounded-circle" onClick={() => }>
