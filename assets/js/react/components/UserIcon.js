@@ -16,10 +16,11 @@ export const Icon = () => {
         </div>
     )
 }
+//asdf
 const UserIcon = () => {
     const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
         <button
-            className='bdo-avatar bdo-avatar--circle'
+            className='bdo-userIcon'
             ref={ref}
             onClick={(e) => onClick(e) }
         >
