@@ -51,6 +51,7 @@ defmodule BordoWeb do
         layout: {BordoWeb.LayoutView, "app.html"}
 
       import Phoenix.LiveView.Helpers
+      import Phoenix.LiveView
 
       unquote(view_helpers())
     end
