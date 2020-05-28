@@ -72,7 +72,7 @@ const TeamNavigation = () => {
     const [{ brands }] = useStateValue()
 
     return (
-        <div style={{ overflow: 'scroll', width: '100%' }}>
+        <div style={{ overflow: 'scroll', '-ms-overflow-style': 'none', width: '100%' }}>
             {brands.map((brand, i) => (
                 <BrandNavButton brand={brand} key={i} />
             ))}
