@@ -1,7 +1,4 @@
-defmodule Helperz do
-  def x do
-    IEx.Helpers.recompile()
-  end
-end
-
-# import Helperz
+alias Bordo.Repo
+alias Bordo.Brands.Brand
+alias Bordo.Posts.Post
+alias Bordo.Teams.Team
