@@ -420,7 +420,7 @@ export const MediaGallery = ({ isSelecter, onSelect }) => {
 
     return (
         <>
-            <MediaUploadModal show={showUploadModal} handleShow={handleUploadModalShow} onUpload={handleMediaUpload} key={key} />
+            {showUploadModal ? <MediaUploadModal show={showUploadModal} handleShow={handleUploadModalShow} onUpload={handleMediaUpload} key={key} /> : null}
             <section>
                 <MediaNavbar
                     handleUploadModalShow={handleUploadModalShow}

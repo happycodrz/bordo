@@ -78,7 +78,6 @@ const MediaUploadModal = ({ show, handleShow, onUpload, key, withTitle }) => {
             centered={true}
             show={show}
             onHide={handleShow}
-            key={key}
         >
             <Modal.Header>
                 <Modal.Title>Upload new media.</Modal.Title>
