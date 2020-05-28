@@ -37,7 +37,10 @@ const FileUploadDropzone = ({ setFileData, setFileType }) => {
         })
     }, [])
 
-    const { getRootProps, getInputProps } = useDropzone({ onDrop })
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop: onDrop,
+        multiple: false,
+    })
 
     return (
         <div {...classes()} {...getRootProps()}>
