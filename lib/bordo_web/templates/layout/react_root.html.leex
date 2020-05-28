@@ -1,53 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <%= csrf_meta_tag() %> <%= live_title_tag assigns[:page_title] || "Bordo", suffix: "" %>
-    <meta name="current-user" content="<%= @current_identity.user_id %>" />
-    <meta name="auth-token" content="<%= Auth.Guardian.Plug.current_token(@conn) %>" />
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/react.css") %>" />
-    <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/react.js") %>"></script>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <%= csrf_meta_tag() %> <%= live_title_tag assigns[:page_title] || "Bordo", suffix: "" %>
+  <meta name="current-user" content="<%= @current_identity.user_id %>" />
+  <meta name="auth-token" content="<%= Auth.Guardian.Plug.current_token(@conn) %>" />
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/react.css") %>" />
+  <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/react.js") %>"></script>
+</head>
 
-  <body>
-    <div id="root"></div>
-  </body>
-  <script>
-    window.fbAsyncInit = function () {
-      FB.init({
-        appId: '822987708217009',
-        autoLogAppEvents: true,
-        xfbml: true,
-        version: 'v7.0'
-      });
-    };
-  </script>
-  <script>
-    "use strict";
-    !function () {
-      var t = window.driftt = window.drift = window.driftt || [];
-      if (!t.init) {
-        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
-        t.invoked = !0, t.methods = ["identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on"],
-          t.factory = function (e) {
-            return function () {
-              var n = Array.prototype.slice.call(arguments);
-              return n.unshift(e), t.push(n), t;
-            };
-          }, t.methods.forEach(function (e) {
-            t[e] = t.factory(e);
-          }), t.load = function (t) {
-            var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
-            o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
-            var i = document.getElementsByTagName("script")[0];
-            i.parentNode.insertBefore(o, i);
+<body>
+  <div id="root"></div>
+</body>
+<script>
+  window.fbAsyncInit = function () {
+    FB.init({
+      appId: '822987708217009',
+      autoLogAppEvents: true,
+      xfbml: true,
+      version: 'v7.0'
+    });
+  };
+
+</script>
+<script>
+  "use strict";
+  ! function () {
+    var t = window.driftt = window.drift = window.driftt || [];
+    if (!t.init) {
+      if (t.invoked) return void(window.console && console.error && console.error("Drift snippet included twice."));
+      t.invoked = !0, t.methods = ["identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide",
+          "off", "on"
+        ],
+        t.factory = function (e) {
+          return function () {
+            var n = Array.prototype.slice.call(arguments);
+            return n.unshift(e), t.push(n), t;
           };
-      }
-    }();
-    drift.SNIPPET_VERSION = '0.3.1';
-    drift.load('5t4tywdca4u8');
-  </script>
-  <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+        }, t.methods.forEach(function (e) {
+          t[e] = t.factory(e);
+        }), t.load = function (t) {
+          var e = 3e5,
+            n = Math.ceil(new Date() / e) * e,
+            o = document.createElement("script");
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src =
+            "https://js.driftt.com/include/" + n + "/" + t + ".js";
+          var i = document.getElementsByTagName("script")[0];
+          i.parentNode.insertBefore(o, i);
+        };
+    }
+  }();
+  drift.SNIPPET_VERSION = '0.3.1';
+  drift.load('5t4tywdca4u8');
+
+</script>
+<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+
 </html>
