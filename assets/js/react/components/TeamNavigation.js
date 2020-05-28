@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { useStateValue } from "../state";
-import Cookies from 'js-cookie'
 
 import BrandNavButton from './BrandNavButton'
 import Avatar from "./Avatar";
