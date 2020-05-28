@@ -62,6 +62,10 @@ const Schedule = ({ show }) => {
 
     const presets = [
         {
+            dateTime: moment(),
+            label: "Now"
+        },
+        {
             dateTime: moment().add(1, 'hour').set({ minute: 0, second: 0, millisecond: 0 }),
             label: "Today"
         },
