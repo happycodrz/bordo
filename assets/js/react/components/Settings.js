@@ -109,7 +109,8 @@ const Settings = () => {
                     <Button variant="danger" onClick={handleDeleteBrandClick}>Delete Brand</Button>
                 </Col>
             </Row>
-            <Users brandUsers={brandUsers} />
+            {/* TODO: add back in with user management release */}
+            {/* <Users brandUsers={brandUsers} /> */}
             <Channels />
         </section>
     )
