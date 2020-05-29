@@ -33,6 +33,9 @@ const NotificationsList = () => {
 
     const variants = ['success', 'danger', 'info', 'warning']
 
+    // USEFUL FOR TESTING:
+    // Just creates random notifications
+    //
     // useEffect(() => {
     //     setInterval(() => {
     //         dispatch({
@@ -48,7 +51,7 @@ const NotificationsList = () => {
     // }, [])
     
     return (
-        <div className="p-3 d-flex flex-column justify-content-end" style={{ zIndex: 999, pointerEvents: 'none', position: 'fixed', right: 0, bottom: 0, top: 0, width: '300px' }}>
+        <div className="p-3 d-flex flex-column justify-content-start" style={{ zIndex: 999, pointerEvents: 'none', position: 'fixed', right: 0, bottom: 0, top: 0, width: '300px' }}>
             {!notifications ? null : notifications.map(notification => (
                 <Notification notification={notification} />
             ))}
