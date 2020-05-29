@@ -148,6 +148,7 @@ export const VariantEditor = ({ variant, mediaId, updateVariant, showHeading }) 
     }, [])
     
     let slug = variant.network.toLowerCase().split(' ')[0]
+    let characterCount = slug === "twitter" ? 280 : null
     
     return (<div>
         {!showHeading ? null : <Row>
@@ -170,7 +171,11 @@ export const VariantEditor = ({ variant, mediaId, updateVariant, showHeading }) 
                 />
             </Col>
             <Col>
-                <ContentEditor content={variant.content} onChange={e => updateVariant('content', e)} />
+                <ContentEditor
+                    content={variant.content}
+                    onChange={e => updateVariant('content', e)} 
+                    characterCount={characterCount}
+                />
             </Col>
         </Row>
     </div>)
