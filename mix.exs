@@ -34,6 +34,7 @@ defmodule Bordo.MixProject do
   defp deps do
     [
       {:appsignal, "~> 1.12.1"},
+      {:auth0_ex, "~> 0.6"},
       {:cloudex, "~> 1.4"},
       {:cors_plug, "~> 2.0"},
       {:credo, "~> 1.3.2", only: [:dev, :test], runtime: false},
