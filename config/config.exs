@@ -68,6 +68,12 @@ config :appsignal, :config,
   env: Mix.env(),
   revision: System.get_env("APP_REVISION")
 
+config :auth0_ex,
+  domain: System.get_env("AUTH0_DOMAIN"),
+  mgmt_client_id: System.get_env("AUTH0_MGMT_CLIENT_ID"),
+  mgmt_client_secret: System.get_env("AUTH0_MGMT_CLIENT_SECRET"),
+  http_opts: []
+
 ####
 # Integration configuration
 ####
