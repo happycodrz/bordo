@@ -1,20 +1,20 @@
 defmodule BordoWeb.AuthLive.Login do
   use BordoWeb, :live_view
-  require Logger
-  alias Auth
+  alias Auth.AdminAuth
   alias Bordo.Users.User
+  alias BordoWeb.Admin.AuthView
 
   def mount(_params, session, socket) do
-    changeset = Bordo.Users.User.changeset(%User{}, %{})
+    changeset = User.changeset(%User{}, %{})
 
     {:ok,
      assign(socket, changeset: changeset, errors: false, session_uuid: session["session_uuid"])}
   end
 
-  def render(assigns), do: BordoWeb.Admin.AuthView.render("login.html", assigns)
+  def render(assigns), do: AuthView.render("login.html", assigns)
 
   def handle_event("login", %{"user" => login_params}, socket) do
-    case Auth.AdminAuth.sign_in(
+    case AdminAuth.sign_in(
            login_params["email"],
            Base.encode64(login_params["password"]),
            socket.assigns.session_uuid
@@ -27,7 +27,7 @@ defmodule BordoWeb.AuthLive.Login do
          )}
 
       {:error, _} ->
-        changeset = Bordo.Users.User.changeset(%User{email: login_params["email"]}, %{})
+        changeset = User.changeset(%User{email: login_params["email"]}, %{})
         {:noreply, assign(socket, changeset: changeset, errors: true)}
     end
   end
