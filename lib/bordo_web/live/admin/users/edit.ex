@@ -1,11 +1,14 @@
 defmodule BordoWeb.Admin.UsersLive.Edit do
   use BordoWeb, :live_view
+
+  alias Auth0Ex.Authentication
+  alias BordoWeb.Admin.UserView
   alias BordoWeb.Router.Helpers, as: Routes
 
   alias Bordo.Users
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, %{})}
+    {:ok, assign(socket, auth0_loading: false)}
   end
 
   def handle_params(%{"id" => id}, _url, socket) do
@@ -18,15 +21,12 @@ defmodule BordoWeb.Admin.UsersLive.Edit do
      })}
   end
 
-  def render(assigns), do: BordoWeb.Admin.UserView.render("edit.html", assigns)
+  def render(assigns), do: UserView.render("edit.html", assigns)
 
-  def handle_event("validate", %{"user" => params}, socket) do
-    changeset =
-      socket.assigns.user
-      |> Users.change_user(params)
-      |> Map.put(:action, :update)
+  def handle_event("connect-auth0", %{"user_id" => user_id}, socket) do
+    send(self(), {:connect_auth0, user_id})
 
-    {:noreply, assign(socket, changeset: changeset)}
+    {:noreply, assign(socket, auth0_loading: true)}
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
@@ -50,5 +50,33 @@ defmodule BordoWeb.Admin.UsersLive.Edit do
      socket
      |> put_flash(:info, "User deleted successfully.")
      |> redirect(to: Routes.admin_live_path(socket, BordoWeb.Admin.UsersLive.Index))}
+  end
+
+  def handle_info({:connect_auth0, user_id}, socket) do
+    length = 12
+    password = :crypto.strong_rand_bytes(length) |> Base.encode64() |> binary_part(0, length)
+
+    user = Users.get_user!(user_id)
+
+    case Authentication.signup(
+           System.get_env("AUTH0_CLIENT_ID"),
+           user.email,
+           password,
+           "Username-Password-Authentication"
+         ) do
+      {:ok, auth0_user} ->
+        {:ok, user} = Users.update_user(user, %{auth0_id: auth0_user["_id"]})
+
+        {:noreply,
+         socket
+         |> assign(auth0_loading: false, user: user)
+         |> put_flash(:success, "Auth0 Connected! Password: #{password}")}
+
+      _ ->
+        {:noreply,
+         socket
+         |> assign(auth0_loading: false)
+         |> put_flash(:error, "Problem connecting Auth0!")}
+    end
   end
 end

@@ -12,21 +12,12 @@ defmodule BordoWeb.Admin.UsersLive.New do
 
   def render(assigns), do: Phoenix.View.render(BordoWeb.Admin.UserView, "new.html", assigns)
 
-  def handle_event("validate", %{"user" => user_params}, socket) do
-    changeset =
-      %User{}
-      |> Users.change_user(user_params)
-      |> Map.put(:action, :insert)
-
-    {:noreply, assign(socket, changeset: changeset)}
-  end
-
   def handle_event("save", %{"user" => user_params}, socket) do
     case Users.create_user(user_params) do
       {:ok, _user} ->
         {:noreply,
          socket
-         |> put_flash(:info, "user created")
+         |> put_flash(:info, "User Created")
          |> redirect(to: Routes.admin_live_path(socket, BordoWeb.Admin.UsersLive.Index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
