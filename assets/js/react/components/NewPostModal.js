@@ -100,7 +100,7 @@ const NewPostModal = ({ show, handleShow }) => {
         <Nav
           className="nav--modal"
           activeKey={activePage}
-          onSelect={(e) => setActivePage(Number(e))}
+          // onSelect={(e) => setActivePage(Number(e))}
         >
           {pages.map((page, i) => (
             <Nav.Item key={i}>
