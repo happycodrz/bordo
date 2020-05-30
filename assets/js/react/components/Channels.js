@@ -73,9 +73,6 @@ const Channels = () => {
     }, [])
 
     useEffect(() => {
-        // if (!channels.length)
-        //     return 
-
         const authorizedChannels = channels.map(channel => channel.network)
         const filteredChannels = ["twitter", "facebook", "linkedin"].filter(channel => !authorizedChannels.includes(createSlug(channel)))
         console.log(filteredChannels)
@@ -125,7 +122,7 @@ const Channels = () => {
             return
         }
 
-        setCurrentChannelToAdd(channel)
+        setCurrentChannelToAdd(channel_slug)
 
         //close the popover, by losing focus
         document.body.click()
@@ -168,14 +165,29 @@ const Channels = () => {
         </Popover>
     )
 
+    useEffect(() => {
+        if (!externalAuthUrl)
+            return
+
+        const popOutWindow = window.open(
+            externalAuthUrl,
+            "_blank",
+            "toolbar=yes,scrollbars=yes,resizable=no,top=250,left=250,width=1024,height=768"
+        )
+    }, [externalAuthUrl])
+
     return (
         <>
-            {!externalAuthUrl ? null :
+            {/* {!externalAuthUrl ? null :
             <PopoutWindow
                 url={externalAuthUrl}
                 title={`Add new channel: ${currentChannelToAdd}`}
                 options={{ width: 1024, height: 768 }}
-            />}
+                onClosing={() => {
+                    alert('closing!')
+                    setExternalAuthUrl(null)
+                }}
+            />} */}
             <Row className="mb-3">
                 <Col><h2>Channels</h2></Col>
             </Row>
