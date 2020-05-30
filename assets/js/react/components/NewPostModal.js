@@ -130,7 +130,7 @@ const NewPostModal = ({ show, handleShow }) => {
         {/* {activePage + 1 < pages.length ? null : <Button variant="success" onClick={handleSchedule}><Calendar size={16} /> Schedule Post</Button>} */}
         {activePage + 1 < pages.length ? null : (
           <LoaderButton variant="success" onClick={handleSchedule}>
-            <Calendar size={16} />
+            <Calendar size={16} className="mr-2" />
             {moment() <= dateTime ? 'Schedule Post' : 'Post Now'}
           </LoaderButton>
         )}
