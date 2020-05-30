@@ -55,6 +55,7 @@
     "react-hot-loader": "^4.12.21",
     "sass-loader": "^8.0.2",
     "tailwindcss": "^1.4.4",
+    "tailwindcss-spinner": "^1.0.0",
     "terser-webpack-plugin": "^2.3.2",
     "webpack": "4.41.5",
     "webpack-cli": "^3.3.2"
