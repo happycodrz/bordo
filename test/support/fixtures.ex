@@ -1,7 +1,7 @@
 defmodule Bordo.Fixtures do
-  alias Bordo.{Channels, Posts, Teams, Users}
+  alias Bordo.{Brands, Channels, Posts, Teams, Users}
 
-  def fixture(:user) do
+  def fixture(:user, assoc \\ [], attrs \\ %{}) do
     {:ok, user} =
       %{
         email: Faker.Internet.email(),
@@ -12,7 +12,7 @@ defmodule Bordo.Fixtures do
     user
   end
 
-  def fixture(:team, assoc \\ []) do
+  def fixture(:team, assoc, attrs) do
     user = assoc[:user] || fixture(:user)
 
     {:ok, team} =
@@ -23,14 +23,18 @@ defmodule Bordo.Fixtures do
     team
   end
 
-  def fixture(:brand, assoc) do
+  def fixture(:brand, assoc, attrs) do
     user = assoc[:user] || fixture(:user)
 
-    {:ok, brand} = Bordo.Brands.create_brand(%{name: Faker.Company.name(), owner_id: user.id})
+    {:ok, brand} =
+      attrs
+      |> Enum.into(%{name: Faker.Company.name(), owner_id: user.id})
+      |> Brands.create_brand()
+
     brand
   end
 
-  def fixture(:channel, assoc) do
+  def fixture(:channel, assoc, attrs) do
     brand = assoc[:brand] || fixture(:brand)
 
     {:ok, channel} =
@@ -44,7 +48,7 @@ defmodule Bordo.Fixtures do
     channel
   end
 
-  def fixture(:post, assoc) do
+  def fixture(:post, assoc, attrs) do
     user = assoc[:user] || fixture(:user)
     brand = assoc[:brand] || fixture(:brand)
     post_variants = assoc[:post_variants] || []
