@@ -22,9 +22,13 @@ defmodule BordoWeb.Router do
   end
 
   pipeline :admin do
-    plug :put_root_layout, {BordoWeb.LayoutView, :root}
+    plug :put_root_layout, {BordoWeb.LayoutView, :root_admin}
     plug :assign_current_admin
     plug Guardian.Permissions.Plug, ensure: %{admin: ["admin:all"]}
+  end
+
+  pipeline :onboarding_layout do
+    plug :put_root_layout, {BordoWeb.LayoutView, :onboarding}
   end
 
   pipeline :api do
@@ -76,6 +80,11 @@ defmodule BordoWeb.Router do
     get "/login", LoginController, :index
     post "/login", LoginController, :login
     get "/logout", LogoutController, :index
+  end
+
+  scope "/", BordoWeb do
+    pipe_through [:browser, :onboarding_layout, :private]
+    live "/onboarding", OnboardingLive.Index
   end
 
   scope "/", BordoWeb do

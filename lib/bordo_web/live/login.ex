@@ -1,3 +1,4 @@
+# Unused
 defmodule BordoWeb.AuthLive.Login do
   use BordoWeb, :live_view
   alias Auth.AdminAuth
