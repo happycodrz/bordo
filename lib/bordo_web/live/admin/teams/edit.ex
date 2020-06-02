@@ -2,7 +2,9 @@ defmodule BordoWeb.Admin.TeamsLive.Edit do
   use BordoWeb, :live_view
   alias BordoWeb.Router.Helpers, as: Routes
 
+  alias Bordo.Brands
   alias Bordo.Teams
+  alias BordoWeb.Admin.TeamView
 
   def mount(_params, _session, socket) do
     {:ok, assign(socket, %{})}
@@ -14,11 +16,12 @@ defmodule BordoWeb.Admin.TeamsLive.Edit do
     {:noreply,
      assign(socket, %{
        team: team,
+       brands: Brands.list_brands_for_team(team.id) |> Bordo.Repo.preload([:owner]),
        changeset: Teams.change_team(team)
      })}
   end
 
-  def render(assigns), do: BordoWeb.Admin.TeamView.render("edit.html", assigns)
+  def render(assigns), do: TeamView.render("edit.html", assigns)
 
   def handle_event("validate", %{"team" => params}, socket) do
     changeset =
