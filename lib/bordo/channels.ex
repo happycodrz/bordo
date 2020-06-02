@@ -6,8 +6,9 @@ defmodule Bordo.Channels do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
-  alias Bordo.Channels.Channel
   alias Bordo.Brands.Brand
+  alias Bordo.Channels.Channel
+  alias Bordo.Posts
 
   @doc """
   Returns the list of channels.
@@ -106,6 +107,9 @@ defmodule Bordo.Channels do
 
   """
   def delete_channel(%Channel{} = channel) do
+    # Cleanup orphaned posts. This has the side-effect of potentially removing
+    # more than just posts for the removed-channel.
+    Posts.delete_posts_without_variants(channel.brand_id)
     Repo.delete(channel)
   end
 

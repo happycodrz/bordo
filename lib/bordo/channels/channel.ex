@@ -11,6 +11,8 @@ defmodule Bordo.Channels.Channel do
     field :resource_id, :string
 
     belongs_to :brand, Bordo.Brands.Brand
+    has_many :post_variants, Bordo.PostVariants.PostVariant
+    many_to_many :posts, Bordo.Posts.Post, join_through: "post_variants", on_replace: :delete
     timestamps()
   end
 

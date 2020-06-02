@@ -63,7 +63,7 @@ defmodule BordoWeb.Admin.PostsLive.Index do
 
   def handle_event(
         "select-brand",
-        %{"brand_name" => brand_name, "status" => status} = msg,
+        %{"brand_name" => brand_name, "status" => status},
         socket
       ) do
     send(self(), {:select_brand, brand_name, status})

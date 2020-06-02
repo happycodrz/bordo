@@ -8,8 +8,8 @@ defmodule Bordo.Posts do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
-  alias Bordo.Posts.Post
   alias Bordo.Brands.Brand
+  alias Bordo.Posts.Post
 
   @topic inspect(__MODULE__)
 
@@ -44,8 +44,8 @@ defmodule Bordo.Posts do
         where: b.id == ^brand_id
 
     Filtrex.query(base_query, filter)
-    |> Bordo.Repo.all()
-    |> Bordo.Repo.preload(post_variants: [:channel, :media])
+    |> Repo.all()
+    |> Repo.preload(post_variants: [:channel, :media])
   end
 
   @doc """
@@ -184,6 +184,23 @@ defmodule Bordo.Posts do
   def delete_post(%Post{} = post) do
     clear_queued_post(post)
     Repo.delete(post)
+  end
+
+  @doc """
+  This is a cleanup function. The intent is to find posts that have had their
+  channels removed. Removing a channel will delete all post-variants, thereby making
+  the post a sort-of orphan.
+  """
+  def delete_posts_without_variants(brand_id) do
+    orphans =
+      Post
+      |> join(:left, [p], p in assoc(p, :post_variants))
+      |> where([p], p.brand_id == ^brand_id)
+      |> where([p, pv], is_nil(pv.id))
+
+    Post
+    |> join(:inner, [p], p in subquery(orphans))
+    |> Repo.delete_all()
   end
 
   @doc """
