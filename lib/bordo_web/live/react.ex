@@ -19,7 +19,15 @@ defmodule BordoWeb.ReactLive do
 
   @impl true
   def mount(params, session, socket) do
-    %{"brand_id" => current_brand_id} = params
+    brand_slug =
+      if Map.has_key?(params, "path") do
+        %{"path" => the_path} = params
+        Enum.at(the_path, 0)
+      else
+        %{"brand_id" => the_path} = params
+        the_path
+      end
+
     {:ok, current_identity} = AuthHelper.load_user(session)
     current_user = Users.get_user!(current_identity.user_id)
 
@@ -27,7 +35,7 @@ defmodule BordoWeb.ReactLive do
      assign(socket,
        show_modal: false,
        brands: fetch_brands(current_identity.team_id),
-       current_brand_id: current_brand_id,
+       brand_slug: brand_slug,
        current_identity: current_identity,
        current_user: current_user
      )}

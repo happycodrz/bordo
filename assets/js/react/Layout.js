@@ -1,7 +1,6 @@
 import React, { useEffect } from "react"
 import { useStateValue } from './state'
 
-import TeamSidebar from "./components/TeamSidebar"
 import BrandSidebar from "./components/BrandSidebar"
 import Loader from "./components/Loader"
 import NotificationsList from "./components/Notifications"
@@ -33,7 +32,6 @@ const Layout = ({children}) => {
         <>
             <div className="app__container">
                 {loadingBrand ? <Loader /> : null}
-                <TeamSidebar />
                 <BrandSidebar />
                 {children}
             </div>
