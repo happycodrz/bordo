@@ -13,7 +13,7 @@ defmodule BordoWeb.Router do
   end
 
   pipeline :react do
-    plug :put_layout, {BordoWeb.LayoutView, :react_root}
+    plug :put_root_layout, {BordoWeb.LayoutView, :react_root}
   end
 
   pipeline :unauthenticated do
