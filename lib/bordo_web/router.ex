@@ -116,7 +116,7 @@ defmodule BordoWeb.Router do
   scope "/", BordoWeb do
     pipe_through [:browser, :private, :react]
 
-    get "/", ReactController, :index
-    get "/*path", ReactController, :index
+    live "/:brand_id", ReactLive
+    live "/*path", ReactLive
   end
 end
