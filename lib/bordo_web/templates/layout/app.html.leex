@@ -1,8 +1,5 @@
-<main class="-mt-20">
-  <div class="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
-    <%= if assigns[:flash] && !assigns[:skip_flash] do %>
-    <%= render_flash(@flash) %>
-    <% end %>
-    <%= @inner_content %>
-  </div>
-</main>
+<%= if assigns[:flash] && !assigns[:skip_flash] do %>
+  <%= render_flash(@flash) %>
+<% end %>
+
+<%= @inner_content %>
