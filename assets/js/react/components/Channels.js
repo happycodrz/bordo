@@ -110,7 +110,7 @@ const Channels = () => {
             }
         }, {
             enable_profile_selector: true,
-            scope: 'pages_manage_posts,pages_manage_engagement,pages_manage_ads,pages_read_engagement,pages_show_list'
+            scope: 'pages_manage_posts,pages_read_engagement'
         });
     }
 
