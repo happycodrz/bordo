@@ -30,7 +30,7 @@ defmodule Bordo.Providers.Facebook do
           :photo,
           channel.resource_id,
           "/tmp/" <> file_name,
-          [],
+          [message: content],
           page_info["access_token"]
         )
       else
