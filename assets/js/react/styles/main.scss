@@ -15,7 +15,6 @@
 @import './components/BrandSidebar';
 @import './components/BrandNavigation';
 @import './components/BrandWorkspace';
-@import './components/TeamNavigation';
 @import './components/ScheduleCalendar';
 @import './components/NewPostModal';
 @import './components/UnsplashSearch';
@@ -38,7 +37,7 @@ body {
 
 .app__container {
     display: grid;
-    grid-template-columns: 75px 350px auto;
+    grid-template-columns: 350px auto;
     overflow: hidden;
     height: 100vh;
 
@@ -47,12 +46,7 @@ body {
     }
 }
 
-.team__sidebar {
-    z-index: 999;
-}
-
 .brand__sidebar {
-    z-index: 99;
     box-shadow: 0 0 15px 5px rgba($gray-800, 0.2);
 }
 
