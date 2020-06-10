@@ -37,7 +37,7 @@ defmodule Bordo.MixProject do
       {:auth0_ex, "~> 0.6"},
       {:cloudex, "~> 1.4"},
       {:cors_plug, "~> 2.0"},
-      {:credo, "~> 1.3.2", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.4.0", only: [:dev, :test], runtime: false},
       {:ecto_autoslug_field, "~> 2.0"},
       {:ecto_sql, "~> 3.4"},
       {:extwitter, "~> 0.12.0"},
