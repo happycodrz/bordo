@@ -33,7 +33,7 @@ defmodule Bordo.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:appsignal, "~> 1.12.1"},
+      {:appsignal, "~> 1.13.1"},
       {:auth0_ex, "~> 0.6"},
       {:cloudex, "~> 1.4"},
       {:cors_plug, "~> 2.0"},
