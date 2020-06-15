@@ -46,7 +46,7 @@ defmodule Bordo.MixProject do
       {:filtrex, "~> 0.4.3"},
       {:gettext, "~> 0.11"},
       {:guardian, "~> 2.1.1"},
-      {:httpoison, "~> 1.6.2"},
+      {:httpoison, "~> 1.7.0"},
       {:jason, "~> 1.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:oban, "~> 1.2.0"},
