@@ -1,39 +1,33 @@
 <div class="grid grid-cols-6 gap-0 h-screen">
-	<div class="col-span-2 flex items-center justify-center text-center flex-col">
-		<div class="w-3/5">
-            <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-3" alt="Bordo admin" width="120px" />
-			<h1 class="text-3xl mb-6 text-gray-700">Welcome back!</h1>
+  <div class="col-span-2 flex items-center justify-center text-center flex-col">
+    <div class="w-3/5">
+      <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-3" alt="Bordo admin" width="120px" />
+      <h1 class="text-3xl mb-6 text-gray-700">Welcome back!</h1>
 
-            <%= f = form_for @conn, "#", [as: :user] %>
+      <%= f = form_for @conn, "#", [as: :user] %>
 
-            <%= if @errors do %>
-                <div class="rounded-md bg-red-100 border border-red-200 p-4 mb-6">
-                    <h3 class="text-sm leading-5 font-medium text-red-500 mb-2">There was a problem logging in.</h3>
-                    <p class="text-xs leading-snug text-red-500">Bordo is currently a closed beta, but you can sign up here: <a href="https://hellobordo.com" class="underline">hellobordo.com</a></p>
-                </div>
-            <% end %>
+      <%= if @errors do %>
+      <div class="rounded-md bg-red-100 border border-red-200 p-4 mb-6">
+        <h3 class="text-sm leading-5 font-medium text-red-500 mb-2">There was a problem logging in.</h3>
+        <p class="text-xs leading-snug text-red-500">Bordo is currently a closed beta, but you can sign up here: <a href="https://hellobordo.com" class="underline">hellobordo.com</a></p>
+      </div>
+      <% end %>
 
-            <div class="mb-3 rounded-md shadow-sm">
-                <%= text_input f, :email, placeholder: "Email", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
-            </div>
-            <div class="mb-6 rounded-md shadow-sm">
-                <%= password_input f, :password, placeholder: "Password", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
-            </div>
-            <div class="mb-2">
-                <span class="block w-full rounded-md shadow-sm">
-                    <button
-                        type="submit"
-                        class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-500 focus:shadow-outline-red active:bg-red-500 transition duration-150 ease-in-out"
-                        phx-disable-with="logging in"
-                    >
-                        Sign in
-                    </button>
-                </span>
-            </div>
-			<%# <div class="text-sm leading-5">
-                <a href="#" class="text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition ease-in-out duration-150">Forgot your password? </a>
-            </div> %>
-		</div>
-	</div>
-	<div class="col-span-4 bg-blue-500 flex items-center justify-center"></div>
+      <div class="mb-3 rounded-md shadow-sm">
+        <%= text_input f, :email, placeholder: "Email", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
+      </div>
+      <div class="mb-6 rounded-md shadow-sm">
+        <%= password_input f, :password, placeholder: "Password", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
+      </div>
+      <div class="mb-2">
+        <span class="block w-full rounded-md shadow-sm">
+          <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-500 focus:shadow-outline-red active:bg-red-500 transition duration-150 ease-in-out" phx-disable-with="logging in">Sign in</button>
+        </span>
+      </div>
+      <%# <div class="text-sm leading-5">
+        <a href="#" class="text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition ease-in-out duration-150">Forgot your password? </a>
+      </div> %>
+    </div>
+  </div>
+  <div class="col-span-4 bg-blue-500 flex items-center justify-center"></div>
 </div>
