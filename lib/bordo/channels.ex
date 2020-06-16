@@ -109,7 +109,9 @@ defmodule Bordo.Channels do
   def delete_channel(%Channel{} = channel) do
     # Cleanup orphaned posts. This has the side-effect of potentially removing
     # more than just posts for the removed-channel.
-    Posts.delete_posts_without_variants(channel.brand_id)
+    # This causes a bug which deleted _all_ posts, across other tenants.
+    # We need to write a better query and test thoroughly
+    # Posts.delete_posts_without_variants(channel.brand_id)
     Repo.delete(channel)
   end
 
