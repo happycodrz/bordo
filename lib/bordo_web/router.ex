@@ -44,6 +44,8 @@ defmodule BordoWeb.Router do
     plug Auth.Guardian.ApiPipeline
   end
 
+  get "/healthy-otter", BordoWeb.HealthzController, :index
+
   scope "/admin", BordoWeb.Admin, as: :admin do
     pipe_through [:browser, :private, :admin]
     live_dashboard "/dashboard", metrics: Bordo.Telemetry
