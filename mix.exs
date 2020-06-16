@@ -55,6 +55,7 @@ defmodule Bordo.MixProject do
       {:phoenix_html, "2.14.2"},
       {:phoenix_live_view, "0.13.2"},
       {:phoenix_live_dashboard, "~> 0.2.5"},
+      {:phoenix_live_react, "~> 0.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_pubsub, "~> 2.0"},
       {:plug_cowboy, "~> 2.1"},
