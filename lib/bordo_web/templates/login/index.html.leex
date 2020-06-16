@@ -1,56 +1,39 @@
-<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto" alt="Bordo admin" width="70px" />
-    <h2 class="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900"> Sign in to your account </h2>
-  </div>
-  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-      <%= f = form_for @conn, "#", [as: :user] %>
-      <%= if @errors do %>
-      <div class="rounded-md bg-red-50 p-4 mb-4">
-        <div class="flex">
-          <div class="ml-3">
-            <h3 class="text-sm leading-5 font-medium text-red-800"> Invalid login. </h3>
-            <div class="mt-2 text-sm leading-5 text-red-700">There was a problem logging in. <br /> Bordo is currently a
-              closed
-              beta, but you can sign up here: <a href="https://hellobordo.com">hellobordo.com</a>
+<div class="grid grid-cols-6 gap-0 h-screen">
+	<div class="col-span-2 flex items-center justify-center text-center flex-col">
+		<div class="w-3/5">
+            <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-3" alt="Bordo admin" width="120px" />
+			<h1 class="text-3xl mb-6 text-gray-700">Welcome back!</h1>
+
+            <%= f = form_for @conn, "#", [as: :user] %>
+
+            <%= if @errors do %>
+                <div class="rounded-md bg-red-100 border border-red-200 p-4 mb-6">
+                    <h3 class="text-sm leading-5 font-medium text-red-500 mb-2">There was a problem logging in.</h3>
+                    <p class="text-xs leading-snug text-red-500">Bordo is currently a closed beta, but you can sign up here: <a href="https://hellobordo.com" class="underline">hellobordo.com</a></p>
+                </div>
+            <% end %>
+
+            <div class="mb-3 rounded-md shadow-sm">
+                <%= text_input f, :email, placeholder: "Email", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
             </div>
-          </div>
-        </div>
-      </div>
-      <% end %>
-      <div>
-        <%= label f, :email, class: "block text-sm font-medium leading-5 text-gray-700" %> <div
-          class="mt-1 rounded-md shadow-sm">
-          <%= text_input f, :email, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
-        </div>
-      </div>
-      <div class="mt-6">
-        <label for="password" class="block text-sm font-medium leading-5 text-gray-700"> Password </label>
-        <div class="mt-1 rounded-md shadow-sm">
-          <%= password_input f, :password, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
-        </div>
-      </div>
-      <div class="mt-6 flex items-center justify-between">
-        <div class="flex items-center">
-          <input id="remember_me" type="checkbox"
-            class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
-          <label for="remember_me" class="ml-2 block text-sm leading-5 text-gray-900"> Remember me </label>
-        </div>
-        <div class="text-sm leading-5">
-          <a href="#"
-            class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
-            Forgot your password? </a>
-        </div>
-      </div>
-      <div class="mt-6">
-        <span class="block w-full rounded-md shadow-sm">
-          <button type="submit"
-            class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-            phx-disable-with="logging in"> Sign in </button>
-        </span>
-      </div>
-      </form>
-    </div>
-  </div>
+            <div class="mb-6 rounded-md shadow-sm">
+                <%= password_input f, :password, placeholder: "Password", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
+            </div>
+            <div class="mb-2">
+                <span class="block w-full rounded-md shadow-sm">
+                    <button
+                        type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-500 focus:shadow-outline-red active:bg-red-500 transition duration-150 ease-in-out"
+                        phx-disable-with="logging in"
+                    >
+                        Sign in
+                    </button>
+                </span>
+            </div>
+			<%# <div class="text-sm leading-5">
+                <a href="#" class="text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition ease-in-out duration-150">Forgot your password? </a>
+            </div> %>
+		</div>
+	</div>
+	<div class="col-span-4 bg-blue-500 flex items-center justify-center"></div>
 </div>
