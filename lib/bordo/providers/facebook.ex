@@ -17,7 +17,7 @@ defmodule Bordo.Providers.Facebook do
   end
 
   def create_post(channel, content, media) do
-    if Mix.env() == :prod do
+    if System.get_env("MIX_ENV") == "prod" do
       {:ok, page_info} = Facebook.page(channel.resource_id, channel.token, ["access_token"])
 
       if length(media) > 0 do
