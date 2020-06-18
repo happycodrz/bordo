@@ -19,6 +19,9 @@ config :bordo, BordoWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :debug
 
+# Enable appsignal, otherwise configured in config.exs
+config :appsignal, :config, active: true
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
