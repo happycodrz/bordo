@@ -62,7 +62,7 @@ config :bordo, Oban,
   queues: [default: 10, events: 50, media: 20]
 
 config :appsignal, :config,
-  active: System.get_env("MIX_ENV") == "prod",
+  active: false,
   name: "Bordo",
   push_api_key: System.get_env("APPSIGNAL_PUSH_API_KEY"),
   env: System.get_env("MIX_ENV", "dev"),
@@ -85,7 +85,9 @@ config :facebook,
   graph_video_url: "https://graph-video.facebook.com"
 
 config :bordo,
-  twitter_live: true
+  twitter_live: true,
+  facebook_live: true,
+  linkedin_live: true
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

@@ -32,6 +32,12 @@ config :bordo, BordoWeb.Endpoint,
     ]
   ]
 
+# Disable sending real integration messages in development
+config :bordo,
+  twitter_live: false,
+  facebook_live: false,
+  linkedin_live: false
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
