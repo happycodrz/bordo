@@ -1,0 +1,10 @@
+<%= if assigns[:flash] && !assigns[:skip_flash] do %>
+  <%= render_flash(@flash) %>
+<% end %>
+
+<div class="h-screen flex">
+  <%= live_render(@socket, BordoWeb.BrandNav, id: "brand-nav", session: %{"brand_slug" => @active_brand.slug, "nav_item" => @nav_item}) %>
+  <div class="w-full">
+    <%= @inner_content %>
+  </div>
+</div>
