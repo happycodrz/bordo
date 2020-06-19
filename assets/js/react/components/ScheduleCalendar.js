@@ -252,8 +252,6 @@ const CalendarDays = ({ year, month }) => {
             .format()
           updatedPost.scheduled_for = newDate
 
-          console.log(updatedPost)
-
           dispatch({
             type: 'updatePost',
             data: {

@@ -6,7 +6,6 @@ import { EIStateProvider, reducer, initialState } from '../state'
 import { MediaGallery } from './Media'
 
 const MediaSelectModal = ({ show, handleShow, handleSelect, key, brandId }) => {
-  console.log(brandId, 'from media select modal')
   const [selectedImage, setSelectedImage] = useState(null)
 
   const handleSelectClick = (selectedImage) => {

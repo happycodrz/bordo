@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
   dateFormat,
   timeFormat,
-  createSlug,
   sentenceCase,
 } from '../utilities/helpers'
 import { getChannels } from '../utilities/api'
@@ -150,7 +149,6 @@ export const Variants = ({ show, brandId }) => {
                 <Tab.Content>
                   {variantArray.map((variant, i) => {
                     if (!variant.active) return null
-                    let slug = createSlug(variant.network)
                     return (
                       <Tab.Pane eventKey={i} key={i}>
                         <VariantEditor
@@ -159,6 +157,7 @@ export const Variants = ({ show, brandId }) => {
                           updateVariant={(field, value) =>
                             updateVariant(variant.network, field, value)
                           }
+                          brandId={brandId}
                         />
                       </Tab.Pane>
                     )
@@ -178,6 +177,7 @@ export const VariantEditor = ({
   mediaId,
   updateVariant,
   showHeading,
+  brandId
 }) => {
   const [selectedImage, setSelectedImage] = useState(null)
 
@@ -220,6 +220,7 @@ export const VariantEditor = ({
                 ])
               }
             }}
+            brandId={brandId}
           />
         </Col>
         <Col>

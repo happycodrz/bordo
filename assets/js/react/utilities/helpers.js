@@ -19,19 +19,7 @@ export const timeFormat = (date, short=false) => {
 
 export const isPM = date => new Date(date).getHours() >= 12
 
-export const createSlug = string => string.toLowerCase().replace(/\s/g, '-')
-
 export const sentenceCase = string => string.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')
-
-export const hexToRgb = hex => {
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null
-}
 
 export const randomNotificationTitle = (type) => {
     const titles = {
@@ -45,8 +33,6 @@ export const randomNotificationTitle = (type) => {
 export const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
 
 export const componentPrefix = 'bdo-'
-
-export const canvaApiKey = process.env.REACT_APP_CANVA_API
 
 const INSTANT_LOAD = true
 export const callWaiting = callback => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { reducer, useStateValue, EIStateProvider } from '../state'
 
 import Button from 'react-bootstrap/Button'
@@ -7,37 +7,13 @@ import Col from 'react-bootstrap/Col'
 
 import MediaUploadModal from './MediaUploadModal'
 
-import { updateBrand, getAllUsers, deleteBrand } from '../utilities/api'
+import { updateBrand, deleteBrand } from '../utilities/api'
 import Channels from './Channels'
-import { randomNotificationTitle } from '../utilities/helpers'
 import { EditableInput } from './EditableInput'
 
 const SettingsComponent = () => {
   const [{ activeBrand }, dispatch] = useStateValue()
   const [uploadModalShow, setUploadModalShow] = useState(false)
-  const [brandUsers, setBrandUsers] = useState([])
-
-  const handleRemove = (userId) => {
-    return null
-  }
-
-  useEffect(() => {
-    getAllUsers(activeBrand.id)
-      .then((users) => {
-        console.log(users)
-        setBrandUsers(users)
-      })
-      .catch((error) => {
-        dispatch({
-          type: 'addNotification',
-          data: {
-            title: randomNotificationTitle('failure'),
-            body: error.message,
-            variant: 'danger',
-          },
-        })
-      })
-  }, [])
 
   const handleOnUpload = (res) => {
     updateBrand(activeBrand.id, {

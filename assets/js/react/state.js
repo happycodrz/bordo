@@ -89,8 +89,6 @@ export const reducer = (state, action) => {
       let postIndex = posts.findIndex((p) => p.id === action.data.id)
       posts.splice(postIndex, 1, action.data.post)
 
-      console.log(posts)
-
       return {
         ...state,
         posts: posts,
@@ -106,7 +104,7 @@ export const reducer = (state, action) => {
     case 'addNotification':
       return {
         ...state,
-        notifications: [...state.notifications, action.data],
+        notifications: [action.data],
       }
 
     case 'deleteNotification':

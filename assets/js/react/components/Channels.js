@@ -5,7 +5,7 @@ import { useStateValue } from '../state'
 import Channel from './Channel'
 import PopoutWindow from 'react-popout'
 import { getChannelAuth, getChannels, getChannelCallback, deleteChannel, addNewChannel, updateChannel } from "../utilities/api"
-import { createSlug, randomNotificationTitle, sentenceCase } from "../utilities/helpers"
+import { randomNotificationTitle, sentenceCase } from "../utilities/helpers"
 
 const Channels = () => {
     const [externalAuthUrl, setExternalAuthUrl] = useState(null)
@@ -74,8 +74,7 @@ const Channels = () => {
 
     useEffect(() => {
         const authorizedChannels = channels.map(channel => channel.network)
-        const filteredChannels = ["twitter", "facebook", "linkedin"].filter(channel => !authorizedChannels.includes(createSlug(channel)))
-        console.log(filteredChannels)
+        const filteredChannels = ["twitter", "facebook", "linkedin"].filter(channel => !authorizedChannels.includes(channel))
         setSupportedChannels(filteredChannels)
     }, [channels])
 
@@ -94,7 +93,6 @@ const Channels = () => {
     const facebookLoginModal = () => {
         window.FB.login(response => {
             if (response.authResponse) {
-                console.log(response)
                 window.FB.api('/me?fields=accounts', res => {
                     addNewChannel(activeBrand.id, {
                         token: res.accounts.data[0].access_token,
@@ -115,7 +113,7 @@ const Channels = () => {
     }
 
     const handleAddChannelClick = channel => {
-        let channel_slug = createSlug(channel)
+        let channel_slug = channel
 
         if (channel_slug === 'facebook') {
             facebookLoginModal()

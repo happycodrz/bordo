@@ -93,20 +93,6 @@ const assets = [
     },
 ]
 
-export const getUser = () => {
-    return new Promise((resolve, reject) => {
-        callWaiting(() => {
-            resolve({
-                "uuid": 'abc123',
-                "first_name": "Michael",
-                "last_name": "Panik",
-                "email": "michaelpanik92@gmail.com",
-                "user_type": "employee"
-            })
-        })
-    })
-}
-
 export const getBrand = uuid => {
     return new Promise((resolve, reject) => {
         callWaiting(() => {
@@ -117,30 +103,6 @@ export const getBrand = uuid => {
             })
 
             reject(new Error(`Could not find brand ${uuid}`))
-        })
-    })
-}
-
-export const getAllBrands = () => {
-    return new Promise((resolve, reject) => {
-        callWaiting(() => {
-            resolve(brands)
-
-            reject(new Error(`Could not load brands.`))
-        })
-    })
-}
-
-export const addNewBrand = brandName => {
-    return new Promise((resolve, reject) => {
-        callWaiting(() => {
-            resolve({
-                "uuid": "95643eaf",
-                "id": 22,
-                "name": brandName,
-            })
-        
-            reject(new Error(`Could not load brands.`))
         })
     })
 }

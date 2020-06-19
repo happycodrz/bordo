@@ -37,7 +37,8 @@ Hooks.ScrollLock = {
   lockScroll() {
     // From https://github.com/excid3/tailwindcss-stimulus-components/blob/master/src/modal.js
     // Add right padding to the body so the page doesn't shift when we disable scrolling
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth
     document.body.style.paddingRight = `${scrollbarWidth}px`
     // Save the scroll position
     this.scrollPosition = window.pageYOffset || document.body.scrollTop
@@ -60,13 +61,17 @@ Hooks.ScrollLock = {
 }
 
 import Choices from 'choices.js'
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content')
+let csrfToken = document
+  .querySelector("meta[name='csrf-token']")
+  .getAttribute('content')
 let liveSocket = new LiveSocket('/live', Socket, {
   hooks: Hooks,
   dom: {
-    onBeforeElUpdated(from, to){
-      if(from.__x){ window.Alpine.clone(from.__x, to) }
-    }
+    onBeforeElUpdated(from, to) {
+      if (from.__x) {
+        window.Alpine.clone(from.__x, to)
+      }
+    },
   },
   params: { _csrf_token: csrfToken },
 })
@@ -83,22 +88,20 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)
 window.liveSocket = liveSocket
 
-import BrandSidebarBody from './react/components/BrandSidebarBody'
+import SidebarNewPostButton from './react/components/SidebarNewPostButton'
 import Media from './react/components/Media'
 import ScheduleCalendar from './react/components/ScheduleCalendar'
 import Settings from './react/components/Settings'
-import Launchpad from './react/components/Launchpad'
 
 window.Components = {
-  BrandSidebarBody,
-  Launchpad,
+  SidebarNewPostButton,
   Media,
   ScheduleCalendar,
-  Settings
+  Settings,
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  feather.replace({width: '1em', height: '1em'})
+  feather.replace({ width: '1em', height: '1em' })
   initLiveReact()
   const element = document.querySelector('.js-choice')
   if (element) {

@@ -30,7 +30,6 @@ const ContentEditor = ({content, onChange, placeholder, characterCount}) => {
                 stripPastedStyles={true}
                 onFocus={() => setPlaceholderValue('')}
                 onBlur={e => {
-                    console.log(e.target.value)
                     if(!e.target.value) {
                         setPlaceholderValue(placeholder)
                     }

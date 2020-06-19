@@ -42,7 +42,6 @@ const NewPostModal = ({ show, handleShow, brandId }) => {
   const pages = [<Content brandId={brandId} />, <Variants brandId={brandId} />, <Schedule />]
 
   const handleSchedule = () => {
-    console.log(dateTime)
     const body = {
       post: {
         title: title,
@@ -57,7 +56,6 @@ const NewPostModal = ({ show, handleShow, brandId }) => {
           type: 'addPosts',
           posts: newPost,
         })
-
         handleShow()
 
         const bodies = [

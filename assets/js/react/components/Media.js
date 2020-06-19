@@ -585,7 +585,6 @@ export const MediaGallery = ({ isSelecter, onSelect }) => {
   }
 
   useEffect(() => {
-    console.log(assets)
     if (!assets) return
 
     if (activeFilter === 'all') {

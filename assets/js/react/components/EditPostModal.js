@@ -2,9 +2,9 @@ import React, { useState, createContext } from 'react'
 import Modal from 'react-bootstrap/Modal'
 
 import { deletePost, updatePost } from '../utilities/api'
-import { dateFormat, timeFormat, sentenceCase, randomNotificationTitle } from '../utilities/helpers'
+import { sentenceCase, randomNotificationTitle } from '../utilities/helpers'
 
-import { Calendar, Facebook, Twitter, Instagram, Linkedin, Globe, MapPin, Save, Trash2 } from 'react-feather'
+import { Facebook, Twitter, Instagram, Linkedin, Globe, MapPin, Save, Trash2 } from 'react-feather'
 
 
 import { useStateValue } from '../state'
@@ -84,7 +84,6 @@ const PostEditorModal = ({ post, show, handleShow }) => {
             newPostData[field] = value
         }
 
-        console.log(newPostData)
         setPostData(newPostData)
     }
 
@@ -98,9 +97,6 @@ const PostEditorModal = ({ post, show, handleShow }) => {
             <Modal.Header closeButton>
                 <Modal.Title className="w-100">
                     <EditableInput defaultValue={post.title} onSave={e => updateVariant(null, 'title', e)} />
-                    {/* <div className="text-muted d-block" style={{ fontSize: 12 }}>
-                        <Calendar size={12} /> {dateFormat(postData.scheduled_for)} at {timeFormat(postData.scheduled_for)}
-                    </div> */}
                     <input
                         style={{ fontSize: 12 }}
                         class="text-muted border-0"

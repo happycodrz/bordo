@@ -1,5 +1,3 @@
-import { createSlug } from '../utilities/helpers'
-
 const AUTH_TOKEN = document.querySelector(`meta[name="auth-token"]`).getAttribute('content')
 
 const API_ROOT_URL = process.env.REACT_APP_API_ENDPOINT || ''
@@ -44,45 +42,6 @@ const errorHandler = (error, reject) => {
 }
 
 /* --- */
-
-export const getUser = uuid => {
-    return new Promise((resolve, reject) => {
-        fetch(`${API_ROOT_URL}/profile`, GET_OPTIONS)
-            .then(res => res.json())
-            .then(json => resolve(json.data))
-            .catch(err => errorHandler(err, reject))
-    })
-}
-
-export const getAllUsers = brandUuid => {
-    return new Promise((resolve, reject) => {
-        fetch(`${API_ROOT_URL}/brands/${brandUuid}/users`, GET_OPTIONS)
-            .then(res => {
-                if(res.status === 200) {
-                    return res.json()
-                } else {
-                    reject({message: 'Could not get users. Try again later.'})
-                }
-            })
-            .then(json => resolve(json.data))
-            .catch(err => errorHandler(err, reject))
-    })
-}
-
-export const getAllBrands = () => {
-    return new Promise((resolve, reject) => {
-        fetch(`${API_ROOT_URL}/brands`, GET_OPTIONS)
-            .then(res => {
-                if(res.status === 200) {
-                    return res.json()
-                } else {
-                    reject({message: 'Unable to authenticate, try logging in again.'})
-                }
-            })
-            .then(json => resolve(json.data))
-            .catch(err => errorHandler(err, reject))
-    })
-}
 
 export const getPosts = (brandId, year, month) => {
     let startDate = new Date(year, month, 1).toISOString()
@@ -131,26 +90,6 @@ export const deletePost = (brandId, postId) => {
         fetch(`${API_ROOT_URL}/brands/${brandId}/posts/${postId}`, DELETE_OPTIONS)
             .then(() => resolve({ message: `Post has been deleted.` }) )
             .catch(err => errorHandler(err, reject))
-    })
-}
-
-export const addNewBrand = brandName => {
-    return new Promise((resolve, reject) => {
-        fetch(`${API_ROOT_URL}/brands`, POST_OPTIONS({
-            "brand": {
-                "name": brandName,
-                "slug": createSlug(brandName)
-            }
-        }))
-        .then(res => {
-            if(res.status === 201) {
-                return res.json()
-            } else {
-                reject({message: 'Could not create brand. Try again later.'})
-            }
-        })
-        .then(json => resolve(json.data))
-        .catch(err => errorHandler(err, reject))
     })
 }
 

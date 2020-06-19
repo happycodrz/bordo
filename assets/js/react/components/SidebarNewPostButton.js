@@ -3,7 +3,7 @@ import { Send } from 'react-feather'
 
 import NewPostModal from './NewPostModal'
 
-const BrandSidebarBody = ({ brandId }) => {
+const SidebarNewPostButton = ({ brandId }) => {
   const [showNewPostModal, setShowNewPostModal] = useState()
   const [key, setKey] = useState(0)
 
@@ -37,4 +37,4 @@ const BrandSidebarBody = ({ brandId }) => {
   )
 }
 
-export default BrandSidebarBody
+export default SidebarNewPostButton

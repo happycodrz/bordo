@@ -16,7 +16,6 @@ const Schedule = ({ show }) => {
     const [months, setMonths] = useState([])
 
     const handleDateSelect = dateTime => {
-        console.log(dateTime)
         dispatch({
             type: 'setDateTime',
             dateTime: moment(dateTime)
