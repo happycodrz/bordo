@@ -1,6 +1,7 @@
 defmodule BordoWeb.Providers.TwitterController do
   use BordoWeb, :controller
 
+  alias Bordo.Brands
   alias Bordo.Channels
   alias Bordo.Channels.Channel
 
@@ -23,6 +24,10 @@ defmodule BordoWeb.Providers.TwitterController do
     end
   end
 
+  @doc """
+  Catches the oauth2 response from twitter and redirects to channels LV.
+  This isn't ideal b/c this controller mixes json & html responses.
+  """
   def callback(conn, %{
         "oauth_token" => oauth_token,
         "oauth_verifier" => oauth_verifier,
@@ -33,14 +38,10 @@ defmodule BordoWeb.Providers.TwitterController do
     with {:ok, access_token} <- ExTwitter.access_token(oauth_verifier, oauth_token),
          {:ok, %Channel{} = channel} <-
            Channels.create_channel(build_channel_params(access_token, brand_id)) do
+      brand = Brands.get_brand!(brand_id)
+
       conn
-      |> put_status(:created)
-      |> put_resp_header(
-        "location",
-        Routes.brand_channel_path(conn, :show, brand_id, channel)
-      )
-      |> put_view(BordoWeb.Brands.ChannelView)
-      |> render("show.json", channel: channel)
+      |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
     else
       {:error, 401} ->
         conn

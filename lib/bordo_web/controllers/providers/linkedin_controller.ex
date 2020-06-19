@@ -5,41 +5,16 @@ defmodule BordoWeb.Providers.LinkedinController do
   alias Bordo.Channels.Channel
 
   def auth(conn, %{"brand_id" => brand_id}) do
-    query =
-      URI.encode_query(%{
-        state: URI.encode_query(%{brand_id: brand_id}),
-        client_id: System.get_env("LINKEDIN_CLIENT_ID"),
-        redirect_uri: System.get_env("LINKEDIN_REDIRECT_URI"),
-        response_type: "code",
-        scope: "w_member_social,r_liteprofile,rw_organization_admin"
-      })
-
-    auth_url =
-      %URI{
-        host: "www.linkedin.com",
-        path: "/oauth/v2/authorization",
-        port: 443,
-        query: query,
-        scheme: "https"
-      }
-      |> URI.to_string()
+    auth_url = Linkedin.auth_url(state: %{brand_id: brand_id})
 
     json(conn, %{url: auth_url})
   end
 
   def callback(conn, %{"code" => code, "state" => state}) do
+    IO.inspect("STILL HIT THE CALLBACK")
     %{"brand_id" => brand_id} = URI.decode_query(state)
 
-    query =
-      URI.encode_query(%{
-        code: code,
-        client_id: System.get_env("LINKEDIN_CLIENT_ID"),
-        redirect_uri: System.get_env("LINKEDIN_REDIRECT_URI"),
-        client_secret: System.get_env("LINKEDIN_CLIENT_SECRET"),
-        grant_type: "authorization_code"
-      })
-
-    case auth(query) do
+    case Linkedin.access_token(code) do
       {:ok, %{"access_token" => access_token}} ->
         channel_params =
           Map.merge(
@@ -68,27 +43,5 @@ defmodule BordoWeb.Providers.LinkedinController do
           error: %{detail: "Auth failed", message: err}
         })
     end
-  end
-
-  defp auth(query) do
-    uri = %URI{
-      host: "www.linkedin.com",
-      path: "/oauth/v2/accessToken",
-      port: 443,
-      query: query,
-      scheme: "https"
-    }
-
-    with {:ok, response} <- get_token(uri) do
-      response
-      |> Map.get(:body)
-      |> Jason.decode()
-    end
-  end
-
-  defp get_token(uri) do
-    uri
-    |> URI.to_string()
-    |> HTTPoison.post("", [{"Content-Type", "x-www-form-urlencoded"}])
   end
 end

@@ -1,6 +1,7 @@
 defmodule BordoWeb.Providers.FacebookController do
   use BordoWeb, :controller
 
+  alias Bordo.Brands
   alias Bordo.Channels
   alias Bordo.Channels.Channel
 
@@ -32,16 +33,10 @@ defmodule BordoWeb.Providers.FacebookController do
          {:ok, channel_params} <- build_channel_params(access_token, brand_id),
          {:ok, %Channel{} = channel} <- Channels.create_channel(channel_params),
          {:ok, %{"access_token" => access_token}} <- upgrade_access_token(access_token) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header(
-        "location",
-        Routes.brand_channel_path(conn, :show, brand_id, channel)
-      )
-      |> put_view(BordoWeb.Brands.ChannelView)
-      |> render("show.json", channel: channel)
+      brand = Brands.get_brand!(brand_id)
 
-      json(conn, %{token: access_token})
+      conn
+      |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
     else
       {:error, error} ->
         json(conn, %{
