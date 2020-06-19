@@ -21,17 +21,9 @@ defmodule BordoWeb.BrandNav do
         <%= live_component(@socket, BordoWeb.BrandModal, show_modal: @show_modal, user_id: @current_user.id, team_id: @current_user.team_id, id: :new_brand_modal) %>
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
-          <div class="relative z-10">
-            <img @click="open = !open" @click.away="open = false" class="h-12 rounded-full cursor-pointer" src="<%= BordoWeb.Admin.UserView.avatar(@current_user) %>" alt="" />
-            <div x-show="open" class="absolute bottom-12 left-0 mt-2 w-48 rounded-md shadow-lg" x-description="Profile dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95">
-              <div class="py-1 rounded-md bg-white shadow-xs">
-                <%= link to: Routes.logout_path(@socket, :index), class: "flex justify-between content-center px-3 py-2 text-sm text-gray-700 hover:text-gray-800 hover:bg-gray-100 hover:no-underline" do %>
-                  Sign out
-                  <i data-feather="log-out" class="text-red-400"></i>
-                <% end %>
-              </div>
-            </div>
-          </div>
+          <%= link to: Routes.logout_path(@socket, :index), class: "flex justify-between content-center px-3 py-2 text-sm text-gray-700 hover:no-underline" do %>
+            <i data-feather="log-out" class="text-gray-300"></i>
+          <% end %>
         </div>
       </div>
       <aside class="bdo-brandSidebar flex flex-col">
