@@ -64,6 +64,7 @@ defmodule Bordo.Brands do
       ** (Ecto.NoResultsError)
 
   """
+  def get_brand!(slug: slug), do: Repo.get_by!(Brand, slug: slug)
   def get_brand!(id), do: Repo.get!(Brand, id)
 
   @doc """
