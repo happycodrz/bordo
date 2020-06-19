@@ -18,6 +18,7 @@ module.exports = (env, options) => {
     },
     entry: {
       'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js']),
+      'lv': glob.sync('./vendor/**/*.js').concat(['./js/lv.js']),
       'react': './js/react/index.js'
     },
     output: {
@@ -66,7 +67,11 @@ module.exports = (env, options) => {
       new webpack.HotModuleReplacementPlugin()
     ],
     resolve: {
-        extensions: ['.js', '.scss', '.jsx']
+        extensions: ['.js', '.scss', '.jsx'],
+        alias: {
+          react: path.resolve(__dirname, './node_modules/react'),
+          'react-dom': path.resolve(__dirname, './node_modules/react-dom')
+        }
     }
   }
 };
