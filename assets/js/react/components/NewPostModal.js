@@ -1,11 +1,11 @@
 import React, { useState, useReducer, useContext, createContext } from 'react'
-import { useStateValue } from '../state'
 
 import LoaderButton from './LoaderButton'
 import Schedule from './NewPost.Schedule'
 import { Variants } from './NewPost.Variants'
 import { Content } from './NewPost.Content'
 import { schedulePost } from '../utilities/api'
+import { reducer } from '../state'
 
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
@@ -30,8 +30,8 @@ const NewPostWizard = ({ activePage, children }) => {
   )
 }
 
-const NewPostModal = ({ show, handleShow }) => {
-  const [{ activeBrand }, dispatch] = useStateValue()
+const NewPostModal = ({ show, handleShow, brandId }) => {
+  const [{}, dispatch] = useReducer(reducer, {})
   const [{ title, dateTime, variants }] = useContext(NewPostContext)
 
   const [activePage, setActivePage] = useState(0)
@@ -39,7 +39,7 @@ const NewPostModal = ({ show, handleShow }) => {
   const nextPage = () => setActivePage(activePage + 1)
   const prevPage = () => setActivePage(activePage - 1)
 
-  const pages = [<Content />, <Variants />, <Schedule />]
+  const pages = [<Content brandId={brandId} />, <Variants brandId={brandId} />, <Schedule />]
 
   const handleSchedule = () => {
     console.log(dateTime)
@@ -51,7 +51,7 @@ const NewPostModal = ({ show, handleShow }) => {
       },
     }
 
-    schedulePost(activeBrand.id, body)
+    schedulePost(brandId, body)
       .then((newPost) => {
         dispatch({
           type: 'addPosts',
@@ -139,13 +139,13 @@ const NewPostModal = ({ show, handleShow }) => {
   )
 }
 
-const NewPost = ({ show, handleShow }) => {
+const NewPost = ({ show, handleShow, brandId }) => {
   const initialState = {
     title: '',
     description: '',
     mediaId: '',
     dateTime: moment(),
-    variants: [],
+    variants: []
   }
 
   const reducer = (state, action) => {
@@ -224,7 +224,7 @@ const NewPost = ({ show, handleShow }) => {
 
   return (
     <NewPostContext.Provider value={useReducer(reducer, initialState)}>
-      <NewPostModal show={show} handleShow={handleShow} />
+      <NewPostModal show={show} handleShow={handleShow} brandId={brandId} />
     </NewPostContext.Provider>
   )
 }

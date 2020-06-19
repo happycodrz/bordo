@@ -1,16 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react'
-
-export const StateContext = createContext()
-
-export const EIStateProvider = ({ reducer, initialState, children }) => (
-  <StateContext.Provider value={useReducer(reducer, initialState)}>
-    {children}
-  </StateContext.Provider>
-)
-
-export const useStateValue = () => useContext(StateContext)
-
-export const reducer = (state, action) => {
+const reducer = (state, action) => {
   switch (action.type) {
     case 'setActiveUser':
       return {
@@ -124,12 +112,4 @@ export const reducer = (state, action) => {
   }
 }
 
-export let initialAppState = {
-  loadingBrand: false,
-  activeBrand: null,
-  brands: null,
-  activeUser: null,
-  posts: [],
-  assets: null,
-  notifications: [],
-}
+export default reducer

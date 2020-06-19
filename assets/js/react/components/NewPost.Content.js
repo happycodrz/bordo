@@ -6,7 +6,7 @@ import { dateFormat, timeFormat } from '../utilities/helpers'
 import MediaSelecter from './MediaSelecter'
 import { NewPostContext } from './NewPostModal'
 import ContentEditor from './ContentEditor'
-export const Content = ({ show }) => {
+export const Content = ({ show, brandId}) => {
     const [{ dateTime, title, description, mediaId }, dispatch] = useContext(NewPostContext)
     const [selectedImage, setSelectedImage] = useState(null)
     const setTitle = title => {
@@ -35,7 +35,7 @@ export const Content = ({ show }) => {
         </p>
         <Row>
             <Col sm={5}>
-                <MediaSelecter selected={selectedImage} onSelect={selectedImage => setMediaId(selectedImage)} />
+                <MediaSelecter selected={selectedImage} onSelect={selectedImage => setMediaId(selectedImage)} brandId={brandId} />
             </Col>
             <Col>
                 <Form.Group controlId="title">

@@ -17,9 +17,11 @@ import 'alpinejs'
 import { Socket } from 'phoenix'
 import NProgress from 'nprogress'
 import { LiveSocket } from 'phoenix_live_view'
+import LiveReact, { initLiveReact } from 'phoenix_live_react'
 const feather = require('feather-icons')
 
 let Hooks = {}
+Hooks.LiveReact = LiveReact
 Hooks.FeatherIcon = {
   mounted() {
     feather.replace()
@@ -81,8 +83,23 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)
 window.liveSocket = liveSocket
 
+import BrandSidebarBody from './react/components/BrandSidebarBody'
+import Media from './react/components/Media'
+import ScheduleCalendar from './react/components/ScheduleCalendar'
+import Settings from './react/components/Settings'
+import Launchpad from './react/components/Launchpad'
+
+window.Components = {
+  BrandSidebarBody,
+  Launchpad,
+  Media,
+  ScheduleCalendar,
+  Settings
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  feather.replace()
+  feather.replace({width: '1em', height: '1em'})
+  initLiveReact()
   const element = document.querySelector('.js-choice')
   if (element) {
     new Choices(element, {

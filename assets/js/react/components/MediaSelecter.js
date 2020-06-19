@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import MediaSelectModal from './MediaSelectModal'
 
-const Select = ({ onSelect }) => {
+const Select = ({ onSelect, brandId }) => {
     const [show, setShow] = useState(false)
     const [key, setKey] = useState(false)
 
@@ -18,12 +18,12 @@ const Select = ({ onSelect }) => {
     return (
         <>
             <Button variant="secondary" block onClick={handleShow}>Choose Media</Button>
-            <MediaSelectModal show={show} handleShow={handleShow} handleSelect={e => onSelect(e)} key={key} />
+            <MediaSelectModal show={show} handleShow={handleShow} handleSelect={e => onSelect(e)} key={key} brandId={brandId} />
         </>
     )
 }
 
-const MediaSelecter = ({ selected, onSelect }) => {
+const MediaSelecter = ({ selected, onSelect, brandId }) => {
     return (
         <div className="p-3 bg-light border rounded-lg h-100 d-flex flex-column justify-content-center">
             {selected ?
@@ -35,7 +35,7 @@ const MediaSelecter = ({ selected, onSelect }) => {
                     }}
                 /> :
                 <>
-                    <Select onSelect={onSelect} />
+                    <Select onSelect={onSelect} brandId={brandId} />
                 </>
             }
         </div>

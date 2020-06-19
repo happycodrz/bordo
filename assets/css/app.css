@@ -23,3 +23,11 @@
   position: relative;
   z-index: 999;
 }
+
+.nav-secondary {
+  width: 350px;
+}
+
+.bg-geometry {
+  background-image: url('/images/geometry2.png');
+}
