@@ -1,36 +1,88 @@
 defmodule BordoWeb.BrandNav do
-  use BordoWeb, :live_component
+  use BordoWeb, :client_live_view
+  import PhoenixLiveReact
+
+  alias Bordo.Brands
+  alias Bordo.Users
+  alias BordoWeb.Live.AuthHelper
 
   def render(assigns) do
     ~L"""
-    <div class="bg-blue-800 text-blue-900 w-18 p-3 flex flex-col h-full">
-      <div class="flex-1 ">
-        <%= for brand <- @brands do %>
-        <div class="cursor-pointer mb-3">
-          <%= link to: Routes.live_path(@socket, BordoWeb.ReactLive, brand.slug), class: "hover:no-underline" do %>
-            <%= brand_nav_avatar(brand, @brand_slug) %>
-            <% end %>
-          </div>
-        <% end %>
-        <%= live_component(@socket, BordoWeb.BrandModal, show_modal: @show_modal, current_identity: @current_identity, id: :new_brand_modal) %>
-      </div>
-      <div class="pin-b" x-data="{ open: false }"  phx-update="ignore">
-        <div class="relative z-10">
-          <img @click="open = !open" @click.away="open = false" class="h-12 rounded-full cursor-pointer" src="<%= BordoWeb.Admin.UserView.avatar(@current_user) %>" alt="" />
-          <div x-show="open" class="origin-top absolute left-0 mt-2 w-48 rounded-md shadow-lg" x-description="Profile dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95">
-            <div class="py-1 rounded-md bg-white shadow-xs">
-              <%= link "Sign out", to: Routes.logout_path(@socket, :index), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+    <nav class="h-full flex">
+      <div class="bg-blue-800 text-blue-50 w-18 p-3 flex flex-col h-full" id="brand-nav">
+        <div class="flex-1 ">
+          <%= for brand <- @brands do %>
+          <div class="cursor-pointer mb-3">
+            <%= live_redirect to: Routes.live_path(@socket, BordoWeb.LaunchpadLive, brand.slug), class: "hover:no-underline" do %>
+              <%= brand_nav_avatar(brand, @active_brand.slug) %>
+              <% end %>
+            </div>
+          <% end %>
+        <%= live_component(@socket, BordoWeb.BrandModal, show_modal: @show_modal, user_id: @current_user.id, team_id: @current_user.team_id, id: :new_brand_modal) %>
+        </div>
+        <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
+          <div class="relative z-10">
+            <img @click="open = !open" @click.away="open = false" class="h-12 rounded-full cursor-pointer" src="<%= BordoWeb.Admin.UserView.avatar(@current_user) %>" alt="" />
+            <div x-show="open" class="absolute bottom-12 left-0 mt-2 w-48 rounded-md shadow-lg" x-description="Profile dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95">
+              <div class="py-1 rounded-md bg-white shadow-xs">
+                <%= link to: Routes.logout_path(@socket, :index), class: "flex justify-between content-center px-3 py-2 text-sm text-gray-700 hover:text-gray-800 hover:bg-gray-100 hover:no-underline" do %>
+                  Sign out
+                  <i data-feather="log-out" class="text-red-400"></i>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>
-
       </div>
-    </div>
+      <aside class="bdo-brandSidebar flex flex-col">
+        <header class="bg-white px-3 py-10 flex justify-content-between align-items-center">
+            <h2 class="m-0"><%= @active_brand.name %></h2>
+        </header>
+        <nav class="nav flex-column nav-secondary h-full">
+          <%= nav_link(Routes.live_path(@socket, BordoWeb.LaunchpadLive, @active_brand.slug), @nav_item, "Launchpad", "zap") %>
+          <%= nav_link(Routes.live_path(@socket, BordoWeb.ScheduleLive, @active_brand.slug), @nav_item, "Schedule", "calendar") %>
+          <%= nav_link(Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), @nav_item, "Media", "image") %>
+          <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
+        </nav>
+        <div class="pin-b">
+          <%= live_react_component("Components.BrandSidebarBody", brandId: @active_brand.id) %>
+          <p class="text-xs text-center text-gray-500 mb-2">
+            v<%= "1.0.0" %>&nbsp;&nbsp;|&nbsp;&nbsp;&copy;<%= DateTime.utc_now.year %> Bordo, LLC&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://hellobordo.com/privacy-policy" class="text-gray-500 underline">Privacy Policy</a>
+          </p>
+        </div>
+      </aside>
+    </nav>
     """
   end
 
-  def brand_nav_avatar(brand, brand_slug) do
-    active = brand.slug == brand_slug
+  def mount(_, %{"brand_slug" => brand_slug, "nav_item" => nav_item} = session, socket) do
+    {:ok, current_identity} = AuthHelper.load_user(session)
+    current_user = Users.get_user!(current_identity.user_id)
+
+    brands = fetch_brands(current_user.team_id)
+    active_brand = Brands.get_brand!(slug: brand_slug)
+
+    {:ok,
+     assign(socket,
+       show_modal: false,
+       brands: brands,
+       current_user: current_user,
+       active_brand: active_brand,
+       nav_item: nav_item
+     )}
+  end
+
+  # def handle_params(%{"brand_slug" => brand_slug}, _url, socket) do
+  #   active_brand = Brands.get_brand!(slug: brand_slug)
+  #   {:no_reply, assign(socket, active_brand: active_brand)}
+  # end
+
+  defp fetch_brands(team_id) do
+    Brands.list_brands_for_team(team_id)
+  end
+
+  def brand_nav_avatar(brand, current_brand_slug) do
+    active = brand.slug == current_brand_slug
 
     if brand.image_url == nil do
       letters =
@@ -61,5 +113,25 @@ defmodule BordoWeb.BrandNav do
     else
       "bg-white h-12 hover:no-underline w-12 flex items-center justify-center text-gray-500 text-2xl font-semibold rounded-lg mb-1 overflow-hidden opacity-50 hover:opacity-100 transition duration-150"
     end
+  end
+
+  defp nav_link(route, nav_item, title, icon) do
+    active = nav_item == String.downcase(title)
+
+    class =
+      if active do
+        "bdo-brandNav__link nav-link p-3 d-flex align-items-center active"
+      else
+        "bdo-brandNav__link nav-link p-3 d-flex align-items-center"
+      end
+
+    ~e"""
+    <div class="nav-item">
+      <%= live_patch to: route, class: class do %>
+        <%= feather_icon(icon, "mr-3") %>
+        <%= title %>
+      <% end %>
+    </div>
+    """
   end
 end

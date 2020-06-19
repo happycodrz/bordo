@@ -2,7 +2,7 @@ defmodule BordoWeb.Router do
   use BordoWeb, :router
   import Phoenix.LiveView.Router
   import Phoenix.LiveDashboard.Router
-  import BordoWeb.Plug.Session, only: [assign_current_admin: 2]
+  import BordoWeb.Plug.Session, only: [assign_current_admin: 2, assign_current_user: 2]
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -14,6 +14,7 @@ defmodule BordoWeb.Router do
 
   pipeline :react do
     plug :put_root_layout, {BordoWeb.LayoutView, :react_root}
+    plug :assign_current_user
   end
 
   pipeline :unauthenticated do
@@ -107,7 +108,6 @@ defmodule BordoWeb.Router do
       get "/facebook/auth", Providers.FacebookController, :auth
       get "/facebook/callback", Providers.FacebookController, :callback
       get "/twitter/auth", Providers.TwitterController, :auth
-      get "/twitter/callback", Providers.TwitterController, :callback
     end
 
     get "/profile", ProfileController, :show
@@ -116,9 +116,29 @@ defmodule BordoWeb.Router do
 
   # This must be defined last as a catchall /*path so react-routing will work
   scope "/", BordoWeb do
+    pipe_through [:browser, :private, :onboarding_layout]
+
+    scope "/oauth", Oauth do
+      scope "/linkedin", LinkedInLive do
+        live "/", Index
+      end
+    end
+  end
+
+  scope "/", BordoWeb do
     pipe_through [:browser, :private, :react]
 
-    live "/:brand_id", ReactLive
-    live "/*path", ReactLive
+    scope "/providers" do
+      get "/twitter/callback", Providers.TwitterController, :callback
+    end
+
+    scope "/:brand_slug" do
+      live "/launchpad", LaunchpadLive
+      live "/schedule", ScheduleLive
+      live "/media", MediaLive
+      live "/settings", SettingsLive
+    end
+
+    live "/*path", OnboardingLive.Index
   end
 end

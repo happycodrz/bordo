@@ -71,11 +71,20 @@ defmodule BordoWeb.OnboardingLive.Index do
     """
   end
 
+  # TODO: Fix this garbage with a plug. This is just to handle nil brands or redirect to the "first" brand
+  # from the router, which will direct here if a route is not found...
   def mount(_params, session, socket) do
     {:ok, user} = AuthHelper.load_user(session)
 
-    if user.team_id != nil && Enum.any?(Brands.list_brands_for_team(user.team_id)) do
-      {:ok, redirect(socket, to: Routes.react_path(BordoWeb.Endpoint, :index))}
+    if user.team_id != nil do
+      brands = Brands.list_brands_for_team(user.team_id)
+
+      if Enum.any?(brands) do
+        brand = Enum.at(brands, 0)
+        {:ok, redirect(socket, to: Routes.live_path(socket, BordoWeb.LaunchpadLive, brand.slug))}
+      else
+        {:ok, determine_step(socket, user)}
+      end
     else
       {:ok, determine_step(socket, user)}
     end
