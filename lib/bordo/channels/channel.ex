@@ -9,6 +9,7 @@ defmodule Bordo.Channels.Channel do
     field :network, :string
     field :token_secret, :string
     field :resource_id, :string
+    field :resource_info, :map
 
     belongs_to :brand, Bordo.Brands.Brand
     has_many :post_variants, Bordo.PostVariants.PostVariant
@@ -19,7 +20,7 @@ defmodule Bordo.Channels.Channel do
   @doc false
   def changeset(channel, attrs) do
     channel
-    |> cast(attrs, [:token, :token_secret, :network, :brand_id, :resource_id])
+    |> cast(attrs, [:token, :token_secret, :network, :brand_id, :resource_id, :resource_info])
     |> validate_inclusion(:network, @supported_networks,
       message: "must be one of #{supported_networks_error_msg()}"
     )
