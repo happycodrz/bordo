@@ -102,14 +102,6 @@ defmodule BordoWeb.Router do
 
     resources "/brand-users", BrandUserController, only: [:create]
 
-    scope "/providers" do
-      get "/linkedin/auth", Providers.LinkedinController, :auth
-      get "/linkedin/callback", Providers.LinkedinController, :callback
-      get "/facebook/auth", Providers.FacebookController, :auth
-      get "/facebook/callback", Providers.FacebookController, :callback
-      get "/twitter/auth", Providers.TwitterController, :auth
-    end
-
     get "/profile", ProfileController, :show
     resources "/teams", TeamController
   end
@@ -119,9 +111,8 @@ defmodule BordoWeb.Router do
     pipe_through [:browser, :private, :onboarding_layout]
 
     scope "/oauth", Oauth do
-      scope "/linkedin", LinkedInLive do
-        live "/", Index
-      end
+      live "/facebook", FacebookLive.Index
+      live "/linkedin", LinkedInLive.Index
     end
   end
 
@@ -129,7 +120,10 @@ defmodule BordoWeb.Router do
     pipe_through [:browser, :private, :react]
 
     scope "/providers" do
+      get "/facebook/auth", Providers.FacebookController, :auth
+      get "/twitter/auth", Providers.TwitterController, :auth
       get "/twitter/callback", Providers.TwitterController, :callback
+      get "/linkedin/auth", Providers.LinkedinController, :auth
     end
 
     scope "/:brand_slug" do
