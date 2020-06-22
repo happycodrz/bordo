@@ -8,7 +8,6 @@ import Col from 'react-bootstrap/Col'
 import MediaUploadModal from './MediaUploadModal'
 
 import { updateBrand, deleteBrand } from '../utilities/api'
-import Channels from './Channels'
 import { EditableInput } from './EditableInput'
 
 const SettingsComponent = () => {
@@ -78,7 +77,6 @@ const SettingsComponent = () => {
             }}
             onClick={() => setUploadModalShow(true)}
           >
-            {/* <img src={activeBrand.image_url} alt={activeBrand.name} /> */}
             <span
               className="bg-dark text-white text-center w-100 small"
               style={{ position: 'absolute', bottom: 0, left: 0, opacity: 0.8 }}
@@ -97,7 +95,6 @@ const SettingsComponent = () => {
           </Button>
         </Col>
       </Row>
-      <Channels />
     </section>
   )
 }
