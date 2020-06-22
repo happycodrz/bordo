@@ -10,7 +10,8 @@ defmodule BordoWeb.Providers.TwitterController do
 
     with {:ok, token} <- get_request_token(brand_id),
          {:ok, authenticate_url} <- get_authenticate_url(token) do
-      json(conn, %{url: authenticate_url})
+      # json(conn, %{url: authenticate_url})
+      redirect(conn, external: authenticate_url)
     else
       {:error, reason} ->
         conn
@@ -83,11 +84,15 @@ defmodule BordoWeb.Providers.TwitterController do
   end
 
   defp build_channel_params(access_token, brand_id) do
+    user_info = Map.from_struct(ExTwitter.verify_credentials())
+
     Map.merge(
       %{
         "token" => access_token.oauth_token,
         "token_secret" => access_token.oauth_token_secret,
-        "network" => "twitter"
+        "network" => "twitter",
+        "resource_info" => user_info,
+        "resource_id" => Integer.to_string(user_info.id)
       },
       %{"brand_id" => brand_id}
     )
