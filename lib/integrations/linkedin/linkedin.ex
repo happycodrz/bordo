@@ -76,6 +76,15 @@ defmodule Linkedin do
     |> Jason.decode!()
   end
 
+  def get_profile_image(token, org_id) do
+    HTTPoison.get!(
+      "https://api.linkedin.com/v2/organizations/#{org_id}?projection=(coverPhotoV2(original~:playableStreams,cropped~:playableStreams,cropInfo),logoV2(original~:playableStreams,cropped~:playableStreams,cropInfo))",
+      Authorization: "Bearer #{token}"
+    )
+    |> Map.get(:body)
+    |> Jason.decode!()
+  end
+
   defp get_token(uri) do
     uri |> URI.to_string() |> HTTPoison.post("", [{"Content-Type", "x-www-form-urlencoded"}])
   end
