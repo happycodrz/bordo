@@ -1,28 +1,12 @@
 defmodule BordoWeb.Oauth.LinkedInLive.Index do
   use BordoWeb, :live_view
 
+  alias Bordo.Brands
   alias Bordo.Channels
   alias Bordo.Channels.Channel
 
   def render(assigns) do
     ~L"""
-    <%= if connected?(@socket) do %>
-      <div x-data="{ oauthComplete: <%= @success %> }"
-          x-bind:oauthComplete="<%= @success %>"
-          x-init="$watch('oauthComplete', (value) => {
-            if (value == true) {
-              if (window.opener) {
-                window.opener.postMessage({
-                    type: 'oAuthComplete',
-                    queryString: window.location.search
-                }, window.location.origin)
-                window.opener.location = '/'
-            }
-            window.close()
-            }
-          })">
-      </div>
-    <% end %>
     <%= if @error do %>
       There was a problem connecting to Linkedin. Please try again.
     <% else %>
@@ -45,7 +29,8 @@ defmodule BordoWeb.Oauth.LinkedInLive.Index do
     %{"code" => code, "state" => state} = params
     %{"brand_id" => brand_id} = URI.decode_query(state)
     send(self(), {:fetch_orgs, code})
-    {:ok, socket |> assign(orgs: [], brand_id: brand_id, error: nil, success: false)}
+
+    {:ok, socket |> assign(orgs: [], brand_id: brand_id, error: nil)}
   end
 
   def handle_info({:fetch_orgs, code}, socket) do
@@ -63,16 +48,21 @@ defmodule BordoWeb.Oauth.LinkedInLive.Index do
   end
 
   def handle_event("org-selected", %{"org_id" => "urn:li:organization:" <> org_id}, socket) do
+    brand = Brands.get_brand!(socket.assigns.brand_id)
+    resource_info = Linkedin.get_organization(socket.assigns.access_token, org_id)
+
     channel_params = %{
       "token" => socket.assigns.access_token,
       "network" => "linkedin",
       "resource_id" => org_id,
-      "brand_id" => socket.assigns.brand_id
+      "resource_info" => resource_info,
+      "brand_id" => brand.id
     }
 
     case Channels.create_channel(channel_params) do
       {:ok, %Channel{} = channel} ->
-        {:noreply, assign(socket, success: true)}
+        {:noreply,
+         redirect(socket, to: Routes.live_path(socket, BordoWeb.SettingsLive, brand.slug))}
 
       _ ->
         {:noreply, socket}
