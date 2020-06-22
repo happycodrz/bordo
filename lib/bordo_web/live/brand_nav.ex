@@ -38,9 +38,6 @@ defmodule BordoWeb.BrandNav do
         </nav>
         <div class="pin-b">
           <%= live_react_component("Components.SidebarNewPostButton", brandId: @active_brand.id) %>
-          <p class="text-xs text-center text-gray-500 mb-2">
-            v<%= "1.0.0" %>&nbsp;&nbsp;|&nbsp;&nbsp;&copy;<%= DateTime.utc_now.year %> Bordo, LLC&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://hellobordo.com/privacy-policy" class="text-gray-500 underline">Privacy Policy</a>
-          </p>
         </div>
       </aside>
     </nav>
