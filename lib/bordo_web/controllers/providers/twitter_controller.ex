@@ -34,7 +34,8 @@ defmodule BordoWeb.Providers.TwitterController do
         "oauth_verifier" => oauth_verifier,
         "brand_id" => brand_id
       }) do
-    configure_twitter()
+
+    ExTwitter.configure(:process, consumer_key: oauth_token, consumer_secret: oauth_verifier)
 
     with {:ok, access_token} <- ExTwitter.access_token(oauth_verifier, oauth_token),
          {:ok, %Channel{} = channel} <-
@@ -84,6 +85,12 @@ defmodule BordoWeb.Providers.TwitterController do
   end
 
   defp build_channel_params(access_token, brand_id) do
+    ExTwitter.configure(:process,
+      consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
+      consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
+      access_token: access_token.oauth_token,
+      access_token_secret: access_token.oauth_token_secret
+    )
     user_info = Map.from_struct(ExTwitter.verify_credentials())
 
     Map.merge(
