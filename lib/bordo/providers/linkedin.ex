@@ -5,10 +5,7 @@ defmodule Bordo.Providers.Linkedin do
   alias Bordo.PostVariants.PostVariant
 
   def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
-    {:ok, %{"id" => id}} = Linkedin.me(channel.token)
-    urn = "urn:li:person:" <> id
-
-    case create_share(channel, content, media, urn) do
+    case create_share(channel, content, media) do
       {:ok, post} ->
         string_id = post["id"]
 
@@ -21,8 +18,9 @@ defmodule Bordo.Providers.Linkedin do
     end
   end
 
-  defp create_share(channel, content, media, urn) do
-    {:ok, body} = build_body(content, media, urn)
+  def create_share(channel, content, media) do
+    owner = "urn:li:organization:" <> channel.resource_id
+    {:ok, body} = build_body(content, media, owner)
 
     if Application.get_env(:bordo, :linkedin_live) do
       HTTPoison.post!(
