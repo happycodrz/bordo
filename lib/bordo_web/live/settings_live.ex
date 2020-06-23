@@ -28,6 +28,13 @@ defmodule BordoWeb.SettingsLive do
           </div>
         <% end %>
       </div>
+      <div class="p-9">
+        <div class="bg-white rounded-lg shadow p-8">
+          <h3 class="mb-4 grid grid-cols-5 gap-4">Danger Zone</h3>
+          <p>Deleting a brand is irreversable! Bordo will remove everything associated with the brand if removed.</p>
+          <button phx-click="delete-brand" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
+        </div>
+      </div>
       <div class="pin-b">
         <p class="text-xs text-center text-gray-500 mb-2">
           <%= System.get_env("RENDER_GIT_COMMIT", "dev") %>&nbsp;&nbsp;|&nbsp;&nbsp;&copy;<%= DateTime.utc_now.year %> Bordo, LLC&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://hellobordo.com/privacy-policy" class="text-gray-500 underline">Privacy Policy</a>
@@ -45,11 +52,23 @@ defmodule BordoWeb.SettingsLive do
     {:ok, assign(socket, active_brand: active_brand, channels: channels, nav_item: "settings")}
   end
 
-  def handle_event("delete-brand", %{"channel_id" => channel_id}, socket) do
+  def handle_event("delete-channel", %{"channel_id" => channel_id}, socket) do
     channel = Channels.get_channel!(channel_id)
     Channels.delete_channel(channel)
     channels = Channels.list_channels(brand_id: socket.assigns.active_brand.id)
     {:noreply, assign(socket, channels: channels)}
+  end
+
+  @doc """
+  Handle the delete-brand click. We'll use @active_brand instead of a value
+  """
+  def handle_event("delete-brand", _params, socket) do
+    Brands.delete_brand(socket.assigns.active_brand)
+
+    {
+      :noreply,
+      socket |> redirect(to: Routes.live_path(socket, BordoWeb.OnboardingLive.Index))
+    }
   end
 
   def channel_card(channel, brand_id) do
@@ -71,7 +90,7 @@ defmodule BordoWeb.SettingsLive do
           </div>
         </div>
       </div>
-      <button phx-click="delete-brand" phx-value-channel_id="<%= channel.id %>" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white w-100">
+      <button phx-click="delete-channel" phx-value-channel_id="<%= channel.id %>" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white w-100">
         Remove Connection
       </button>
     </div>

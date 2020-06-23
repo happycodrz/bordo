@@ -93,14 +93,6 @@ export const deletePost = (brandId, postId) => {
     })
 }
 
-export const deleteBrand = (brandId) => {
-    return new Promise((resolve, reject) => {
-        fetch(`${API_ROOT_URL}/brands/${brandId}`, DELETE_OPTIONS)
-            .then(() => resolve({ message: `Brand has been deleted.` }) )
-            .catch(err => errorHandler(err, reject))
-    })
-}
-
 export const getChannels = brandId => {
     return new Promise((resolve, reject) => {
         fetch(`${API_ROOT_URL}/brands/${brandId}/channels`, GET_OPTIONS)

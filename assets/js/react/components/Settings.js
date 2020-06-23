@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { reducer, useStateValue, EIStateProvider } from '../state'
 
-import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 import MediaUploadModal from './MediaUploadModal'
 
-import { updateBrand, deleteBrand } from '../utilities/api'
+import { updateBrand } from '../utilities/api'
 import { EditableInput } from './EditableInput'
 
 const SettingsComponent = () => {
@@ -27,20 +26,6 @@ const SettingsComponent = () => {
 
       setUploadModalShow(false)
     })
-  }
-
-  const handleDeleteBrandClick = () => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete the brand ${activeBrand.name}?`,
-      )
-    ) {
-      deleteBrand(activeBrand.id).then(() => {
-        window.location.replace('/')
-      })
-    } else {
-      return
-    }
   }
 
   const updateBrandName = (brandName) => {
@@ -88,11 +73,6 @@ const SettingsComponent = () => {
             defaultValue={activeBrand.name}
             onSave={(e) => updateBrandName(e)}
           />
-        </Col>
-        <Col sm={5} className="d-flex align-items-start justify-content-end">
-          <Button variant="danger" onClick={handleDeleteBrandClick}>
-            Delete Brand
-          </Button>
         </Col>
       </Row>
     </section>
