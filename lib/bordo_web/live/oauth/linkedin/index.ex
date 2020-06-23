@@ -8,19 +8,19 @@ defmodule BordoWeb.Oauth.LinkedInLive.Index do
   def render(assigns) do
     ~L"""
     <%= if @error do %>
-      There was a problem connecting to Linkedin. Please try again.
+      <p class="bg-red-100 border-l-4 border-red-600 m-10 p-5 text-red-600">There was a problem connecting to LinkedIn. Please try again.</>
     <% else %>
-      <h2>Choose a Page or Profile</h2>
-      <p>Select the LinkedIn profile or organization you want to post as:</p>
-      <ul>
-        <%= for org <- @orgs do %>
-          <li>
-            <a href="#" phx-click="org-selected" phx-value-org_id="<%= org["$URN"] %>">
+      <div class="container mx-auto">
+        <h2 class="mb-2 mt-15 text-4xl">Choose a Page or Profile</h2>
+        <p class="mb-5 text-gray-500 text-lg tracking-wide">Select the LinkedIn profile or organization you want to post as:</p>
+        <div class="gap-4 grid grid-cols-2">
+          <%= for org <- @orgs do %>
+            <a href="#" phx-click="org-selected" phx-value-org_id="<%= org["$URN"] %>" class="block duration-150 hover:shadow-md hover:text-gray-900 p-8 rounded-lg shadow text-gray-600 text-xl transition transition-all">
               <%= org["localizedName"] %>
             </a>
-          </li>
-        <% end %>
-      </ul>
+          <% end %>
+        </div>
+      </div>
     <% end %>
     """
   end
