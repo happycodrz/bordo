@@ -8,7 +8,6 @@ defmodule Bordo.Channels do
 
   alias Bordo.Brands.Brand
   alias Bordo.Channels.Channel
-  alias Bordo.Posts
 
   @doc """
   Returns the list of channels.
