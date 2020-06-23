@@ -15,7 +15,7 @@ defmodule BordoWeb.SettingsLive do
           <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600">Your channels</h3>
           <div class="mb-4 grid grid-cols-5 gap-4">
             <%= for channel <- @channels do %>
-              <%= channel_card(channel, @active_brand.id) %>
+              <%= channel_card(channel) %>
             <% end %>
           </div>
         <% end %>
@@ -52,6 +52,7 @@ defmodule BordoWeb.SettingsLive do
     {:ok, assign(socket, active_brand: active_brand, channels: channels, nav_item: "settings")}
   end
 
+  @impl true
   def handle_event("delete-channel", %{"channel_id" => channel_id}, socket) do
     channel = Channels.get_channel!(channel_id)
     Channels.delete_channel(channel)
@@ -71,7 +72,7 @@ defmodule BordoWeb.SettingsLive do
     }
   end
 
-  def channel_card(channel, brand_id) do
+  def channel_card(channel) do
     ~e"""
     <div class="flex flex-col transition transition-all duration-150 hover:shadow-lg bg-white overflow-hidden sm:rounded-lg sm:shadow">
       <div class="flex-1 py-8">

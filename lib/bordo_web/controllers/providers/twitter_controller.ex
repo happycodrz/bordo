@@ -1,4 +1,9 @@
 defmodule BordoWeb.Providers.TwitterController do
+  @moduledoc """
+  Handles oauth & channel-creation for twitter. It's important that each step handles the ExTwitter.configure(:process)
+  individually, otherwise we risk getting user-info tied to the TWITTER_ACCESS_TOKEN, which will tie it to the app-owner,
+  Kevin.
+  """
   use BordoWeb, :controller
 
   alias Bordo.Brands
@@ -10,7 +15,6 @@ defmodule BordoWeb.Providers.TwitterController do
 
     with {:ok, token} <- get_request_token(brand_id),
          {:ok, authenticate_url} <- get_authenticate_url(token) do
-      # json(conn, %{url: authenticate_url})
       redirect(conn, external: authenticate_url)
     else
       {:error, reason} ->
@@ -34,11 +38,10 @@ defmodule BordoWeb.Providers.TwitterController do
         "oauth_verifier" => oauth_verifier,
         "brand_id" => brand_id
       }) do
-
     ExTwitter.configure(:process, consumer_key: oauth_token, consumer_secret: oauth_verifier)
 
     with {:ok, access_token} <- ExTwitter.access_token(oauth_verifier, oauth_token),
-         {:ok, %Channel{} = channel} <-
+         {:ok, %Channel{} = _channel} <-
            Channels.create_channel(build_channel_params(access_token, brand_id)) do
       brand = Brands.get_brand!(brand_id)
 
@@ -91,6 +94,7 @@ defmodule BordoWeb.Providers.TwitterController do
       access_token: access_token.oauth_token,
       access_token_secret: access_token.oauth_token_secret
     )
+
     user_info = Map.from_struct(ExTwitter.verify_credentials())
 
     Map.merge(

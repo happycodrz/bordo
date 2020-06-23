@@ -25,7 +25,7 @@ defmodule BordoWeb.Oauth.LinkedInLive.Index do
     """
   end
 
-  def mount(params, session, socket) do
+  def mount(params, _session, socket) do
     %{"code" => code, "state" => state} = params
     %{"brand_id" => brand_id} = URI.decode_query(state)
     send(self(), {:fetch_orgs, code})
@@ -60,7 +60,7 @@ defmodule BordoWeb.Oauth.LinkedInLive.Index do
     }
 
     case Channels.create_channel(channel_params) do
-      {:ok, %Channel{} = channel} ->
+      {:ok, %Channel{} = _channel} ->
         {:noreply,
          redirect(socket, to: Routes.live_path(socket, BordoWeb.SettingsLive, brand.slug))}
 

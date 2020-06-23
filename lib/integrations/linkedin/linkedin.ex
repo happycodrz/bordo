@@ -24,15 +24,14 @@ defmodule Linkedin do
         scope: "w_member_social,r_liteprofile,rw_organization_admin"
       })
 
-    auth_url =
-      %URI{
-        host: "www.linkedin.com",
-        path: "/oauth/v2/authorization",
-        port: 443,
-        query: query,
-        scheme: "https"
-      }
-      |> URI.to_string()
+    %URI{
+      host: "www.linkedin.com",
+      path: "/oauth/v2/authorization",
+      port: 443,
+      query: query,
+      scheme: "https"
+    }
+    |> URI.to_string()
   end
 
   def access_token(code) do

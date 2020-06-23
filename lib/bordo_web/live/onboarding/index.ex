@@ -115,7 +115,11 @@ defmodule BordoWeb.OnboardingLive.Index do
          ) do
       {:ok, brand} ->
         create_brand_team(brand.id, socket.assigns.current_user.team_id)
-        {:noreply, redirect(socket, to: Routes.react_path(BordoWeb.Endpoint, :index))}
+
+        {:noreply,
+         redirect(socket,
+           to: Routes.live_path(BordoWeb.Endpoint, BordoWeb.LaunchpadLive, brand.slug)
+         )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(changeset: changeset)}

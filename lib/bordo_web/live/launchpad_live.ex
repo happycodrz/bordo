@@ -1,6 +1,6 @@
 defmodule BordoWeb.LaunchpadLive do
   use BordoWeb, :client_live_view
-  import PhoenixLiveReact
+
   alias Bordo.Brands
   alias Bordo.Users
   alias BordoWeb.Live.AuthHelper
