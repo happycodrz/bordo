@@ -12,7 +12,7 @@ defmodule BordoWeb.SettingsLive do
       <div class="p-9">
         <%= live_react_component("Components.Settings", brandId: @active_brand.id, brandName: @active_brand.name, brandSlug: @active_brand.slug, brandImage: @active_brand.image_url) %>
         <%= if Enum.any?(@channels) do %>
-          <h3 class="mb-8">Your channels</h3>
+          <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600">Your channels</h3>
           <div class="mb-4 grid grid-cols-5 gap-4">
             <%= for channel <- @channels do %>
               <%= channel_card(channel, @active_brand.id) %>
@@ -20,8 +20,7 @@ defmodule BordoWeb.SettingsLive do
           </div>
         <% end %>
         <%= if Enum.any?(remaining_channels(@channels)) do %>
-          <hr>
-          <h3 class="mb-8">Connect a channel</h3>
+          <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600">Connect a channel</h3>
           <div class="mb-4 grid grid-cols-5 gap-6">
             <%= for channel <- remaining_channels(@channels) do %>
               <%= add_channel_card(channel, @active_brand.id) %>
