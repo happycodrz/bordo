@@ -126,7 +126,7 @@ defmodule BordoWeb.SettingsLive do
         <div class="bg-blue-600 block group-hover:bg-blue-500 transition transition-all duration-150 hover:no-underline items-center px-4 py-2 shadow-md text-center text-white w-100">
           Connect →
         </div>
-      <%= end %>
+      <% end %>
     """
   end
 
