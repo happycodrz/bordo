@@ -54,19 +54,21 @@ defmodule BordoWeb.SettingsLive do
 
   def channel_card(channel, brand_id) do
     ~e"""
-    <div class="transition transition-all duration-150 hover:shadow-lg bg-white overflow-hidden sm:rounded-lg sm:shadow">
-      <div class="p-8">
-        <div class="mb-4 flex items-center w-full justify-center">
-          <div class="w-10 h-10 mr-2">
-            <%= card_logo(channel.network) %>
+    <div class="flex flex-col transition transition-all duration-150 hover:shadow-lg bg-white overflow-hidden sm:rounded-lg sm:shadow">
+      <div class="flex-1 py-8">
+        <div>
+          <div class="mb-4 flex items-center w-full justify-center">
+            <div class="w-10 h-10 mr-2">
+              <%= card_logo(channel.network) %>
+            </div>
+            <%= feather_icon("link", "mr-2 text-gray-500") %>
+            <div class="flex-shrink-0">
+              <img class="h-12 w-12 rounded-full" src="<%= connection_url(channel) %>" alt="" />
+            </div>
           </div>
-          <%= feather_icon("link", "mr-2 text-gray-500") %>
-          <div class="flex-shrink-0">
-            <img class="h-12 w-12 rounded-full" src="<%= connection_url(channel) %>" alt="" />
+          <div class="text-center">
+            <%= card_resource_info(channel) %>
           </div>
-        </div>
-        <div class="text-center">
-          <%= card_resource_info(channel) %>
         </div>
       </div>
       <button phx-click="delete-brand" phx-value-channel_id="<%= channel.id %>" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white w-100">
@@ -162,30 +164,28 @@ defmodule BordoWeb.SettingsLive do
 
   defp card_resource_info(%Channel{network: "twitter"} = channel) do
     ~e"""
-    <h3 class="text-sm leading-6 font-medium text-gray-900">
+    <div class="text-gray-800">
       <%= channel.resource_info["name"] %>
-    </h3>
-    <p class="text-sm leading-5 text-gray-500">
-      <a href="#">
-        @<%= channel.resource_info["screen_name"] %>
-      </a>
-    </p>
+    </div>
+    <a href="https://twitter.com/<%= channel.resource_info["screen_name"] %>" target="_blank" class="text-xs">
+      @<%= channel.resource_info["screen_name"] %>
+    </a>
     """
   end
 
   defp card_resource_info(%Channel{network: "facebook"} = channel) do
     ~e"""
-    <h3 class="text-sm leading-6 font-medium text-gray-900">
+    <div class="text-gray-800">
       <%= channel.resource_info["name"] %>
-    </h3>
+    </div>
     """
   end
 
   defp card_resource_info(%Channel{network: "linkedin"} = channel) do
     ~e"""
-    <h3 class="text-sm leading-6 font-medium text-gray-900">
+    <div class="text-gray-800">
       <%= channel.resource_info["localizedName"] %>
-    </h3>
+    </div>
     """
   end
 end
