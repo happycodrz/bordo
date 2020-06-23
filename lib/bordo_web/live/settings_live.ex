@@ -8,20 +8,21 @@ defmodule BordoWeb.SettingsLive do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="w-4/5 h-full">
-      <div class="m-8">
+    <div class="w-full h-full">
+      <div class="p-9">
         <%= live_react_component("Components.Settings", brandId: @active_brand.id, brandName: @active_brand.name, brandSlug: @active_brand.slug, brandImage: @active_brand.image_url) %>
         <%= if Enum.any?(@channels) do %>
           <h3 class="mb-8">Your channels</h3>
-          <div class="mb-4 grid grid-cols-3 gap-4">
+          <div class="mb-4 grid grid-cols-5 gap-4">
             <%= for channel <- @channels do %>
               <%= channel_card(channel, @active_brand.id) %>
             <% end %>
           </div>
         <% end %>
         <%= if Enum.any?(remaining_channels(@channels)) do %>
-          <h3 class="mb-8">Connect channels</h3>
-          <div class="mb-4 grid grid-cols-3 gap-4">
+          <hr>
+          <h3 class="mb-8">Connect a channel</h3>
+          <div class="mb-4 grid grid-cols-5 gap-6">
             <%= for channel <- remaining_channels(@channels) do %>
               <%= add_channel_card(channel, @active_brand.id) %>
             <% end %>
@@ -54,36 +55,24 @@ defmodule BordoWeb.SettingsLive do
 
   def channel_card(channel, brand_id) do
     ~e"""
-    <div class="bg-white overflow-hidden sm:rounded-lg sm:shadow">
-      <div class="bg-white px-4 py-3 border-b border-gray-200 sm:px-6 h-full">
-        <div class="">
-          <div class="mt-4">
-            <div class="">
-              <div class="mb-4 flex items-center w-full justify-center">
-                <div class="w-10 h-10 mr-2">
-                  <%= card_logo(channel.network) %>
-                </div>
-                <%= feather_icon("link", "mr-3 text-gray-500") %>
-                <div class="flex-shrink-0">
-                  <img class="h-12 w-12 rounded-full" src="<%= connection_url(channel) %>" alt="" />
-                </div>
-              </div>
-              <div class="text-center">
-                <%= card_resource_info(channel) %>
-              </div>
-            </div>
+    <div class="transition transition-all duration-150 hover:shadow-lg bg-white overflow-hidden sm:rounded-lg sm:shadow">
+      <div class="p-8">
+        <div class="mb-4 flex items-center w-full justify-center">
+          <div class="w-10 h-10 mr-2">
+            <%= card_logo(channel.network) %>
           </div>
-          <div class="mt-4 flex justify-center w-full">
-            <span class="rounded-md shadow-sm">
-              <button phx-click="delete-brand" phx-value-channel_id="<%= channel.id %>" type="button" class="relative inline-flex items-center px-4 py-2 border border-red-600 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:shadow-outline-red focus:border-red-300 active:bg-gray-50 active:text-gray-800">
-                <span>
-                  Remove Connection
-                </span>
-              </button>
-            </span>
+          <%= feather_icon("link", "mr-2 text-gray-500") %>
+          <div class="flex-shrink-0">
+            <img class="h-12 w-12 rounded-full" src="<%= connection_url(channel) %>" alt="" />
           </div>
         </div>
+        <div class="text-center">
+          <%= card_resource_info(channel) %>
+        </div>
       </div>
+      <button phx-click="delete-brand" phx-value-channel_id="<%= channel.id %>" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white w-100">
+        Remove Connection
+      </button>
     </div>
     """
   end
@@ -102,25 +91,21 @@ defmodule BordoWeb.SettingsLive do
       end
 
     ~e"""
-      <div class="bg-white overflow-hidden sm:rounded-lg sm:shadow">
-        <div class="bg-white px-4 py-3 border-b border-gray-200 sm:px-6">
-          <div class="w-full flex justify-center mt-4">
-            <div class="w-12 h-12">
-              <%= card_logo(channel) %>
-            </div>
-          </div>
-          <div class="mt-8 mb-4 w-full flex justify-center">
-            <span class="inline-flex rounded-md shadow-sm">
-              <%= link({:safe, "Connect &rarr;"},
-                  to: link,
-                  class:
-                    "rounded shadow-md w-full items-center text-center shadow bg-blue-500 px-4 py-2 text-white hover:bg-blue-400",
-                  data: [integration: "facebook"]
-                ) %>
-            </span>
+      <%= link(
+        to: link,
+        class:
+          "group hover:shadow-lg transition transition-all duration-150 bg-white flex flex-col overflow-hidden rounded shadow-md",
+        data: [integration: "facebook"]
+      ) do %>
+        <div class="flex flex-1 items-center justify-center w-full py-15">
+          <div class="w-20 h-20">
+            <%= card_logo(channel) %>
           </div>
         </div>
-      </div>
+        <div class="bg-blue-600 block group-hover:bg-blue-500 transition transition-all duration-150 hover:no-underline items-center px-4 py-2 shadow-md text-center text-white w-100">
+          Connect →
+        </div>
+      <%= end %>
     """
   end
 
