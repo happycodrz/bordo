@@ -11,7 +11,8 @@ defmodule BordoWeb.Providers.FacebookController do
       URI.encode_query(%{
         client_id: System.get_env("FACEBOOK_APP_ID"),
         redirect_uri: System.get_env("FACEBOOK_REDIRECT_URI"),
-        state: URI.encode_query(%{brand_id: brand_id})
+        state: URI.encode_query(%{brand_id: brand_id}),
+        scope: "pages_manage_posts,pages_read_engagement"
       })
 
     %URI{
