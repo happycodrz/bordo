@@ -2,6 +2,7 @@ defmodule BordoWeb.SettingsLive do
   use BordoWeb, :client_live_view
   import PhoenixLiveReact
   alias Bordo.Brands
+  alias Bordo.Brands.Brand
   alias Bordo.Channels
   alias Bordo.Channels.Channel
 
@@ -10,7 +11,33 @@ defmodule BordoWeb.SettingsLive do
     ~L"""
     <div class="w-full h-full">
       <div class="p-9">
-        <%= live_react_component("Components.Settings", brandId: @active_brand.id, brandName: @active_brand.name, brandSlug: @active_brand.slug, brandImage: @active_brand.image_url) %>
+        <div class="flex items-center mb-5">
+          <%= live_react_component("Components.Settings", brandId: @active_brand.id, brandImage: @active_brand.image_url) %>
+          <div>
+            <%= if !@editing_name do %>
+              <h3><%= @active_brand.name %></h3>
+              <span class="text-blue-700 cursor-pointer" phx-click="edit-brand">Edit</span>
+            <% else %>
+              <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save"] %>
+                <div>
+                  <div class="mt-1 rounded-md shadow-sm">
+                    <%= text_input f, :name, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
+                    <%= error_tag f, :name %>
+                  </div>
+                </div>
+
+                <div class="">
+                  <span class="block w-full">
+                    <span class="text-gray-700 cursor-pointer mr-2" phx-click="edit-brand">Cancel</span>
+                    <button type="submit"
+                      class="py-2 text-blue-700"
+                      phx-disable-with="Saving...">Save</button>
+                  </span>
+                </div>
+              </form>
+            <% end %>
+          </div>
+        </div>
         <%= if Enum.any?(@channels) do %>
           <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600">Your channels</h3>
           <div class="mb-4 grid grid-cols-5 gap-4">
@@ -49,7 +76,14 @@ defmodule BordoWeb.SettingsLive do
     active_brand = Brands.get_brand!(slug: brand_slug)
     channels = Channels.list_channels(brand_id: active_brand.id)
 
-    {:ok, assign(socket, active_brand: active_brand, channels: channels, nav_item: "settings")}
+    {:ok,
+     assign(socket,
+       active_brand: active_brand,
+       channels: channels,
+       editing_name: false,
+       nav_item: "settings",
+       changeset: Brand.changeset(active_brand, %{})
+     )}
   end
 
   @impl true
@@ -70,6 +104,22 @@ defmodule BordoWeb.SettingsLive do
       :noreply,
       socket |> redirect(to: Routes.live_path(socket, BordoWeb.OnboardingLive.Index))
     }
+  end
+
+  def handle_event("edit-brand", _params, socket) do
+    {:noreply, assign(socket, editing_name: !socket.assigns.editing_name)}
+  end
+
+  def handle_event("save", params, socket) do
+    brand = socket.assigns.active_brand
+
+    case Brands.update_brand(brand, params["brand"]) do
+      {:ok, %Brand{} = brand} ->
+        {:noreply, assign(socket, active_brand: brand, editing_name: false)}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
   end
 
   def channel_card(channel) do

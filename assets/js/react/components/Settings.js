@@ -7,14 +7,13 @@ import Col from 'react-bootstrap/Col'
 import MediaUploadModal from './MediaUploadModal'
 
 import { updateBrand } from '../utilities/api'
-import { EditableInput } from './EditableInput'
 
 const SettingsComponent = () => {
-  const [{ activeBrand }, dispatch] = useStateValue()
+  const [{ brandId, brandImage }, dispatch] = useStateValue()
   const [uploadModalShow, setUploadModalShow] = useState(false)
 
   const handleOnUpload = (res) => {
-    updateBrand(activeBrand.id, {
+    updateBrand(brandId, {
       brand: {
         image_url: res.data.secure_url,
       },
@@ -28,19 +27,6 @@ const SettingsComponent = () => {
     })
   }
 
-  const updateBrandName = (brandName) => {
-    updateBrand(activeBrand.id, {
-      brand: {
-        name: brandName,
-      },
-    }).then((e) => {
-      dispatch({
-        type: 'updateBrand',
-        brand: e,
-      })
-    })
-  }
-
   return (
     <section>
       <MediaUploadModal
@@ -49,15 +35,15 @@ const SettingsComponent = () => {
         onUpload={handleOnUpload}
         withTitle={false}
       />
-      <Row className="mb-5">
-        <Col sm={7} className="d-flex align-items-center">
+      <Row>
+        <Col className="d-flex align-items-center">
           <div
             className="bg-white border rounded-lg d-flex align-items-end position-relative mr-3"
             style={{
               width: 125,
               height: 125,
               overflow: 'hidden',
-              backgroundImage: `url(${activeBrand.image_url})`,
+              backgroundImage: `url(${brandImage})`,
               backgroundSize: 'cover',
             }}
             onClick={() => setUploadModalShow(true)}
@@ -69,37 +55,15 @@ const SettingsComponent = () => {
               Update Image
             </span>
           </div>
-          <EditableInput
-            defaultValue={activeBrand.name}
-            onSave={(e) => updateBrandName(e)}
-          />
         </Col>
       </Row>
     </section>
   )
 }
 
-let initialState = {
-  loadingBrand: false,
-  activeBrand: null,
-  brands: null,
-  activeUser: null,
-  posts: [],
-  assets: null,
-  notifications: [],
-}
-
-const Settings = ({ brandId, brandName, brandSlug, brandImage }) => {
-  const activeBrand = {
-    id: brandId,
-    name: brandName,
-    slug: brandSlug,
-    image_url: brandImage,
-  }
-
-  initialState = { ...initialState, activeBrand: activeBrand }
+const Settings = ({ brandId, brandImage }) => {
   return (
-    <EIStateProvider initialState={initialState} reducer={reducer}>
+    <EIStateProvider initialState={{ brandId, brandImage }} reducer={reducer}>
       <SettingsComponent />
     </EIStateProvider>
   )
