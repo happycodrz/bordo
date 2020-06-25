@@ -22,4 +22,7 @@ config :mix_test_watch,
 
 config :bordo, Oban, queues: false
 
-config :bordo, twitter_live: false
+config :bordo,
+  twitter_live: false,
+  facebook_live: false,
+  linkedin_live: false

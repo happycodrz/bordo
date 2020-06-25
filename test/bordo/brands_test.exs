@@ -36,7 +36,6 @@ defmodule Bordo.BrandsTest do
       assert {:error, %Ecto.Changeset{}} = Brands.create_brand(@invalid_attrs)
     end
 
-    @tag :focus
     test "update_brand/2 with valid data updates the brand" do
       brand = fixture(:brand, [], @valid_attrs)
       assert brand.slug == "some-name"

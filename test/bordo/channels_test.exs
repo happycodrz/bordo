@@ -20,13 +20,7 @@ defmodule Bordo.ChannelsTest do
     def channel_fixture(attrs \\ %{}) do
       brand = fixture(:brand)
 
-      {:ok, channel} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Enum.into(%{brand_id: brand.id})
-        |> Channels.create_channel()
-
-      channel
+      fixture(:channel, [brand: brand], @valid_attrs)
     end
 
     test "list_channels/0 returns all channels" do
