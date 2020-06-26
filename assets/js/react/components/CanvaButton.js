@@ -13,17 +13,18 @@ const CanvaButton = ({ children, onDesignOpen, onDesignPublish }) => {
         window.CanvaButton.initialize({
           apiKey: 'fWzIitASrQlpVDa-nh7oUNl-',
         }).then((api) => {
-          canva = api
+          window.canva = api
           setReady(true)
+          console.log(api)
         })
       }
     }
 
     document.body.appendChild(script)
-  })
+  }, [])
 
   const handleButtonClick = () => {
-    canva.createDesign({
+    window.canva.createDesign({
       type: 'SocialMedia',
       onDesignOpen: ({ designId }) => onDesignOpen(designId),
       onDesignPublish: ({ exportUrl, designId }) =>
