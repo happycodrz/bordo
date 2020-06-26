@@ -21,7 +21,7 @@ defmodule BordoWeb.BrandNav do
         <%= live_component(@socket, BordoWeb.BrandModal, show_modal: @show_modal, user_id: @current_user.id, team_id: @current_user.team_id, id: :new_brand_modal) %>
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
-          <%= link to: Routes.logout_path(@socket, :index), class: "flex justify-between content-center px-3 py-2 text-sm text-gray-700 hover:no-underline" do %>
+          <%= link to: Routes.logout_path(@socket, :index), class: "block p-2 text-center" do %>
             <i data-feather="log-out" class="text-gray-300"></i>
           <% end %>
         </div>
