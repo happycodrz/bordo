@@ -18,6 +18,10 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+svg {
+  display: inline-block !important;
+}
+
 /* Foreground container */
 .modal-inner-container {
   position: relative;
