@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { reducer, useStateValue, EIStateProvider } from '../state'
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -8,8 +7,7 @@ import MediaUploadModal from './MediaUploadModal'
 
 import { updateBrand } from '../utilities/api'
 
-const SettingsComponent = () => {
-  const [{ brandId, brandImage }, dispatch] = useStateValue()
+const Settings = ({ brandId, brandImage }) => {
   const [uploadModalShow, setUploadModalShow] = useState(false)
 
   const handleOnUpload = (res) => {
@@ -18,12 +16,7 @@ const SettingsComponent = () => {
         image_url: res.data.secure_url,
       },
     }).then((e) => {
-      dispatch({
-        type: 'updateBrand',
-        brand: e,
-      })
-
-      setUploadModalShow(false)
+      window.location.reload()
     })
   }
 
@@ -61,11 +54,4 @@ const SettingsComponent = () => {
   )
 }
 
-const Settings = ({ brandId, brandImage }) => {
-  return (
-    <EIStateProvider initialState={{ brandId, brandImage }} reducer={reducer}>
-      <SettingsComponent />
-    </EIStateProvider>
-  )
-}
 export default Settings

@@ -51,7 +51,6 @@ const FileUploadDropzone = ({ setFileData, setFileType }) => {
 }
 
 const MediaUploadModal = ({ show, handleShow, onUpload, key, withTitle }) => {
-    const [{ activeBrand }] = useStateValue()
     const [fileData, setFileData] = useState(null)
     const [fileType, setFileType] = useState(null)
     const [title, setTitle] = useState(null)
