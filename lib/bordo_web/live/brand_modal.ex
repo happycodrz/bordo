@@ -39,7 +39,7 @@ defmodule BordoWeb.BrandModal do
               <span class="inline-flex rounded-md shadow-sm">
                 <button type="button"
                   class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out"
-                  phx-click="close-modal" phx-target="#modal-parent" phx-value-id="<%= @id %>" @click="open = false">
+                  @click="open = false">
                   Cancel
                 </button>
               </span>
@@ -55,18 +55,6 @@ defmodule BordoWeb.BrandModal do
       <% end %>
     </div>
     """
-  end
-
-  def handle_event("open-modal", %{"id" => id}, socket) do
-    send_update(BordoWeb.Components.Modal, id: id, state: "OPEN")
-    {:noreply, socket}
-  end
-
-  def handle_event("close-modal", %{"id" => id}, socket) do
-    # SO THE CSS ANIMATIONS HAVE TIME TO RUN
-    :timer.sleep(100)
-    send_update(BordoWeb.Components.Modal, id: id, state: "CLOSED", action: nil)
-    {:noreply, socket}
   end
 
   def handle_event("save", %{"brand" => brand_params}, socket) do

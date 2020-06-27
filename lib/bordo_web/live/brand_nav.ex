@@ -61,10 +61,17 @@ defmodule BordoWeb.BrandNav do
      )}
   end
 
-  # def handle_params(%{"brand_slug" => brand_slug}, _url, socket) do
-  #   active_brand = Brands.get_brand!(slug: brand_slug)
-  #   {:no_reply, assign(socket, active_brand: active_brand)}
-  # end
+  def handle_event("open-modal", %{"id" => id}, socket) do
+    send_update(BordoWeb.Components.Modal, id: id, state: "OPEN")
+    {:noreply, socket}
+  end
+
+  def handle_event("close-modal", %{"id" => id}, socket) do
+    # SO THE CSS ANIMATIONS HAVE TIME TO RUN
+    :timer.sleep(100)
+    send_update(BordoWeb.Components.Modal, id: id, state: "CLOSED", action: nil)
+    {:noreply, socket}
+  end
 
   defp fetch_brands(team_id) do
     Brands.list_brands_for_team(team_id)
