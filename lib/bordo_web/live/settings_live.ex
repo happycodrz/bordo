@@ -221,15 +221,7 @@ defmodule BordoWeb.SettingsLive do
   end
 
   defp connection_url(%Channel{network: "linkedin"} = channel) do
-    org_info = Linkedin.get_profile_image(channel.token, channel.resource_id)
-
-    %{
-      "logoV2" => %{
-        "original~" => %{"elements" => [%{"identifiers" => [%{"identifier" => url} | _]} | _]}
-      }
-    } = org_info
-
-    url
+    channel.image_url
   end
 
   defp card_resource_info(%Channel{network: "twitter"} = channel) do
