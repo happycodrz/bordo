@@ -61,6 +61,10 @@ defmodule BordoWeb.BrandNav do
      )}
   end
 
+  @doc """
+  This needs to be moved to the modal/container component, not here. This will entail working with the
+  initModal hook and passing the correct id.
+  """
   def handle_event("open-modal", %{"id" => id}, socket) do
     send_update(BordoWeb.Components.Modal, id: id, state: "OPEN")
     {:noreply, socket}
