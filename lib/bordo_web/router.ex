@@ -53,6 +53,7 @@ defmodule BordoWeb.Router do
 
     scope "/posts", PostsLive do
       live "/", Index
+      live "/:post_id", Index
     end
 
     scope "/users", UsersLive do
