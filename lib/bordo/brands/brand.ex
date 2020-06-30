@@ -9,8 +9,8 @@ defmodule Bordo.Brands.Brand do
     field :slug, TitleSlug.Type
     field :image_url
 
-    belongs_to(:owner, Bordo.Users.User)
-    has_many(:team_brands, Bordo.Brands.BrandTeam)
+    belongs_to :owner, Bordo.Users.User
+    belongs_to :team, Bordo.Teams.Team
 
     timestamps()
   end
@@ -18,8 +18,9 @@ defmodule Bordo.Brands.Brand do
   @doc false
   def changeset(brand, attrs) do
     brand
-    |> cast(attrs, [:name, :owner_id, :image_url])
+    |> cast(attrs, [:name, :owner_id, :image_url, :team_id])
     |> foreign_key_constraint(:owner_id)
+    |> foreign_key_constraint(:team_id)
     |> validate_required([:name, :owner_id])
     |> unique_constraint(:name)
     |> TitleSlug.maybe_generate_slug()

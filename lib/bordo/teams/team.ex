@@ -9,6 +9,8 @@ defmodule Bordo.Teams.Team do
 
     field :timezone, :string, virtual: true, default: "America/Chicago"
     belongs_to :owner, Bordo.Users.User
+    has_many :brands, Bordo.Brands.Brand
+
     timestamps()
   end
 
