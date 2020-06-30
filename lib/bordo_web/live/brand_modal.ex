@@ -60,8 +60,6 @@ defmodule BordoWeb.BrandModal do
   def handle_event("save", %{"brand" => brand_params}, socket) do
     case Brands.create_brand(brand_params) do
       {:ok, brand} ->
-        Brands.create_brand_team(%{team_id: brand_params["team_id"], brand_id: brand.id})
-
         {:noreply,
          socket
          |> redirect(to: Routes.live_path(socket, BordoWeb.LaunchpadLive, brand.slug))}

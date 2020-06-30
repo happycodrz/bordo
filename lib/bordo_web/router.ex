@@ -94,7 +94,7 @@ defmodule BordoWeb.Router do
   scope "/", BordoWeb do
     pipe_through [:api, :private_api]
 
-    resources "/brands", BrandController do
+    resources "/brands", BrandController, except: [:create] do
       resources "/channels", Brands.ChannelController
       resources "/media", Brands.MediaController
       resources "/posts", Brands.PostController

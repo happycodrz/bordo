@@ -82,16 +82,3 @@ brand_fleetio = Enum.at(brands, 1)
   %Brands.BrandUser{brand_id: brand_bordo.id, user_id: michael.id}
 ]
 |> Enum.each(fn brand_user -> Repo.insert!(brand_user) end)
-
-#
-# Link brands to users
-#
-
-[
-  %Brands.BrandTeam{
-    brand_id: brand_bordo.id,
-    team_id: bordo.id
-  },
-  %Brands.BrandTeam{brand_id: brand_fleetio.id, team_id: fleetio.id}
-]
-|> Enum.each(&Repo.insert!(&1))
