@@ -111,7 +111,10 @@ defmodule BordoWeb.OnboardingLive.Index do
   def handle_event("save", %{"brand" => brand_params}, socket) do
     case Brands.create_brand(
            brand_params
-           |> Enum.into(%{"owner_id" => socket.assigns.current_user.user_id})
+           |> Enum.into(%{
+             "owner_id" => socket.assigns.current_user.user_id,
+             "team_id" => socket.assigns.current_user.team_id
+           })
          ) do
       {:ok, brand} ->
         {:noreply,
