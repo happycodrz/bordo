@@ -101,8 +101,8 @@ const Schedule = ({ show }) => {
                 <Calendar className="mr-2 text-muted" />
                 <Form.Control as="select" className="mr-2" size="lg" onChange={e => handleDateSelect(dateTime.month(e.target.value))}>
                     {months.map((month, i) => {
-                        let selected = dateTime.format('MMMM') === i
-                        return <option value={i} selected={selected}>{month}</option>
+                        let selected = dateTime.format('M') === i
+                        return <option value={moment().month(month).format("M") - 1} selected={selected}>{month}</option>
                     })}
                 </Form.Control>
                 <Form.Control as="select" className="mr-2" size="lg" onChange={e => handleDateSelect(dateTime.date(e.target.value))}>
