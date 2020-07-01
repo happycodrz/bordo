@@ -111,11 +111,12 @@ defmodule BordoWeb.OnboardingLive.Index do
   def handle_event("save", %{"brand" => brand_params}, socket) do
     case Brands.create_brand(
            brand_params
-           |> Enum.into(%{"owner_id" => socket.assigns.current_user.user_id})
+           |> Enum.into(%{
+             "owner_id" => socket.assigns.current_user.user_id,
+             "team_id" => socket.assigns.current_user.team_id
+           })
          ) do
       {:ok, brand} ->
-        create_brand_team(brand.id, socket.assigns.current_user.team_id)
-
         {:noreply,
          redirect(socket,
            to: Routes.live_path(BordoWeb.Endpoint, BordoWeb.LaunchpadLive, brand.slug)
@@ -124,10 +125,6 @@ defmodule BordoWeb.OnboardingLive.Index do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(changeset: changeset)}
     end
-  end
-
-  defp create_brand_team(brand_id, team_id) do
-    Brands.create_brand_team(%{brand_id: brand_id, team_id: team_id})
   end
 
   defp determine_step(socket, user) do

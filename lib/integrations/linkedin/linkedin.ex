@@ -68,7 +68,8 @@ defmodule Linkedin do
   end
 
   def get_organization(token, org_id) do
-    HTTPoison.get!("https://api.linkedin.com/v2/organizations/#{org_id}",
+    HTTPoison.get!(
+      "https://api.linkedin.com/v2/organizations/#{org_id}",
       Authorization: "Bearer #{token}"
     )
     |> Map.get(:body)

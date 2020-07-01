@@ -70,4 +70,7 @@ defmodule Bordo.Admin.Posts do
     |> Repo.all()
     |> Repo.preload([:brand, post_variants: [:channel, :media]])
   end
+
+  def get_post!(id),
+    do: Repo.get!(Post, id) |> Repo.preload([:brand, :user, post_variants: [:channel, :media]])
 end

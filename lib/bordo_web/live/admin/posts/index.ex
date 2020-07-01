@@ -15,13 +15,27 @@ defmodule BordoWeb.Admin.PostsLive.Index do
     {:ok,
      assign(socket,
        posts: fetch_posts(%{}),
-       show_modal: false,
+       show_slideover: false,
        brands: [],
-       brand_name: nil
+       brand_name: nil,
+       post: nil
      )}
   end
 
-  @impl true
+  def handle_params(%{"post_id" => post_id} = params, _uri, socket) do
+    post = Posts.get_post!(post_id)
+    filter_params = Map.drop(params, ~w(post_id))
+
+    {:noreply,
+     socket
+     |> assign(
+       status: nil,
+       show_slideover: true,
+       post: post,
+       posts: fetch_posts(filter_params)
+     )}
+  end
+
   def handle_params(%{"status" => status} = params, _uri, socket) do
     {:noreply, assign(socket, posts: fetch_posts(params), status: status)}
   end
@@ -30,7 +44,6 @@ defmodule BordoWeb.Admin.PostsLive.Index do
     {:noreply, assign(socket, posts: fetch_posts(params), status: nil)}
   end
 
-  @impl true
   def handle_info({Posts, [:post | _], _}, socket) do
     {:noreply, assign(socket, posts: fetch_posts(%{}))}
   end
@@ -48,13 +61,23 @@ defmodule BordoWeb.Admin.PostsLive.Index do
      )}
   end
 
-  @impl true
-  def handle_event("modal-open", _, socket) do
-    {:noreply, assign(socket, show_modal: true)}
+  def handle_event("fetch-slideover", %{"post_id" => post_id}, socket) do
+    {:noreply,
+     socket
+     |> assign(show_slideover: true)
+     |> push_patch(
+       to: Routes.admin_live_path(socket, BordoWeb.Admin.PostsLive.Index, post_id: post_id)
+     )}
   end
 
-  def handle_event("modal-close", _, socket) do
-    {:noreply, assign(socket, show_modal: false)}
+  def handle_event("close-slideover", _params, socket) do
+    # SO THE CSS ANIMATIONS HAVE TIME TO RUN
+    :timer.sleep(300)
+
+    {:noreply,
+     socket
+     |> assign(show_slideover: false)
+     |> push_patch(to: Routes.admin_live_path(socket, BordoWeb.Admin.PostsLive.Index))}
   end
 
   def handle_event("suggest-brand", %{"brand_name" => brand_name}, socket) do

@@ -50,13 +50,23 @@ defmodule BordoWeb.Oauth.LinkedInLive.Index do
   def handle_event("org-selected", %{"org_id" => "urn:li:organization:" <> org_id}, socket) do
     brand = Brands.get_brand!(socket.assigns.brand_id)
     resource_info = Linkedin.get_organization(socket.assigns.access_token, org_id)
+    org_info = Linkedin.get_profile_image(socket.assigns.access_token, org_id)
+
+    %{
+      "logoV2" => %{
+        "original~" => %{"elements" => [%{"identifiers" => [%{"identifier" => url} | _]} | _]}
+      }
+    } = org_info
+
+    {:ok, upload} = Cloudex.upload(url)
 
     channel_params = %{
       "token" => socket.assigns.access_token,
       "network" => "linkedin",
       "resource_id" => org_id,
       "resource_info" => resource_info,
-      "brand_id" => brand.id
+      "brand_id" => brand.id,
+      "image_url" => upload.url
     }
 
     case Channels.create_channel(channel_params) do

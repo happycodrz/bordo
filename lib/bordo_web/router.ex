@@ -53,6 +53,7 @@ defmodule BordoWeb.Router do
 
     scope "/posts", PostsLive do
       live "/", Index
+      live "/:post_id", Index
     end
 
     scope "/users", UsersLive do
@@ -93,7 +94,7 @@ defmodule BordoWeb.Router do
   scope "/", BordoWeb do
     pipe_through [:api, :private_api]
 
-    resources "/brands", BrandController do
+    resources "/brands", BrandController, except: [:create] do
       resources "/channels", Brands.ChannelController
       resources "/media", Brands.MediaController
       resources "/posts", Brands.PostController

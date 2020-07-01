@@ -6,7 +6,7 @@ defmodule Bordo.Brands do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
-  alias Bordo.Brands.{Brand, BrandTeam, BrandUser}
+  alias Bordo.Brands.{Brand, BrandUser}
 
   @doc """
   Returns the list of brands.
@@ -29,10 +29,7 @@ defmodule Bordo.Brands do
   def list_brands_for_team(team_id) do
     query =
       from b in Brand,
-        left_join: bt in BrandTeam,
-        on: b.id == bt.brand_id,
-        distinct: b.id,
-        where: bt.team_id == ^team_id
+        where: b.team_id == ^team_id
 
     Repo.all(query)
   end
@@ -226,101 +223,5 @@ defmodule Bordo.Brands do
   """
   def change_user_brand(%BrandUser{} = user_brand) do
     BrandUser.changeset(user_brand, %{})
-  end
-
-  alias Bordo.Brands.BrandTeam
-
-  @doc """
-  Returns the list of brand_teams.
-
-  ## Examples
-
-      iex> list_brand_teams()
-      [%BrandTeam{}, ...]
-
-  """
-  def list_brand_teams do
-    Repo.all(BrandTeam)
-  end
-
-  @doc """
-  Gets a single brand_team.
-
-  Raises `Ecto.NoResultsError` if the Brand team does not exist.
-
-  ## Examples
-
-      iex> get_brand_team!(123)
-      %BrandTeam{}
-
-      iex> get_brand_team!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_brand_team!(id), do: Repo.get!(BrandTeam, id)
-
-  @doc """
-  Creates a brand_team.
-
-  ## Examples
-
-      iex> create_brand_team(%{field: value})
-      {:ok, %BrandTeam{}}
-
-      iex> create_brand_team(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_brand_team(attrs \\ %{}) do
-    %BrandTeam{}
-    |> BrandTeam.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a brand_team.
-
-  ## Examples
-
-      iex> update_brand_team(brand_team, %{field: new_value})
-      {:ok, %BrandTeam{}}
-
-      iex> update_brand_team(brand_team, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_brand_team(%BrandTeam{} = brand_team, attrs) do
-    brand_team
-    |> BrandTeam.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a brand_team.
-
-  ## Examples
-
-      iex> delete_brand_team(brand_team)
-      {:ok, %BrandTeam{}}
-
-      iex> delete_brand_team(brand_team)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_brand_team(%BrandTeam{} = brand_team) do
-    Repo.delete(brand_team)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking brand_team changes.
-
-  ## Examples
-
-      iex> change_brand_team(brand_team)
-      %Ecto.Changeset{source: %BrandTeam{}}
-
-  """
-  def change_brand_team(%BrandTeam{} = brand_team) do
-    BrandTeam.changeset(brand_team, %{})
   end
 end

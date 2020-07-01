@@ -52,7 +52,7 @@
       <li>
         <a href="#"
           class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out"
-          phx-click="modal-open">
+          phx-click="fetch-slideover" phx-value-post_id="<%= post.id %>">
           <div class="flex items-center px-4 py-4 sm:px-6">
             <div class="min-w-0 flex-1 flex items-center">
               <div class="flex-shrink-0">
@@ -85,8 +85,8 @@
     </ul>
   </div>
 </div>
-<%= if @show_modal do %>
-<%= live_component(@socket, BordoWeb.Components.ModalLive, id: "modal") do %>
-<%= render("modal_body.html") %>
-<% end %>
+<%= if @show_slideover do %>
+  <%= live_component(@socket, BordoWeb.Components.SlideOver, id: "user-info", title: "Post Info") do %>
+    <%= render("post_details.html", post: @post) %>
+  <% end %>
 <% end %>

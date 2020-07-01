@@ -31,30 +31,6 @@ defmodule BordoWeb.BrandControllerTest do
     end
   end
 
-  describe "create brand" do
-    test "renders brand when data is valid", %{conn: conn, user: user} do
-      conn =
-        post(conn, Routes.brand_path(conn, :create),
-          brand: @create_attrs |> Map.merge(%{owner_id: user.id})
-        )
-
-      assert %{"id" => id} = json_response(conn, 201)["data"]
-
-      conn = get(conn, Routes.brand_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "name" => "some name"
-             } = json_response(conn, 200)["data"]
-    end
-
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.brand_path(conn, :create), brand: @invalid_attrs)
-
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
   describe "update brand" do
     setup [:create_brand]
 

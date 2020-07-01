@@ -18,7 +18,7 @@ defmodule BordoWeb.BrandNav do
               <% end %>
             </div>
           <% end %>
-        <%= live_component(@socket, BordoWeb.BrandModal, show_modal: @show_modal, user_id: @current_user.id, team_id: @current_user.team_id, id: :new_brand_modal) %>
+          <%= live_component(@socket, BordoWeb.BrandModal, id: "brand-modal", owner_id: @current_user.id, team_id: @current_user.team_id) %>
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
           <%= link to: Routes.logout_path(@socket, :index), class: "block p-2 text-center" do %>
@@ -61,10 +61,21 @@ defmodule BordoWeb.BrandNav do
      )}
   end
 
-  # def handle_params(%{"brand_slug" => brand_slug}, _url, socket) do
-  #   active_brand = Brands.get_brand!(slug: brand_slug)
-  #   {:no_reply, assign(socket, active_brand: active_brand)}
-  # end
+  @doc """
+  This needs to be moved to the modal/container component, not here. This will entail working with the
+  initModal hook and passing the correct id.
+  """
+  def handle_event("open-modal", %{"id" => id}, socket) do
+    send_update(BordoWeb.Components.Modal, id: id, state: "OPEN")
+    {:noreply, socket}
+  end
+
+  def handle_event("close-modal", %{"id" => id}, socket) do
+    # SO THE CSS ANIMATIONS HAVE TIME TO RUN
+    :timer.sleep(100)
+    send_update(BordoWeb.Components.Modal, id: id, state: "CLOSED", action: nil)
+    {:noreply, socket}
+  end
 
   defp fetch_brands(team_id) do
     Brands.list_brands_for_team(team_id)
