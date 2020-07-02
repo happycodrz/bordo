@@ -132,6 +132,7 @@ defmodule BordoWeb.Router do
       live "/schedule", ScheduleLive
       live "/media", MediaLive
       live "/settings", SettingsLive
+      live "/team-settings", TeamSettingsLive
     end
 
     live "/*path", OnboardingLive.Index
