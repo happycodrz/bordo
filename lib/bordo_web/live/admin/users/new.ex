@@ -3,6 +3,7 @@ defmodule BordoWeb.Admin.UsersLive.New do
   alias BordoWeb.Router.Helpers, as: Routes
 
   alias Bordo.Users
+  alias Bordo.Users.Account
   alias Bordo.Users.User
 
   def mount(_params, _session, socket) do
@@ -10,10 +11,10 @@ defmodule BordoWeb.Admin.UsersLive.New do
     {:ok, assign(socket, changeset: changeset)}
   end
 
-  def render(assigns), do: Phoenix.View.render(BordoWeb.Admin.UserView, "new.html", assigns)
+  def render(assigns), do: render(BordoWeb.Admin.UserView, "new.html", assigns)
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    case Users.create_user(user_params) do
+    case Account.create_user_with_auth0(user_params) do
       {:ok, _user} ->
         {:noreply,
          socket

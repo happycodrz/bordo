@@ -7,8 +7,6 @@ defmodule Bordo.Users.Account do
   alias Bordo.Users
 
   def create_user_with_auth0(attrs \\ %{}) do
-    IO.inspect(attrs)
-
     case Users.create_user(attrs) do
       {:ok, user} ->
         case Authentication.signup(
@@ -27,10 +25,5 @@ defmodule Bordo.Users.Account do
       {:error, changeset} ->
         {:error, changeset}
     end
-  end
-
-  defp generate_password do
-    length = 12
-    :crypto.strong_rand_bytes(length) |> Base.encode64() |> binary_part(0, length)
   end
 end
