@@ -60,6 +60,14 @@ defmodule BordoWeb.Providers.TwitterController do
     end
   end
 
+  def callback(conn, %{"brand_id" => brand_id, "denied" => _oauth_response}) do
+    brand = Brands.get_brand!(brand_id)
+
+    conn
+    |> put_flash(:error, "There was a problem connecting your twitter account")
+    |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
+  end
+
   # Handling errors from extwitter request_token is difficult right now b/c no error tuple is returned
   # this could be refactored later to return the error tuple.
   defp get_request_token(brand_id) do
