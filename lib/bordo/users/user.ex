@@ -27,8 +27,22 @@ defmodule Bordo.Users.User do
       :team_id,
       :password
     ])
+    |> validate_email()
+    |> validate_password()
+  end
+
+  defp validate_email(changeset) do
+    changeset
     |> validate_required([:email])
-    |> validate_length(:password, min: 8)
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
+    |> validate_length(:email, max: 254)
+    |> unsafe_validate_unique(:email, Bordo.Repo)
     |> unique_constraint(:email)
+  end
+
+  defp validate_password(changeset) do
+    changeset
+    |> validate_required([:password])
+    |> validate_length(:password, min: 8, max: 80)
   end
 end
