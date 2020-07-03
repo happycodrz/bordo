@@ -5,11 +5,12 @@ defmodule Bordo.Fixtures do
     {:ok, user} =
       %{
         email: Faker.Internet.email(),
+        password: Faker.random_bytes(12) |> Base.encode64(),
         auth0_id: Faker.Blockchain.Bitcoin.address()
       }
       |> Users.create_user()
 
-    user
+    user |> Map.put(:password, nil)
   end
 
   def fixture(:team, assoc, attrs) do

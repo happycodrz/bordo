@@ -10,7 +10,6 @@ defmodule Bordo.TeamsTest do
     @update_attrs %{name: "some updated name"}
     @invalid_attrs %{name: nil}
 
-    @tag :focus
     test "list_teams/0 returns all teams" do
       team = fixture(:team)
       assert Teams.list_teams() == [team]

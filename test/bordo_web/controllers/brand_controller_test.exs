@@ -15,7 +15,7 @@ defmodule BordoWeb.BrandControllerTest do
   @invalid_attrs %{icon_url: nil, name: nil}
 
   setup %{conn: conn} do
-    {:ok, user} = Bordo.Users.create_user(%{email: "xx", auth0_id: "1234"})
+    user = fixture(:user)
     {:ok, team} = Bordo.Teams.create_team(%{name: "Bordo!", owner_id: user.id})
     Bordo.Users.update_user(user, %{team_id: team.id})
 
@@ -24,6 +24,7 @@ defmodule BordoWeb.BrandControllerTest do
      user: user}
   end
 
+  @tag :skip
   describe "index" do
     test "lists all brands", %{conn: conn} do
       conn = get(conn, Routes.brand_path(conn, :index))
