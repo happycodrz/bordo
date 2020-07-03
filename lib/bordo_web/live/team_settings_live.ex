@@ -22,33 +22,44 @@ defmodule BordoWeb.TeamSettingsLive do
   def render(assigns) do
     ~L"""
     <div class="p-8">
+      <h2 class="mt-2 mb-8">Team Settings</h2>
+      <div class="bg-white rounded-lg shadow p-8 mb-10">
+        <h3 class="mb-3">Add Team Member</h3>
+        <p class="text-gray-500 mb-4">To add a user to your team, type their email and a new password below. They'll receive an email letting them know they're in!<p>
+        <%= f = form_for @changeset, "#", [phx_submit: :add_user] %>
+          <div class="grid grid-cols-12 gap-3 mb-4">
+            <div class="col-span-5">
+              <%= text_input f, :email, class: "form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-red focus:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", placeholder: "Email Address" %>
+              <%= error_tag f, :email %>
+              <%= hidden_input f, :team_id, value: @active_brand.team_id %>
+            </div>
+            <div class="col-span-5">
+              <%= password_input f, :password, class: "form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-red focus:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", placeholder: "Password" %>
+              <%= error_tag f, :password %>
+            </div>
+            <div class="col-span-2">
+              <%= submit "Add New User", phx_disable_with: "Adding...", class: "inline-flex justify-center py-2
+              px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white
+              bg-red-500 hover:bg-red-600 focus:outline-none focus:border-red-500
+              focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out w-100" %>
+            </div>
+          </div>
+        </form>
+      </div>
       <div class="bg-white rounded-lg shadow p-8">
-      <h3>Team Members</h3>
-      <%= f = form_for @changeset, "#", [phx_submit: :add_user, class: "mb-8"] %>
-        <div class="grid grid-cols-12 gap-6 mb-4">
-          <div class="col-span-4 sm:col-span-3">
-            <%= label f, :email, class: "block text-sm font-medium leading-5 text-gray-700" %>
-            <%= text_input f, :email, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
-            <%= error_tag f, :email %>
-            <%= hidden_input f, :team_id, value: @active_brand.team_id %>
-          </div>
-          <div class="col-span-4 sm:col-span-3">
-            <%= label f, :password, class: "block text-sm font-medium leading-5 text-gray-700" %>
-            <%= password_input f, :password, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
-            <%= error_tag f, :password %>
-          </div>
-        </div>
-        <span class="inline-flex rounded-md shadow-sm">
-          <%= submit "Save", phx_disable_with: "Saving...", class: "inline-flex justify-center py-2
-          px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white
-          bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700
-          focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out" %>
-        </span>
-      </form>
-      <%= for user <- @users do %>
-        <%= user_row(user) %>
-      <% end %>
-    </div>
+        <h3 class="mb-3">Your Team</h3>
+        <table class="table">
+          <thead>
+            <th>Name</th>
+            <th>Email</th>
+          </thead>
+          <tbody>
+            <%= for user <- @users do %>
+              <%= user_row(user) %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
     """
   end
@@ -69,17 +80,15 @@ defmodule BordoWeb.TeamSettingsLive do
 
   defp user_row(user) do
     ~e"""
-    <div class="flex items-center">
-      <div class="flex-shrink-0 h-10 w-10 mr-6">
-        <img class="h-10 w-10 rounded-full" src="<%= UserView.avatar(user) %>" alt="" />
-      </div>
-      <div class="flex items-center">
-        <div>
-          <span>Kevin Brown</span>
-          <span><%= user.email %></span>
-        </div>
-      </div>
-    </div>
+    <tr>
+      <td>
+        <img class="inline-block h-8 w-8 rounded-full mr-3" src="<%= UserView.avatar(user) %>" alt="" />
+        <strong><%= user.first_name %> <%= user.last_name %></strong>
+      </td>
+      <td>
+        <a href="mailto:<%= user.email %>" target="_blank"><%= user.email %></a>
+      </td>
+    </tr>
     """
   end
 end
