@@ -100,7 +100,7 @@ defmodule Bordo.Users do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.create_changeset(attrs)
     |> Repo.insert()
     |> notify_subscribers([:user, :created])
   end
@@ -180,7 +180,7 @@ defmodule Bordo.Users do
 
   """
   def change_user(user, attrs \\ %{}) do
-    User.changeset(user, %{})
+    User.changeset(user, attrs)
   end
 
   defp notify_subscribers({:ok, result}, event) do

@@ -28,6 +28,21 @@ defmodule Bordo.Users.User do
       :password
     ])
     |> validate_email()
+  end
+
+  def create_changeset(user, attrs) do
+    user
+    |> cast(attrs, [
+      :email,
+      :auth0_id,
+      :team_id,
+      :image_url,
+      :first_name,
+      :last_name,
+      :team_id,
+      :password
+    ])
+    |> validate_email()
     |> validate_password()
   end
 

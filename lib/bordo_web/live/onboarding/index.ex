@@ -99,7 +99,7 @@ defmodule BordoWeb.OnboardingLive.Index do
          ) do
       {:ok, team} ->
         user = Users.get_user!(user_id)
-        updated_user = Users.update_user(user, %{team_id: team.id})
+        {:ok, updated_user} = Users.update_user(user, %{team_id: team.id})
 
         {:noreply, determine_step(socket, updated_user)}
 
@@ -112,7 +112,7 @@ defmodule BordoWeb.OnboardingLive.Index do
     case Brands.create_brand(
            brand_params
            |> Enum.into(%{
-             "owner_id" => socket.assigns.current_user.user_id,
+             "owner_id" => socket.assigns.current_user.id,
              "team_id" => socket.assigns.current_user.team_id
            })
          ) do
