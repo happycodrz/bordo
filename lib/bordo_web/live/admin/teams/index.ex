@@ -10,7 +10,13 @@ defmodule BordoWeb.Admin.TeamsLive.Index do
   def mount(_params, _session, socket) do
     if connected?(socket), do: Teams.subscribe()
 
-    {:ok, assign(socket, teams: Teams.list_teams())}
+    {:ok,
+     assign(socket,
+       teams: Teams.list_teams(),
+       title: "Teams",
+       action_module: BordoWeb.Admin.TeamsLive.New,
+       action_name: "Add Team"
+     )}
   end
 
   @impl true

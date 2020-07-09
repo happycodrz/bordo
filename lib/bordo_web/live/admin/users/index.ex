@@ -10,7 +10,13 @@ defmodule BordoWeb.Admin.UsersLive.Index do
   def mount(_params, _session, socket) do
     if connected?(socket), do: Users.subscribe()
 
-    {:ok, assign(socket, users: Users.list_users())}
+    {:ok,
+     assign(socket,
+       users: Users.list_users(),
+       title: "Users",
+       action_module: BordoWeb.Admin.UsersLive.New,
+       action_name: "Add New User"
+     )}
   end
 
   @impl true
