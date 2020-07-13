@@ -18,7 +18,7 @@ defmodule BordoWeb.BrandNav do
               <% end %>
             </div>
           <% end %>
-          <%= live_component(@socket, BordoWeb.BrandModal, id: "brand-modal", owner_id: @current_user.id, team_id: @current_user.team_id) %>
+          <%= live_component(@socket, BordoWeb.BrandModal, id: "brand-modal", team_id: @current_user.team_id) %>
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
           <%= live_redirect to: Routes.live_path(@socket, BordoWeb.TeamSettingsLive, @active_brand.slug), class: "block p-2 text-center" do %>

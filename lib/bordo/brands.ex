@@ -34,19 +34,6 @@ defmodule Bordo.Brands do
     Repo.all(query)
   end
 
-  def list_brands_for_user(user_id) do
-    query =
-      from b in Brand,
-        left_join: ub in BrandUser,
-        on: b.id == ub.brand_id,
-        distinct: b.id,
-        where:
-          b.owner_id == ^user_id or
-            ub.user_id == ^user_id
-
-    Repo.all(query)
-  end
-
   @doc """
   Gets a single brand.
 

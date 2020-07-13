@@ -27,7 +27,7 @@ defmodule Bordo.BrandsTest do
       user = fixture(:user)
 
       assert {:ok, %Brand{} = brand} =
-               Brands.create_brand(@valid_attrs |> Enum.into(%{owner_id: user.id}))
+               Brands.create_brand(@valid_attrs))
 
       assert brand.name == "some name"
     end

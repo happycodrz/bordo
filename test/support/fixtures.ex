@@ -25,11 +25,9 @@ defmodule Bordo.Fixtures do
   end
 
   def fixture(:brand, assoc, attrs) do
-    user = assoc[:user] || fixture(:user)
-
     {:ok, brand} =
       attrs
-      |> Enum.into(%{name: Faker.Company.name(), owner_id: user.id})
+      |> Enum.into(%{name: Faker.Company.name()})
       |> Brands.create_brand()
 
     brand

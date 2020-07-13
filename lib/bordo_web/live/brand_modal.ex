@@ -29,7 +29,6 @@ defmodule BordoWeb.BrandModal do
           <div class="grid grid-cols-6 gap-6 mb-4">
             <div class="col-span-12">
               <%= text_input f, :name, class: "mt-1 form-input text-black block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autofocus: true, placeholder: "New Brand Name" %>
-              <%= hidden_input f, :owner_id, value: @owner_id %>
               <%= hidden_input f, :team_id, value: @team_id %>
               <%= error_tag f, :name %>
             </div>

@@ -16,7 +16,7 @@ defmodule BordoWeb.BrandControllerTest do
 
   setup %{conn: conn} do
     user = fixture(:user)
-    {:ok, team} = Bordo.Teams.create_team(%{name: "Bordo!", owner_id: user.id})
+    {:ok, team} = Bordo.Teams.create_team(%{name: "Bordo!"})
     Bordo.Users.update_user(user, %{team_id: team.id})
 
     {:ok,
@@ -70,8 +70,8 @@ defmodule BordoWeb.BrandControllerTest do
     end
   end
 
-  defp create_brand(%{user: user}) do
-    {:ok, brand} = Brands.create_brand(@create_attrs |> Map.merge(%{owner_id: user.id}))
+  defp create_brand do
+    {:ok, brand} = Brands.create_brand(@create_attrs))
     {:ok, brand: brand}
   end
 end

@@ -61,8 +61,8 @@ Repo.update!(change(michael, team_id: bordo.id))
 #
 
 [
-  %Brands.Brand{name: "Bordo", owner_id: michael.id, slug: "bordo"},
-  %Brands.Brand{name: "Fleetio", owner_id: kevin.id, slug: "fleetio"}
+  %Brands.Brand{name: "Bordo", slug: "bordo"},
+  %Brands.Brand{name: "Fleetio", slug: "fleetio"}
 ]
 |> Enum.each(fn brand -> Repo.insert!(brand) end)
 
