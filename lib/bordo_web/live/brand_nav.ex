@@ -58,28 +58,11 @@ defmodule BordoWeb.BrandNav do
 
     {:ok,
      assign(socket,
-       show_modal: false,
        brands: brands,
        current_user: current_user,
        active_brand: active_brand,
        nav_item: nav_item
      )}
-  end
-
-  @doc """
-  This needs to be moved to the modal/container component, not here. This will entail working with the
-  initModal hook and passing the correct id.
-  """
-  def handle_event("open-modal", %{"id" => id}, socket) do
-    send_update(BordoWeb.Components.Modal, id: id, state: "OPEN")
-    {:noreply, socket}
-  end
-
-  def handle_event("close-modal", %{"id" => id}, socket) do
-    # SO THE CSS ANIMATIONS HAVE TIME TO RUN
-    :timer.sleep(100)
-    send_update(BordoWeb.Components.Modal, id: id, state: "CLOSED", action: nil)
-    {:noreply, socket}
   end
 
   defp fetch_brands(team_id) do

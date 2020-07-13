@@ -10,48 +10,49 @@ defmodule BordoWeb.BrandModal do
     {:ok,
      assign(socket,
        state: "CLOSED",
-       action: nil,
        changeset: changeset
      )}
   end
 
   def render(assigns) do
     ~L"""
-    <div id="modal-parent">
-      <div class="cursor-pointer">
+    <div id="<%= @id %>" style="min-height: 250px;"><!-- NOTE THE THE COMPONENT NEEDS TO BE TRACKED WITH AN ID -->
+      <div class="cursor-pointer" phx-click="open" phx-target="#new-brand-modal">
         <div
-          class="bg-blue-700 hover:bg-blue-600 transition duration-150 h-12 w-12 flex items-center justify-center text-blue-800 text-2xl font-semibold rounded-lg mb-1 overflow-hidden" phx-click="open-modal" phx-value-id="brand-modal">
+          class="bg-blue-700 hover:bg-blue-600 transition duration-150 h-12 w-12 flex items-center justify-center text-blue-800 text-2xl font-semibold rounded-lg mb-1 overflow-hidden">
           <%= feather_icon("plus", "w-56") %>
         </div>
       </div>
-      <%= live_component @socket, BordoWeb.Components.Modal, id: @id do %>
-        <%= f = form_for @changeset, "#", [phx_submit: :save, phx_target: "#modal-parent"] %>
-          <div class="grid grid-cols-6 gap-6 mb-4">
-            <div class="col-span-12">
-              <%= text_input f, :name, class: "mt-1 form-input text-black block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autofocus: true, placeholder: "New Brand Name" %>
-              <%= hidden_input f, :team_id, value: @team_id %>
-              <%= error_tag f, :name %>
+      <div id="new-brand-handler">
+        <%= live_component @socket, BordoWeb.Components.Modal, id: "new-brand-modal", title: "Add a new brand" do %>
+          <%= f = form_for @changeset, "#", [phx_submit: :save, phx_target: "#new-brand-handler"] %>
+            <div class="grid grid-cols-6 gap-6 mb-4">
+              <div class="col-span-12">
+                <%= text_input f, :name, class: "mt-1 form-input text-black block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autofocus: true, placeholder: "New Brand Name" %>
+                <%= hidden_input f, :team_id, value: @team_id %>
+                <%= error_tag f, :name %>
+              </div>
             </div>
-          </div>
-          <div class="border-t border-gray-200 pt-2">
-            <div class="flex justify-end">
-              <span class="inline-flex rounded-md shadow-sm">
-                <button type="button"
-                  class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out"
-                  @click="open = false">
-                  Cancel
-                </button>
-              </span>
-              <span class="ml-3 inline-flex rounded-md shadow-sm">
-                <button type="submit"
-                  class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">
-                  Add New Brand
-                </button>
-              </span>
+            <div class="border-t border-gray-200 pt-2">
+              <div class="flex justify-end">
+                <span class="inline-flex rounded-md shadow-sm">
+                  <button type="button"
+                    class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out"
+                    @click="open = false">
+                    Cancel
+                  </button>
+                </span>
+                <span class="ml-3 inline-flex rounded-md shadow-sm">
+                  <button type="submit"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">
+                    Add New Brand
+                  </button>
+                </span>
+              </div>
             </div>
-          </div>
-        </form>
-      <% end %>
+          </form>
+        <% end %>
+      </div>
     </div>
     """
   end

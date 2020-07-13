@@ -19,7 +19,7 @@ import NProgress from 'nprogress'
 import { LiveSocket } from 'phoenix_live_view'
 
 // Hooks
-import { initModal, closeModal } from './hooks/modal'
+import { InitModal } from './hooks/modal'
 import { initSlideOver } from './hooks/slide_over'
 
 const feather = require('feather-icons')
@@ -31,7 +31,7 @@ Hooks.FeatherIcon = {
   },
 }
 
-Hooks = { ...Hooks, initModal, closeModal, initSlideOver }
+Hooks = { ...Hooks, InitModal, initSlideOver }
 
 import Choices from 'choices.js'
 let csrfToken = document

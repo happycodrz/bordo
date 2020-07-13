@@ -3,59 +3,90 @@ defmodule BordoWeb.Components.Modal do
   This a stateful wrapper component for modals. There is an useless looking wrapper div around the modal
   so that alpinejs can properly watch events without having it chopped by LV.
   """
-  use Phoenix.LiveComponent
+  use BordoWeb, :live_component
 
+  @impl true
   def mount(socket) do
-    {:ok, assign(socket, state: "CLOSED", action: nil)}
+    {:ok, assign(socket, state: "CLOSED")}
   end
 
+  @impl true
+  def update(assigns, socket) do
+    {:ok,
+     socket
+     |> assign(assigns)}
+  end
+
+  @impl true
+  def handle_event("open", _, socket) do
+    {:noreply, assign(socket, :state, "OPEN")}
+  end
+
+  @impl true
+  def handle_event("close", _, socket) do
+    {:noreply, assign(socket, :state, "CLOSED")}
+  end
+
+  @impl true
   def render(assigns) do
-    if assigns.state == "OPEN" do
-      ~L"""
-      <div>
-        <div
-          id="<%= @id %>"
-          phx-hook="initModal"
-          x-data="{ open: false }"
-          x-init="() => {
-            setTimeout(() => open = true, 100);
-            $watch('open', isOpen => $dispatch('modal-change', { open: isOpen }))
-          }"
-          x-show="open"
-          close-modal="setTimeout(() => open = false, 100)"
-          class="z-50 fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center"
+    ~L"""
+    <div id="<%= @id %>">
+      <%= if @state == "OPEN" do %>
+      <div
+        phx-hook="InitModal"
+        phx-target="#<%= @id %>"
+        x-data="{ open: false }"
+        x-init="() => {
+          setTimeout(() => open = true, 100);
+          $watch('open', isOpen => $dispatch('modal-change', { open: isOpen, id: '#<%= @id %>' }))
+        }"
+        x-show="open"
+        @close-modal="setTimeout(() => open = false, 100)"
+        class="z-50 fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0"
         >
-          <%= if @action == "CLOSE" do %>
-            <div id="close-modal-<%= @id %>" data-modal-id="<%= @id %>" phx-hook="closeModal"></div>
-          <% end %>
 
-          <!-- BACKDROP -->
-          <div x-show="open" x-transition:enter="ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 transition-opacity">
-            <div class="absolute inset-0 bg-gray-800 opacity-75"></div>
-          </div>
+        <!-- BACKDROP -->
+        <div
+          x-show="open"
+          x-transition:enter="ease-out duration-300"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="ease-in duration-200"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+          class="fixed inset-0 transition-opacity"
+        >
+          <div class="absolute inset-0 bg-gray-900 opacity-50"></div>
+        </div>
 
-          <div x-show="open" x-transition:enter="ease-out duration-100" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-100" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-            <div @click.away="open = false" class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
-                <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-100 mb-8">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                  </svg>
-                </button>
-              </div>
-              <!-- CONTENT -->
-              <div class="mt-4">
-                <%= @inner_content.([]) %>
-              </div>
+        <!-- MODAL DIALOG -->
+        <div
+          x-show="open"
+          x-transition:enter="ease-out duration-300"
+          x-transition:enter-start="opacity-0 mb-2 sm:mb-8 sm:mt-2 sm:scale-95"
+          x-transition:enter-end="opacity-100 mb-8 sm:mt-8 sm:scale-100"
+          x-transition:leave="ease-in duration-200"
+          x-transition:leave-start="opacity-100  mb-8 sm:mt-8  sm:scale-100"
+          x-transition:leave-end="opacity-0  mb-2 sm:mb-8 sm:mt-2  sm:scale-95"
+          class="relative w-full max-w-lg my-8 mx-auto px-4 sm:px-0 shadow-lg">
+
+          <div @click.away="open = false" class="relative flex flex-col bg-white border border-gray-200 rounded-lg">
+            <!-- MODAL HEADER -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200 rounded-t">
+              <h5 class="mb-0 text-base font-semibold text-gray-500 uppercase"><%= assigns[:title] %></h5>
+              <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
+                &times;
+              </button>
+            </div>
+            <!-- MODAL BODY -->
+            <div class="relative flex-auto p-4">
+              <%= @inner_content.([]) %>
             </div>
           </div>
         </div>
       </div>
-      """
-    else
-      ~L"""
-      <div id="closed-modal-<%= @id %>"></div>
-      """
-    end
+      <% end %>
+    </div>
+    """
   end
 end
