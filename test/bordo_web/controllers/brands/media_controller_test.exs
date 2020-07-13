@@ -18,8 +18,7 @@ defmodule BordoWeb.MediaControllerTest do
   setup %{conn: conn} do
     user = fixture(:user)
 
-    {:ok, brand} =
-      Bordo.Brands.create_brand(%{name: "test brand", slug: "test-brand"})
+    {:ok, brand} = Bordo.Brands.create_brand(%{name: "test brand", slug: "test-brand"})
 
     {:ok,
      brand: brand,

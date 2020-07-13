@@ -16,7 +16,7 @@ defmodule BordoWeb.BrandControllerTest do
 
   setup %{conn: conn} do
     user = fixture(:user)
-    {:ok, team} = Bordo.Teams.create_team(%{name: "Bordo!"})
+    {:ok, team} = Bordo.Teams.create_team(%{name: "Bordo!", owner_id: user.id})
     Bordo.Users.update_user(user, %{team_id: team.id})
 
     {:ok,
