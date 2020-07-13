@@ -70,8 +70,8 @@ defmodule BordoWeb.BrandControllerTest do
     end
   end
 
-  defp create_brand do
-    {:ok, brand} = Brands.create_brand(@create_attrs))
+  defp create_brand(%{}) do
+    {:ok, brand} = Brands.create_brand(@create_attrs)
     {:ok, brand: brand}
   end
 end
