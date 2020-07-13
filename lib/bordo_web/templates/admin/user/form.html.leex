@@ -1,10 +1,6 @@
-<%= f = form_for @changeset, "#", [phx_submit: :save] %>
-<div class="md:grid md:grid-cols-3 md:gap-6">
-  <div class="md:col-span-1">
-    <h3 class="text-lg font-medium leading-6 text-gray-900">Personal Information</h3>
-  </div>
-  <div class="mt-5 md:mt-0 md:col-span-2">
-    <div class="grid grid-cols-6 gap-6">
+<%= f = form_for @changeset, "#", [as: :user, phx_submit: :save, phx_target: assigns[:myself], class: "relative flex-1 px-4 sm:px-6"] %>
+  <div class="divide-y divide-gray-200">
+    <div class="space-y-6 pt-6 pb-5">
       <div class="col-span-6 sm:col-span-3">
         <%= label f, :first_name, class: "block text-sm font-medium leading-5 text-gray-700" %>
         <%= text_input f, :first_name, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
@@ -20,47 +16,33 @@
         <%= text_input f, :email, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
         <%= error_tag f, :email %>
       </div>
-      <%= if !assigns[:user] do %>
-          <div class="col-span-6 sm:col-span-4">
-            <%= label f, :password, class: "block text-sm font-medium leading-5 text-gray-700" %>
-            <%= password_input f, :password, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
-            <%= error_tag f, :password %>
-          </div>
-      <% end %>
-      <div class="col-span-6 sm:col-span-4">
-        <div phx-update="ignore">
-          <%= label f, :team_id, class: "block text-sm font-medium leading-5 text-gray-700" %>
-          <%= live_component(@socket, BordoWeb.Admin.Select, selection: "admin_list_teams", form: f, prompt: "Select a team") %>
-        </div>
-      </div>
     </div>
   </div>
-
-</div>
-<div class="mt-8 border-t border-gray-200 pt-5">
-  <div class="flex justify-end">
+  <%= if !assigns[:user] do %>
+    <div class="col-span-6 sm:col-span-4">
+      <%= label f, :password, class: "block text-sm font-medium leading-5 text-gray-700" %>
+      <%= password_input f, :password, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
+      <%= error_tag f, :password %>
+    </div>
+  <% end %>
+  <div class="col-span-6 sm:col-span-4">
+    <div phx-update="ignore">
+      <%= label f, :team_id, class: "block text-sm font-medium leading-5 text-gray-700" %>
+      <%= live_component(@socket, BordoWeb.Admin.Select, selection: "admin_list_teams", form: f, prompt: "Select a team") %>
+    </div>
+  </div>
+  <div class="flex-shrink-0 px-4 py-4 space-x-4 flex justify-end">
     <span class="inline-flex rounded-md shadow-sm">
-      <%= link "Cancel", to: Routes.admin_live_path(@socket, BordoWeb.Admin.UsersLive.Index), class:
-        "py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700
-        hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue
-        active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out" %>
+      <button type="button"
+        class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+        Cancel
+      </button>
     </span>
-    <span class="ml-3 inline-flex rounded-md shadow-sm">
+    <span class="inline-flex rounded-md shadow-sm">
       <%= submit "Save", phx_disable_with: "Saving...", class: "inline-flex justify-center py-2
         px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white
         bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700
         focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out" %>
     </span>
-
   </div>
-
-  <div class="mt-8">
-    <%= if assigns[:user] do %>
-    <span phx-click="delete" phx-value-user_id=<%=assigns.user.id %> class="inline-flex justify-center py-2
-    px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white
-    bg-red-700 hover:bg-red-800 focus:outline-none focus:border-red-800
-    focus:shadow-outline-red cursor-pointer active:bg-red-700 transition duration-150 ease-in-out"
-      data-confirm="Are you sure, this will remove this user and all associated records?">DELETE</span>
-    <% end %>
-  </div>
-  </form>
+</form>

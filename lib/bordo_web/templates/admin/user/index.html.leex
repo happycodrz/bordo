@@ -14,12 +14,13 @@
           class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           Team
         </th>
-        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
       </tr>
     </thead>
     <tbody class="bg-white">
       <%= for user <- @users do %>
-      <tr>
+      <tr
+        class="hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out cursor-pointer"
+        phx-click="fetch-slideover" phx-value-user_id="<%= user.id %>">
         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
           <div class="flex items-center">
             <div class="flex-shrink-0 h-10 w-10">
@@ -40,10 +41,6 @@
         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
           <%= team_name(user.team) %>
         </td>
-        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-          <span><%= link "Edit", to: Routes.admin_live_path(@socket, BordoWeb.Admin.UsersLive.Edit,
-            user), class: "text-indigo-600 hover:text-indigo-900" %></span>
-        </td>
       </tr>
       <% end %>
     </tbody>
@@ -53,3 +50,8 @@
     <!-- We use less vertical padding on card footers at all sizes than on headers or body sections -->
   </div>
 </div>
+<%= if @show_slideover do %>
+  <%= live_component(@socket, BordoWeb.Components.SlideOver, id: "user-info", title: "User Info") do %>
+    <%= render("user_details.html", user: @user, socket: @socket) %>
+  <% end %>
+<% end %>

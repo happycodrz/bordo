@@ -1,13 +1,14 @@
 defmodule BordoWeb.Admin.UsersLive.Edit do
-  use BordoWeb, :live_view
+  use BordoWeb, :live_component
 
   alias BordoWeb.Admin.UserView
   alias BordoWeb.Router.Helpers, as: Routes
 
   alias Bordo.Users
+  alias Bordo.Users.User
 
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, auth0_loading: false)}
+  def update(assigns, socket) do
+    {:ok, assign(socket, user: assigns.user, changeset: User.changeset(assigns.user, %{}))}
   end
 
   def handle_params(%{"id" => id}, _url, socket) do

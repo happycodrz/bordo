@@ -58,8 +58,8 @@ defmodule BordoWeb.Router do
 
     scope "/users", UsersLive do
       live "/", Index
-      live "/:id/edit", Edit
       live "/new", New
+      live "/:user_id", Index
     end
 
     scope "/teams", TeamsLive do

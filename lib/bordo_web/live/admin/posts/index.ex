@@ -22,6 +22,7 @@ defmodule BordoWeb.Admin.PostsLive.Index do
      )}
   end
 
+  @impl true
   def handle_params(%{"post_id" => post_id} = params, _uri, socket) do
     post = Posts.get_post!(post_id)
     filter_params = Map.drop(params, ~w(post_id))
@@ -44,6 +45,7 @@ defmodule BordoWeb.Admin.PostsLive.Index do
     {:noreply, assign(socket, posts: fetch_posts(params), status: nil)}
   end
 
+  @impl true
   def handle_info({Posts, [:post | _], _}, socket) do
     {:noreply, assign(socket, posts: fetch_posts(%{}))}
   end
@@ -61,6 +63,7 @@ defmodule BordoWeb.Admin.PostsLive.Index do
      )}
   end
 
+  @impl true
   def handle_event("fetch-slideover", %{"post_id" => post_id}, socket) do
     {:noreply,
      socket
