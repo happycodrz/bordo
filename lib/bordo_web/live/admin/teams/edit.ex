@@ -16,7 +16,7 @@ defmodule BordoWeb.Admin.TeamsLive.Edit do
     {:noreply,
      assign(socket, %{
        team: team,
-       brands: Brands.list_brands_for_team(team.id) |> Bordo.Repo.preload([:owner]),
+       brands: Brands.list_brands_for_team(team.id),
        changeset: Teams.change_team(team)
      })}
   end
