@@ -12,6 +12,7 @@ defmodule Bordo.UsersTest do
 
     test "list_users/0 returns all users" do
       user = fixture(:user)
+      user = Users.get_user!(user.id) |> Repo.preload(:team)
       assert Users.list_users() == [user]
     end
 
