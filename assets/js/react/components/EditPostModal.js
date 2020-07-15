@@ -103,8 +103,8 @@ const PostEditorModal = ({ post, show, handleShow }) => {
                         type="datetime-local"
                         id="scheduled_for"
                         name="scheduled_for"
-                        value={moment(postData.scheduled_for).format('YYYY-MM-DDTHH:MM')}
-                        min={moment.utc().format('YYYY-MM-DDTHH:MM')}
+                        value={moment(postData.scheduled_for).format('YYYY-MM-DDThh:mm')}
+                        min={moment.utc().format('YYYY-MM-DDThh:mm')}
                         onChange={e => updateVariant(null, 'scheduled_for', moment(e.target.value).format())}
                     />
                 </Modal.Title>
