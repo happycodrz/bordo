@@ -20,8 +20,8 @@ defmodule Bordo.Brands.Brand do
     |> cast(attrs, [:name, :image_url, :team_id])
     |> foreign_key_constraint(:team_id)
     |> validate_required([:name])
-    |> validate_format(:name, ~r/\A[\w\_\-,\' ]+\z/, message: "must be alphanumeric, no emojis 🙈")
-    |> unique_constraint(:name)
+    |> validate_format(:name, ~r/\w+/, message: "must be alphanumeric, no emojis 🙈")
+    |> unique_constraint(:name, name: "brands_name_team_id_index")
     |> TitleSlug.maybe_generate_slug()
     |> TitleSlug.unique_constraint()
   end
