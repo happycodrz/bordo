@@ -42,7 +42,7 @@ defmodule BordoWeb.BrandNav do
           <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
         </nav>
         <div class="pin-b">
-          <%= live_react_component("Components.SidebarNewPostButton", brandId: @active_brand.id) %>
+          <%= live_react_component("Components.SidebarNewPostButton", %{brandId: @active_brand.id, brandSlug: @active_brand.slug}) %>
         </div>
       </aside>
     </nav>

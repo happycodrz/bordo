@@ -30,7 +30,7 @@ const NewPostWizard = ({ activePage, children }) => {
   )
 }
 
-const NewPostModal = ({ show, handleShow, brandId }) => {
+const NewPostModal = ({ show, handleShow, brandId, brandSlug }) => {
   const [{}, dispatch] = useReducer(reducer, {})
   const [{ title, dateTime, variants }] = useContext(NewPostContext)
 
@@ -39,7 +39,7 @@ const NewPostModal = ({ show, handleShow, brandId }) => {
   const nextPage = () => setActivePage(activePage + 1)
   const prevPage = () => setActivePage(activePage - 1)
 
-  const pages = [<Content brandId={brandId} />, <Variants brandId={brandId} />, <Schedule />]
+  const pages = [<Content brandId={brandId} />, <Variants brandId={brandId} brandSlug={brandSlug} />, <Schedule />]
 
   const handleSchedule = () => {
     const body = {
@@ -137,7 +137,7 @@ const NewPostModal = ({ show, handleShow, brandId }) => {
   )
 }
 
-const NewPost = ({ show, handleShow, brandId }) => {
+const NewPost = ({ show, handleShow, brandId, brandSlug }) => {
   const initialState = {
     title: '',
     description: '',
@@ -222,7 +222,7 @@ const NewPost = ({ show, handleShow, brandId }) => {
 
   return (
     <NewPostContext.Provider value={useReducer(reducer, initialState)}>
-      <NewPostModal show={show} handleShow={handleShow} brandId={brandId} />
+      <NewPostModal show={show} handleShow={handleShow} brandId={brandId} brandSlug={brandSlug} />
     </NewPostContext.Provider>
   )
 }

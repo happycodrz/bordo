@@ -3,7 +3,7 @@ import { Send } from 'react-feather'
 
 import NewPostModal from './NewPostModal'
 
-const SidebarNewPostButton = ({ brandId }) => {
+const SidebarNewPostButton = ({ brandId, brandSlug }) => {
   const [showNewPostModal, setShowNewPostModal] = useState()
   const [key, setKey] = useState(0)
 
@@ -31,6 +31,7 @@ const SidebarNewPostButton = ({ brandId }) => {
         show={showNewPostModal}
         handleShow={handleNewPostModalShow}
         brandId={brandId}
+        brandSlug={brandSlug}
         key={key}
       />
     </div>

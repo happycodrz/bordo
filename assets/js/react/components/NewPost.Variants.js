@@ -25,7 +25,7 @@ const socialIcons = {
   linkedin: <LinkedIn size={20} />,
 }
 
-export const Variants = ({ show, brandId }) => {
+export const Variants = ({ show, brandId, brandSlug }) => {
   const [
     { dateTime, title, description, mediaId, variants },
     dispatch,
@@ -98,7 +98,7 @@ export const Variants = ({ show, brandId }) => {
           {noChannels ? (
             <span>
               This brand has no authorized social channels. Do you need to{' '}
-              <Link to="/settings">add some</Link>?
+              <a href={`/${brandSlug}/settings`}>add some</a>?
             </span>
           ) : null}
           {!channels
