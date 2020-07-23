@@ -5,6 +5,7 @@ defmodule BordoWeb.SettingsLive do
   alias Bordo.Brands.Brand
   alias Bordo.Channels
   alias Bordo.Channels.Channel
+  alias BordoWeb.Helpers.Svg
 
   @impl true
   def render(assigns) do
@@ -169,9 +170,7 @@ defmodule BordoWeb.SettingsLive do
         data: [integration: "facebook"]
       ) do %>
         <div class="flex flex-1 items-center justify-center w-full py-15">
-          <div class="w-20 h-20">
-            <%= card_logo(channel) %>
-          </div>
+          <%= card_logo(channel) %>
         </div>
         <div class="bg-blue-600 block group-hover:bg-blue-500 transition transition-all duration-150 hover:no-underline items-center px-4 py-2 shadow-md text-center text-white w-100">
           Connect →
@@ -188,28 +187,18 @@ defmodule BordoWeb.SettingsLive do
 
   defp card_logo(channel) do
     case channel do
-      "facebook" -> fb_logo()
-      "twitter" -> twitter_logo()
-      "linkedin" -> linkedin_logo()
+      "facebook" ->
+        Svg.social_icon("fb", style: "fill: #1877f2; width: 2.5rem; height: 2.5rem;")
+
+      "twitter" ->
+        Svg.social_icon("twitter",
+          class: "stroke-current",
+          style: "fill: #1da1f2; width: 2.5rem; height: 2.5rem;"
+        )
+
+      "linkedin" ->
+        Svg.social_icon("linkedin", style: "fill: #2867b2; width: 2.5rem; height: 2.5rem;")
     end
-  end
-
-  defp fb_logo do
-    ~e"""
-    <img src="<%= Routes.static_path(BordoWeb.Endpoint, "/images/fb.svg") %>" />
-    """
-  end
-
-  defp twitter_logo do
-    ~e"""
-    <img src="<%= Routes.static_path(BordoWeb.Endpoint, "/images/twitter.svg") %>" />
-    """
-  end
-
-  defp linkedin_logo do
-    ~e"""
-    <img src="<%= Routes.static_path(BordoWeb.Endpoint, "/images/linkedin.svg") %>" />
-    """
   end
 
   defp connection_url(%Channel{network: "twitter"} = channel) do
