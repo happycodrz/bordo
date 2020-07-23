@@ -10,7 +10,8 @@ defmodule Bordo.PostVariants.PostVariant do
     field :external_id, :string
     belongs_to :channel, Bordo.Channels.Channel
     belongs_to :post, Bordo.Posts.Post
-    has_many :post_variant_media, Bordo.PostVariants.PostVariantMedia
+    has_many :post_variant_media, Bordo.PostVariants.PostVariantMedia, on_replace: :delete
+
     many_to_many :media, Bordo.Media.Media, join_through: "post_variant_media"
 
     timestamps()
