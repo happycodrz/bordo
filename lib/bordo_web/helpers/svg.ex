@@ -7,10 +7,10 @@ defmodule BordoWeb.Helpers.Svg do
     classes = Keyword.get(opts, :class, "")
     styles = Keyword.get(opts, :style, "")
 
-    content_tag(:svg, class: classes, style: styles) do
-      tag(:use,
-        "xlink:href": Routes.static_path(BordoWeb.Endpoint, "/images/social_icons.svg#" <> name)
-      )
-    end
+    content_tag(:img, "",
+      src: Routes.static_path(BordoWeb.Endpoint, "/images/#{name}.svg"),
+      class: classes,
+      style: styles
+    )
   end
 end
