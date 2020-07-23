@@ -31,7 +31,7 @@ defmodule Bordo.PostVariants.PostVariant do
   def update_content_changeset(post_variant, attrs) do
     post_variant
     |> cast(attrs, [:status, :post_id, :content])
-    |> cast_assoc(:post_variant_media)
+    |> cast_assoc(:post_variant_media, default: [])
     |> validate_not_published(post_variant)
     |> put_change(:status, "scheduled")
     |> validate_required([:status, :content])
