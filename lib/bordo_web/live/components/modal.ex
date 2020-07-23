@@ -68,7 +68,7 @@ defmodule BordoWeb.Components.Modal do
           x-transition:leave="ease-in duration-200"
           x-transition:leave-start="opacity-100  mb-8 sm:mt-8  sm:scale-100"
           x-transition:leave-end="opacity-0  mb-2 sm:mb-8 sm:mt-2  sm:scale-95"
-          class="relative w-full max-w-lg my-8 mx-auto sm:px-0 shadow-lg">
+          class="relative <%= modal_size(assigns[:size]) %>">
 
           <div @click.away="open = false" class="relative flex flex-col bg-white border border-gray-200 rounded-lg">
             <!-- MODAL HEADER -->
@@ -88,5 +88,18 @@ defmodule BordoWeb.Components.Modal do
       <% end %>
     </div>
     """
+  end
+
+  defp modal_size(size) do
+    case size do
+      "small" ->
+        "w-full max-w-lg my-8 mx-auto sm:px-0 shadow-lg"
+
+      "large" ->
+        "w-full max-w-3xl my-8 mx-auto sm:px-0 shadow-lg"
+
+      _ ->
+        "w-full max-w-lg my-8 mx-auto sm:px-0 shadow-lg"
+    end
   end
 end
