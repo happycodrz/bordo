@@ -51,27 +51,6 @@ const errorHandler = (error, reject) => {
 
 /* --- */
 
-export const getPosts = (brandId, year, month) => {
-  let startDate = new Date(year, month, 1).toISOString()
-  let endDate = new Date(year, month + 1, 0).toISOString()
-
-  return new Promise((resolve, reject) => {
-    fetch(
-      `${API_ROOT_URL}/brands/${brandId}/posts?scheduled_for_after=${startDate}&scheduled_for_before=${endDate}`,
-      GET_OPTIONS,
-    )
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          reject({ message: 'Could not get posts. Try again later.' })
-        }
-      })
-      .then((json) => resolve(json.data))
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
 export const schedulePost = (brandId, body) => {
   return new Promise((resolve, reject) => {
     fetch(`${API_ROOT_URL}/brands/${brandId}/posts`, POST_OPTIONS(body))
@@ -87,26 +66,6 @@ export const schedulePost = (brandId, body) => {
   })
 }
 
-export const updatePost = (brandId, postId, body) => {
-  return new Promise((resolve, reject) => {
-    fetch(
-      `${API_ROOT_URL}/brands/${brandId}/posts/${postId}`,
-      PUT_OPTIONS(body),
-    )
-      .then((res) => res.json())
-      .then((json) => resolve(json.data))
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
-export const deletePost = (brandId, postId) => {
-  return new Promise((resolve, reject) => {
-    fetch(`${API_ROOT_URL}/brands/${brandId}/posts/${postId}`, DELETE_OPTIONS)
-      .then(() => resolve({ message: `Post has been deleted.` }))
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
 export const getChannels = (brandId) => {
   return new Promise((resolve, reject) => {
     fetch(`${API_ROOT_URL}/brands/${brandId}/channels`, GET_OPTIONS)
@@ -118,87 +77,6 @@ export const getChannels = (brandId) => {
         }
       })
       .then((json) => resolve(json.data))
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
-export const getChannelAuth = (brandId, channel) => {
-  return new Promise((resolve, reject) => {
-    fetch(
-      `${API_ROOT_URL}/providers/${channel}/auth?brand_id=${brandId}`,
-      GET_OPTIONS,
-    )
-      .then((res) => res.json())
-      .then((json) => resolve(json))
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
-export const getChannelCallback = (channel, queryString) => {
-  return new Promise((resolve, reject) => {
-    fetch(
-      `${API_ROOT_URL}/providers/${channel}/callback${queryString}`,
-      GET_OPTIONS,
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.error) {
-          reject(json.error)
-        } else {
-          resolve(json.data)
-        }
-      })
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
-export const addNewChannel = (brandId, channel) => {
-  return new Promise((resolve, reject) => {
-    fetch(
-      `${API_ROOT_URL}/brands/${brandId}/channels`,
-      POST_OPTIONS({
-        channel: channel,
-      }),
-    )
-      .then((res) => {
-        if (res.status === 201) {
-          return res.json()
-        } else {
-          reject({
-            message: 'Could not add new social channel. Try again later.',
-          })
-        }
-      })
-      .then((json) => resolve(json.data))
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
-export const updateChannel = (brandId, channelId, data) => {
-  return new Promise((resolve, reject) => {
-    fetch(
-      `${API_ROOT_URL}/brands/${brandId}/channels/${channelId}`,
-      PUT_OPTIONS(data),
-    )
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          reject({ message: 'Could not update channel. Try again later.' })
-        }
-      })
-      .then((json) => resolve(json.data))
-      .catch((err) => errorHandler(err, reject))
-  })
-}
-
-export const deleteChannel = (brandId, channelId) => {
-  return new Promise((resolve, reject) => {
-    fetch(
-      `${API_ROOT_URL}/brands/${brandId}/channels/${channelId}`,
-      DELETE_OPTIONS,
-    )
-      .then(() => resolve({ message: `Channel has been deleted.` }))
       .catch((err) => errorHandler(err, reject))
   })
 }
