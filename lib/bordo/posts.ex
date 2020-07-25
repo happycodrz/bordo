@@ -62,7 +62,9 @@ defmodule Bordo.Posts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id) |> Repo.preload(post_variants: [:channel, :media])
+  def get_post!(id),
+    do:
+      Repo.get!(Post, id) |> Repo.preload(post_variants: [:channel, :post_variant_media, :media])
 
   def get_brand_post!(id, brand_id) do
     query =
