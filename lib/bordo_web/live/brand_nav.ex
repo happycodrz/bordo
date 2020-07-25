@@ -37,7 +37,7 @@ defmodule BordoWeb.BrandNav do
         </header>
         <nav class="nav flex-column nav-secondary h-full">
           <%= nav_link(Routes.live_path(@socket, BordoWeb.LaunchpadLive, @active_brand.slug), @nav_item, "Launchpad", "zap") %>
-          <%= nav_link(Routes.live_path(@socket, BordoWeb.ScheduleLive, @active_brand.slug), @nav_item, "Schedule", "calendar") %>
+          <%= nav_link(Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), @nav_item, "Schedule", "calendar") %>
           <%= nav_link(Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), @nav_item, "Media", "image") %>
           <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
         </nav>

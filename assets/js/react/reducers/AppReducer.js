@@ -63,26 +63,6 @@ const reducer = (state, action) => {
       }
     }
 
-    case 'deletePost': {
-      let posts = state.posts
-      posts = posts.filter((post) => post.id !== action.postId)
-      return {
-        ...state,
-        posts: posts,
-      }
-    }
-
-    case 'updatePost': {
-      let posts = [...state.posts]
-      let postIndex = posts.findIndex((p) => p.id === action.data.id)
-      posts.splice(postIndex, 1, action.data.post)
-
-      return {
-        ...state,
-        posts: posts,
-      }
-    }
-
     case 'setAssets':
       return {
         ...state,

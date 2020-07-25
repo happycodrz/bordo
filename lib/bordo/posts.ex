@@ -62,7 +62,9 @@ defmodule Bordo.Posts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id) |> Repo.preload(post_variants: [:channel, :media])
+  def get_post!(id),
+    do:
+      Repo.get!(Post, id) |> Repo.preload(post_variants: [:channel, :post_variant_media, :media])
 
   def get_brand_post!(id, brand_id) do
     query =
@@ -212,8 +214,8 @@ defmodule Bordo.Posts do
       %Ecto.Changeset{source: %Post{}}
 
   """
-  def change_post(%Post{} = post) do
-    Post.changeset(post, %{})
+  def change_post(%Post{} = post, changes \\ %{}) do
+    Post.update_changeset(post, changes)
   end
 
   defp notify_subscribers({:ok, result}, event) do

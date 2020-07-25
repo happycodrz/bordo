@@ -30,7 +30,6 @@
     "phoenix_live_react": "file:../deps/phoenix_live_react",
     "phoenix_live_view": "file:../deps/phoenix_live_view",
     "react": "^16.13.1",
-    "react-beautiful-dnd": "^13.0.0",
     "react-bem-helper": "^1.4.1",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-contenteditable": "^3.3.4",

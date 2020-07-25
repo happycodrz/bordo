@@ -131,8 +131,9 @@ defmodule BordoWeb.Router do
 
     scope "/:brand_slug" do
       live "/launchpad", LaunchpadLive
-      live "/schedule", ScheduleLive
       live "/media", MediaLive
+      live "/schedule", CalendarLive
+      live "/schedule/:post_id", CalendarLive
       live "/settings", SettingsLive
       live "/team-settings", TeamSettingsLive
     end

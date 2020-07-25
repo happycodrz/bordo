@@ -1,0 +1,72 @@
+<div id="<%= @id %>" style="min-height: 250px;"><!-- NOTE THE THE COMPONENT NEEDS TO BE TRACKED WITH AN ID -->
+  <div id="edit-post-handler">
+    <%= f = form_for @changeset, "#", [phx_submit: :save, phx_target: "#edit-post-handler"] %>
+      <div class="mb-4">
+        <%= label f, :title, class: "block text-sm font-medium leading-5 text-gray-900" %>
+        <div class="relative rounded-md shadow-sm">
+          <%= text_input f, :title, class: "form-input block w-full sm:text-sm sm:leading-5 transition ease-in-out duration-150" %>
+        </div>
+        <%= error_tag f, :title %>
+    </div>
+    <div class="grid grid-cols-6 gap-6 mb-4">
+      <div class="col-span-6">
+        <%= label f, :scheduled_for, class: "block text-sm font-medium leading-5 text-gray-700" %>
+        <%= datetime_select f, :scheduled_for, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
+        <%= error_tag f, :scheduled_for %>
+      </div>
+    </div>
+
+    <%= inputs_for f, :post_variants, fn pv -> %>
+      <header class="w-full mb-2">
+        <h3 class="h5 mb-0">
+          <%= String.capitalize(pv.data.channel.network) %> <%=variant_status_badge(pv.data) %>
+        </h3>
+      </header>
+      <div class="flex h-48 mb-4">
+        <div class="w-1/2">
+          <%= inputs_for pv, :post_variant_media, fn pv_media -> %>
+            <%= media_selector(pv_media, pv.data.id) %>
+            <%= hidden_input pv_media, :media_id %>
+          <% end %>
+        </div>
+        <div class="w-1/2 mx-2">
+          <%# <%= label f, :content, class: "block text-sm font-medium leading-5 text-gray-900" %>
+          <div class="relative rounded-md shadow-sm h-full">
+            <%= textarea pv, :content, placeholder: "content", class: "form-input block w-full h-full sm:text-sm sm:leading-5 transition ease-in-out duration-150 resize-none focus:outline-none" %>
+          </div>
+          <%= error_tag f, :content %>
+        </div>
+        <hr/>
+      </div>
+    <% end %>
+<div class="flex justify-between">
+  <button type="button" class="inline-flex bg-red-600 justify-between items-center w-auto rounded-md border border-gray-300 px-4 py-2 text-white leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5" phx-click="delete" phx-target="#edit-post-handler">
+    <%= feather_icon("trash", "mr-2") %>
+    Delete Post
+  </button>
+  <button type="submit" class="inline-flex justify-center w-auto rounded-md border border-gray-300 px-4 py-2 btn-success text-white leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+    Schedule
+  </button>
+</div>
+</form>
+</div>
+<%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: "Change media", size: "large" do %>
+  <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <%= for media <- Bordo.Media.list_media(brand_id: @active_brand.id) do %>
+      <li class="col-span-1 bg-white rounded-lg shadow" phx-value-media_id="<%= media.id %>" phx-target="#edit-post-handler" phx-click="media-selected" >
+        <div class="bdo-mediaAsset bdo-mediaAsset--image card">
+          <div class="bdo-mediaAsset__header">
+            <div class="bdo-mediaAsset__iconBar">
+              <%= feather_icon("image", "w-6 h-6 text-white") %>
+            </div>
+            <img class="card-img-top bdo-mediaAsset__thumbnail" src="<%= media.thumbnail_url %>"></div>
+          <div class="bdo-mediaAsset__body card-body">
+            <div class="bdo-mediaAsset__date card-subtitle h6">July 1, 2020</div>
+            <div class="bdo-mediaAsset__title card-title h5"><%= media.title %></div>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+</div>
