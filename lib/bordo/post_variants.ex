@@ -7,6 +7,7 @@ defmodule Bordo.PostVariants do
   alias Bordo.Repo
 
   alias Bordo.PostVariants.PostVariant
+  alias Bordo.PostVariants.PostVariantMedia
 
   @doc """
   Gets a single post_variant.
@@ -18,6 +19,7 @@ defmodule Bordo.PostVariants do
       ** (Ecto.NoResultsError)
   """
   def get_post_variant!(id), do: Repo.get!(PostVariant, id) |> Repo.preload(:media)
+  def get_post_variant_media!(id), do: Repo.get!(PostVariantMedia, id)
 
   @doc """
   Updates a post_variant.
@@ -52,5 +54,9 @@ defmodule Bordo.PostVariants do
   """
   def delete_post_variant(%PostVariant{} = post_variant) do
     Repo.delete(post_variant)
+  end
+
+  def delete_post_variant_media(%PostVariantMedia{} = post_variant_media) do
+    Repo.delete(post_variant_media)
   end
 end
