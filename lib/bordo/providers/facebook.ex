@@ -1,8 +1,9 @@
 defmodule Bordo.Providers.Facebook do
   require Logger
+
+  alias Bordo.ContentParser
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
-  alias Bordo.ContentParser
 
   def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
     case create_post(channel, content, media) do
