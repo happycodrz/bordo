@@ -26,7 +26,7 @@
         <div class="w-1/2">
           <%= inputs_for pv, :post_variant_media, fn pv_media -> %>
             <%= media_selector(pv_media, pv.data.id) %>
-            <%= text_input pv_media, :media_id %>
+            <%= hidden_input pv_media, :media_id %>
           <% end %>
         </div>
         <div class="w-1/2 mx-2">
