@@ -29,8 +29,23 @@ defmodule Bordo.PostVariants.PostVariant do
   Used to update the post-variant before it is published. Published posts cannot be changed, except to update the status.
   """
   def update_content_changeset(post_variant, attrs) do
+    # Used to drop blank media_id, which comes from editing posts
+    # This can probably be done a lot better
+    new_attrs =
+      if Map.get(attrs, "post_variant_media") do
+        pv_attrs =
+          attrs
+          |> Map.get("post_variant_media")
+          |> Enum.filter(fn {_id, pvm} -> pvm["media_id"] != "" end)
+          |> Enum.into(%{})
+
+        attrs |> Map.replace!("post_variant_media", pv_attrs)
+      else
+        attrs
+      end
+
     post_variant
-    |> cast(attrs, [:status, :post_id, :content])
+    |> cast(new_attrs, [:status, :post_id, :content])
     |> cast_assoc(:post_variant_media, default: [])
     |> validate_not_published(post_variant)
     |> put_change(:status, "scheduled")
