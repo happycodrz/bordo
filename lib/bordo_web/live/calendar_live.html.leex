@@ -1,0 +1,35 @@
+<div class="m-8">
+  <section class="bdo-scheduleCalendar">
+    <header class="flex items-center justify-between">
+      <h1>
+        <strong><%= Timex.format!(@current_date, "%B", :strftime) %></strong>
+        <%= Timex.format!(@current_date, "%Y", :strftime) %>
+      </h1>
+      <div>
+        <button type="button" class="btn btn-link" phx-click="prev-month">
+          <%= feather_icon("chevron-left", "w-6") %>
+        </button>
+        <button type="button" class="btn btn-link" phx-click="next-month">
+          <%= feather_icon("chevron-right", "w-6") %>
+        </button>
+      </div>
+    </header>
+    <div class="calendar__header">
+      <%= for day_name <- @day_names do %>
+        <div><%= day_name %></div>
+      <% end %>
+    </div>
+    <div class="calendar__body">
+      <%= for week <- @week_rows do %>
+        <%= for day <- week do %>
+          <%= live_component @socket, BordoWeb.Components.CalendarDay, day: day, current_date: @current_date, posts: @posts[day], id: day %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+  <%= if @show_slideover do %>
+    <%= live_component(@socket, BordoWeb.Components.SlideOver, id: "edit-post", title: "Post Info", with_overlay: true, size: "large") do %>
+      <%= live_component(@socket, BordoWeb.EditPost, post: @post, id: "edit-post-inner", changeset: @changeset, active_brand: @active_brand) %>
+    <% end %>
+  <% end %>
+</div>
