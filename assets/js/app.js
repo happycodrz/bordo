@@ -65,13 +65,11 @@ window.liveSocket = liveSocket
 
 import SidebarNewPostButton from './react/components/SidebarNewPostButton'
 import Media from './react/components/Media'
-import ScheduleCalendar from './react/components/ScheduleCalendar'
 import Settings from './react/components/Settings'
 
 window.Components = {
   SidebarNewPostButton,
   Media,
-  ScheduleCalendar,
   Settings,
 }
 
