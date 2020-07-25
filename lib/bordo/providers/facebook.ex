@@ -2,6 +2,7 @@ defmodule Bordo.Providers.Facebook do
   require Logger
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
+  alias Bordo.ContentParser
 
   def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
     case create_post(channel, content, media) do
@@ -20,6 +21,8 @@ defmodule Bordo.Providers.Facebook do
     if Application.get_env(:bordo, :facebook_live) do
       {:ok, page_info} = Facebook.page(channel.resource_id, channel.token, ["access_token"])
 
+      parsed_content = ContentParser.parse(:facebook, content)
+
       if length(media) > 0 do
         media = Enum.at(media, 0)
         file_name = media.url |> String.split("/") |> Enum.at(-1)
@@ -30,14 +33,14 @@ defmodule Bordo.Providers.Facebook do
           :photo,
           channel.resource_id,
           "/tmp/" <> file_name,
-          [message: content],
+          parsed_content,
           page_info["access_token"]
         )
       else
         Facebook.publish(
           :feed,
           channel.resource_id,
-          [message: content],
+          parsed_content,
           page_info["access_token"]
         )
       end
