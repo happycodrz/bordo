@@ -30,7 +30,7 @@ defmodule BordoWeb.LaunchpadLive do
             <div class="bg-primary text-light card-footer">Let's go!</div>
           </div>
 
-          <%= link to: Routes.live_path(@socket, BordoWeb.ScheduleLive, @active_brand.slug), class: "text-dark bdo-launchpadCard card hover:no-underline transition duration-300 ease-in-out transform hover:- hover:scale-110 hover:shadow-xl" do %>
+          <%= link to: Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), class: "text-dark bdo-launchpadCard card hover:no-underline transition duration-300 ease-in-out transform hover:- hover:scale-110 hover:shadow-xl" do %>
             <div class="card-body">
               <div class="mb-5 bg-danger rounded-circle d-flex align-items-center justify-content-center mx-auto text-white"
                 style="width: 75px; height: 75px; margin-top: -24%;"><%= feather_icon("calendar", "w-48") %></div>
