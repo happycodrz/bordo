@@ -85,6 +85,81 @@ defmodule Linkedin do
     |> Jason.decode!()
   end
 
+  @doc """
+  Create a text-only share
+  """
+  def share(token, owner, content) do
+    {:ok, body} = build_share_body(owner, content)
+
+    HTTPoison.post!(
+      "https://api.linkedin.com/v2/shares",
+      body,
+      [{"X-Restli-Protocol-Version", "2.0.0"}, {"Authorization", "Bearer #{token}"}]
+    )
+    |> Map.get(:body)
+    |> Jason.decode()
+  end
+
+  @doc """
+  Create a media share
+  """
+  def share(token, owner, content, media) do
+    li_asset = upload_media(token, owner, media)
+    {:ok, body} = build_share_body(owner, content, li_asset)
+
+    HTTPoison.post!(
+      "https://api.linkedin.com/v2/shares",
+      body,
+      [
+        {"X-Restli-Protocol-Version", "2.0.0"},
+        {"Authorization", "Bearer #{token}"}
+      ]
+    )
+    |> Map.get(:body)
+    |> Jason.decode()
+  end
+
+  @doc """
+  Upload media
+
+  iex> Linkedin.upload_media("<Access Token>", "<Owner Urn>", "%Media{}")
+  "urn:li:digitalmediaAsset:C4E22AQH-jrNeFvFiYg"
+  """
+  def upload_media(token, owner, media) do
+    file_name = media.url |> String.split("/") |> Enum.at(-1)
+    %HTTPoison.Response{body: body} = HTTPoison.get!(media.url)
+    File.write!("/tmp/" <> file_name, body)
+    image = File.read!("/tmp/" <> file_name)
+
+    {:ok,
+     %{
+       "value" => %{
+         "asset" => li_asset,
+         "uploadMechanism" => %{
+           "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest" => %{
+             "uploadUrl" => upload_url
+           }
+         }
+       }
+     }} = request_upload(token, owner)
+
+    resp =
+      HTTPoison.post(
+        upload_url,
+        image,
+        [{"X-Restli-Protocol-Version", "2.0.0"}, {"Authorization", "Bearer #{token}"}],
+        recv_timeout: 30_000
+      )
+
+    case resp do
+      {:ok, _body} ->
+        li_asset
+
+      error ->
+        error
+    end
+  end
+
   defp get_token(uri) do
     uri |> URI.to_string() |> HTTPoison.post("", [{"Content-Type", "x-www-form-urlencoded"}])
   end
@@ -93,5 +168,67 @@ defmodule Linkedin do
 
   def process_url(url) do
     @endpoint <> url
+  end
+
+  def request_upload(token, owner) do
+    {:ok, body} =
+      Jason.encode(%{
+        registerUploadRequest: %{
+          owner: owner,
+          recipes: [
+            "urn:li:digitalmediaRecipe:feedshare-image"
+          ],
+          serviceRelationships: [
+            %{
+              identifier: "urn:li:userGeneratedContent",
+              relationshipType: "OWNER"
+            }
+          ]
+        }
+      })
+
+    HTTPoison.post!("https://api.linkedin.com/v2/assets?action=registerUpload", body, [
+      {"X-Restli-Protocol-Version", "2.0.0"},
+      {"Authorization", "Bearer #{token}"},
+      {"Content-Type", "application/json"}
+    ])
+    |> Map.get(:body)
+    |> Jason.decode()
+  end
+
+  defp build_share_body(urn, content) do
+    Jason.encode(%{
+      "distribution" => %{
+        "linkedInDistributionTarget" => %{}
+      },
+      "owner" => urn,
+      "subject" => content,
+      "text" => %{
+        "text" => content
+      }
+    })
+  end
+
+  defp build_share_body(urn, content, li_asset) do
+    Jason.encode(%{
+      "content" => %{
+        "contentEntities" => [
+          %{
+            "entity" => li_asset
+          }
+        ],
+        "description" => "content description",
+        "title" => "Test Share with Content",
+        "shareMediaCategory" => "IMAGE"
+      },
+      "distribution" => %{
+        "linkedInDistributionTarget" => %{}
+      },
+      "owner" => urn,
+      "subject" => content,
+      "text" => %{
+        "text" => content
+      }
+    })
   end
 end
