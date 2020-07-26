@@ -84,5 +84,6 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :bordo,
+  linkedin_live: false,
   twitter_live: false,
   facebook_live: false
