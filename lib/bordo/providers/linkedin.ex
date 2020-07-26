@@ -19,45 +19,17 @@ defmodule Bordo.Providers.Linkedin do
   end
 
   def create_share(channel, content, media) do
-    owner = "urn:li:organization:" <> channel.resource_id
-    {:ok, body} = build_body(content, media, owner)
-
     if Application.get_env(:bordo, :linkedin_live) do
-      HTTPoison.post!(
-        "https://api.linkedin.com/v2/shares",
-        body,
-        [{"X-Restli-Protocol-Version", "2.0.0"}, {"Authorization", "Bearer #{channel.token}"}]
-      )
-      |> Map.get(:body)
-      |> Jason.decode()
+      owner = "urn:li:organization:" <> channel.resource_id
+
+      if Enum.any?(media) do
+        media = Enum.at(media, 0)
+        Linkedin.share(channel.token, owner, content, media)
+      else
+        Linkedin.share(channel.token, owner, content)
+      end
     else
       Logger.info("LINKEDIN SHARE CREATED")
     end
-  end
-
-  defp build_body(content, media, urn) do
-    Jason.encode(%{
-      "content" => %{
-        "contentEntities" =>
-          Enum.map(media, fn media ->
-            %{
-              "entityLocation" => media.url,
-              "thumbnails" => [
-                %{
-                  "resolvedUrl" => media.url
-                }
-              ]
-            }
-          end)
-      },
-      "distribution" => %{
-        "linkedInDistributionTarget" => %{}
-      },
-      "owner" => urn,
-      "subject" => content,
-      "text" => %{
-        "text" => content
-      }
-    })
   end
 end
