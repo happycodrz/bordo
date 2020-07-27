@@ -34,7 +34,10 @@ defmodule BordoWeb.Components.CalendarDay do
 
   defp calendar_day_post(socket, post) do
     time = Timex.to_datetime(post.scheduled_for, "America/Chicago")
-    scheduled_for = Timex.format!(time, "%H:%m", :strftime)
+
+    scheduled_for =
+      Timex.format!(time, "%H:%M", :strftime) <>
+        String.downcase(Timex.format!(time, "%p", :strftime))
 
     networks = post.post_variants |> Enum.map(& &1.channel.network)
     assigns = %{socket: socket}
