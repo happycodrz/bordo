@@ -7,7 +7,15 @@ defmodule BordoWeb.EditPost do
   alias Ecto.Changeset
 
   def handle_event("save", %{"post" => post_params}, socket) do
-    case Posts.update_and_schedule_post(socket.assigns.post, post_params) do
+    utc_scheduled_for =
+      post_params
+      |> Map.get("scheduled_for")
+      |> Timex.to_datetime("America/Chicago")
+      |> Timex.Timezone.convert("UTC")
+
+    params = post_params |> Map.replace!("scheduled_for", utc_scheduled_for)
+
+    case Posts.update_and_schedule_post(socket.assigns.post, params) do
       {:ok, _post} ->
         {:noreply,
          socket
