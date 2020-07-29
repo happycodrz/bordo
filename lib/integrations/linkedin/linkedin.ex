@@ -1,5 +1,6 @@
 defmodule Linkedin do
   use HTTPoison.Base
+  alias Bordo.ContentParser
 
   @endpoint "https://api.linkedin.com/"
 
@@ -97,6 +98,7 @@ defmodule Linkedin do
       [{"X-Restli-Protocol-Version", "2.0.0"}, {"Authorization", "Bearer #{token}"}]
     )
     |> Map.get(:body)
+    |> IO.inspect()
     |> Jason.decode()
   end
 
@@ -197,16 +199,38 @@ defmodule Linkedin do
   end
 
   defp build_share_body(urn, content) do
-    Jason.encode(%{
-      "distribution" => %{
-        "linkedInDistributionTarget" => %{}
-      },
-      "owner" => urn,
-      "subject" => content,
-      "text" => %{
-        "text" => content
-      }
-    })
+    parsed_content = ContentParser.parse(:linkedin, content)
+
+    if is_nil(parsed_content[:link]) do
+      Jason.encode(%{
+        "distribution" => %{
+          "linkedInDistributionTarget" => %{}
+        },
+        "owner" => urn,
+        "subject" => content,
+        "text" => %{
+          "text" => content
+        }
+      })
+    else
+      Jason.encode(%{
+        "distribution" => %{
+          "linkedInDistributionTarget" => %{}
+        },
+        "content" => %{
+          "contentEntities" => [
+            %{
+              "entityLocation" => parsed_content[:link]
+            }
+          ]
+        },
+        "owner" => urn,
+        "subject" => parsed_content[:message],
+        "text" => %{
+          "text" => parsed_content[:message]
+        }
+      })
+    end
   end
 
   defp build_share_body(urn, content, li_asset) do
