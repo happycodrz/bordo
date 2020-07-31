@@ -22,6 +22,7 @@ import { LiveSocket } from 'phoenix_live_view'
 import LiveReact, { initLiveReact } from 'phoenix_live_react'
 import { InitModal } from './hooks/modal'
 import { initSlideOver } from './hooks/slide_over'
+import { Toast } from './hooks/toast'
 
 const feather = require('feather-icons')
 
@@ -33,7 +34,7 @@ Hooks.FeatherIcon = {
   },
 }
 
-Hooks = { ...Hooks, InitModal, initSlideOver }
+Hooks = { ...Hooks, InitModal, initSlideOver, Toast }
 
 import Choices from 'choices.js'
 let csrfToken = document
