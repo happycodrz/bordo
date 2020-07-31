@@ -92,7 +92,7 @@ defmodule BordoWeb.SettingsLive do
     channel = Channels.get_channel!(channel_id)
     Channels.delete_channel(channel)
     channels = Channels.list_channels(brand_id: socket.assigns.active_brand.id)
-    {:noreply, assign(socket, channels: channels)}
+    {:noreply, socket |> put_flash(:success, "Channel removed") |> assign(channels: channels)}
   end
 
   @doc """

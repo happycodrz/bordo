@@ -46,6 +46,7 @@ defmodule BordoWeb.Providers.TwitterController do
       brand = Brands.get_brand!(brand_id)
 
       conn
+      |> put_flash(:success, ["Nice!", "Twitter connected"])
       |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
     else
       {:error, 401} ->
