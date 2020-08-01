@@ -124,6 +124,8 @@ defmodule BordoWeb.Router do
 
     scope "/providers" do
       get "/facebook/auth", Providers.FacebookController, :auth
+      get "/google/auth", Providers.GoogleController, :auth
+      get "/google/callback", Providers.GoogleController, :callback
       get "/twitter/auth", Providers.TwitterController, :auth
       get "/twitter/callback", Providers.TwitterController, :callback
       get "/linkedin/auth", Providers.LinkedinController, :auth

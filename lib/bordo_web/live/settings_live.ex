@@ -160,6 +160,9 @@ defmodule BordoWeb.SettingsLive do
 
         "linkedin" ->
           Routes.linkedin_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
+
+          # "google" ->
+          #   Routes.google_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
       end
 
     ~e"""
@@ -180,7 +183,7 @@ defmodule BordoWeb.SettingsLive do
   end
 
   defp remaining_channels(channels) do
-    networks = ["twitter", "facebook", "linkedin"]
+    networks = Channel.supported_networks()
     channel_networks = Enum.map(channels, &Map.get(&1, :network))
     Enum.reject(networks, fn network -> Enum.member?(channel_networks, network) end)
   end
@@ -198,6 +201,9 @@ defmodule BordoWeb.SettingsLive do
 
       "linkedin" ->
         Svg.social_icon("linkedin", style: "fill: #2867b2; width: 2.5rem; height: 2.5rem;")
+
+      "google" ->
+        "na"
     end
   end
 
@@ -211,6 +217,10 @@ defmodule BordoWeb.SettingsLive do
 
   defp connection_url(%Channel{network: "linkedin"} = channel) do
     channel.image_url
+  end
+
+  defp connection_url(%Channel{network: "google"} = channel) do
+    ""
   end
 
   defp card_resource_info(%Channel{network: "twitter"} = channel) do
@@ -237,6 +247,11 @@ defmodule BordoWeb.SettingsLive do
     <div class="text-gray-800">
       <%= channel.resource_info["localizedName"] %>
     </div>
+    """
+  end
+
+  defp card_resource_info(%Channel{network: "google"} = channel) do
+    ~e"""
     """
   end
 end
