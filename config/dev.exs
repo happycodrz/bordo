@@ -34,9 +34,9 @@ config :bordo, BordoWeb.Endpoint,
 
 # Disable sending real integration messages in development
 config :bordo,
-  twitter_live: false,
+  linkedin_live: false,
   facebook_live: false,
-  linkedin_live: false
+  twitter_live: false
 
 # ## SSL Support
 #
@@ -82,8 +82,3 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
-
-config :bordo,
-  linkedin_live: false,
-  twitter_live: false,
-  facebook_live: false
