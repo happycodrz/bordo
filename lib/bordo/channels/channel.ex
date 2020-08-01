@@ -18,6 +18,10 @@ defmodule Bordo.Channels.Channel do
     timestamps()
   end
 
+  def supported_networks do
+    @supported_networks
+  end
+
   @doc false
   def changeset(channel, attrs) do
     channel
