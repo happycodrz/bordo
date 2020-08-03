@@ -74,6 +74,10 @@ config :auth0_ex,
   mgmt_client_secret: System.get_env("AUTH0_MGMT_CLIENT_SECRET"),
   http_opts: []
 
+config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
+
+config :bordo, :stripe, standard_price_id: "price_1H1vEbIa5ro1VoLoNPDHs0FO"
+
 ####
 # Integration configuration
 ####

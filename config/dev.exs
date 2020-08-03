@@ -73,6 +73,7 @@ config :bordo, BordoWeb.Endpoint,
     ]
   ]
 
+config :bordo, :stripe, standard_price_id: "price_1H1vGZIa5ro1VoLo1PvIb6t3"
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
