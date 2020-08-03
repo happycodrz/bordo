@@ -1,27 +1,13 @@
 defmodule Bordo.ContentParser do
-  @url_regex ~r/(https?+\:\/\/)?([\w\d-]+\.)*[\w-]+[\.\:]\w+([\/\.\?\=\&\#]?[\w-]+)*\/?/
-
   def parse(:facebook, content) do
-    links =
-      @url_regex
-      |> Regex.scan(content)
-
-    if Enum.any?(links) do
-      [message: content, link: links |> Enum.at(0) |> Enum.at(0)]
-    else
-      [message: content]
-    end
+    [message: content, links: parse_links(content)]
   end
 
   def parse(:linkedin, content) do
-    links =
-      @url_regex
-      |> Regex.scan(content)
+    [message: content, links: parse_links(content)]
+  end
 
-    if Enum.any?(links) do
-      [message: content, link: links |> Enum.at(0) |> Enum.at(0)]
-    else
-      [message: content]
-    end
+  defp parse_links(content) do
+    for s <- String.split(content), u = URI.parse(s), u.host != nil, do: s
   end
 end

@@ -34,14 +34,14 @@ defmodule Bordo.Providers.Facebook do
           :photo,
           channel.resource_id,
           "/tmp/" <> file_name,
-          parsed_content,
+          [message: parsed_content[:message], link: parsed_content[:links] |> List.first()],
           page_info["access_token"]
         )
       else
         Facebook.publish(
           :feed,
           channel.resource_id,
-          parsed_content,
+          [message: parsed_content[:message], link: parsed_content[:links] |> List.first()],
           page_info["access_token"]
         )
       end

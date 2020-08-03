@@ -201,7 +201,7 @@ defmodule Linkedin do
   defp build_share_body(urn, content) do
     parsed_content = ContentParser.parse(:linkedin, content)
 
-    if is_nil(parsed_content[:link]) do
+    if Enum.empty?(parsed_content[:links]) do
       Jason.encode(%{
         "distribution" => %{
           "linkedInDistributionTarget" => %{}
@@ -220,7 +220,7 @@ defmodule Linkedin do
         "content" => %{
           "contentEntities" => [
             %{
-              "entityLocation" => parsed_content[:link]
+              "entityLocation" => parsed_content[:links] |> List.first()
             }
           ]
         },
