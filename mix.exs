@@ -61,9 +61,10 @@ defmodule Bordo.MixProject do
       {:phoenix_pubsub, "~> 2.0"},
       {:plug_cowboy, "~> 2.1"},
       {:postgrex, ">= 0.0.0"},
+      {:slack, "~> 0.23.2"},
+      {:stripity_stripe, "~> 2.0"},
       {:telemetry_metrics, "~> 0.4"},
-      {:timex, "~> 3.6.1"},
-      {:slack, "~> 0.23.2"}
+      {:timex, "~> 3.6.1"}
     ]
   end
 
