@@ -28,7 +28,7 @@ defmodule Bordo.Users do
 
   """
   def list_users do
-    User |> order_by(desc: :inserted_at) |> Repo.all() |> Bordo.Repo.preload(:team)
+    User |> order_by(desc: :inserted_at) |> Repo.all() |> Repo.preload(:team)
   end
 
   @doc """
