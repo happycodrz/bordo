@@ -6,6 +6,7 @@ defmodule Bordo.Teams.Team do
     field :name, :string
     field :last_paid_at, :naive_datetime
     field :stripe_customer_id, :string
+    field :stripe_subscription_id, :string
 
     field :timezone, :string, virtual: true, default: "America/Chicago"
     belongs_to :owner, Bordo.Users.User
@@ -17,7 +18,13 @@ defmodule Bordo.Teams.Team do
   @doc false
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:name, :owner_id, :stripe_customer_id, :last_paid_at])
+    |> cast(attrs, [
+      :name,
+      :owner_id,
+      :stripe_customer_id,
+      :stripe_subscription_id,
+      :last_paid_at
+    ])
     |> validate_required([:name, :owner_id])
   end
 end
