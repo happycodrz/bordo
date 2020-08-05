@@ -139,6 +139,13 @@ defmodule BordoWeb.SettingsLive do
           </div>
           <div class="text-center">
             <%= card_resource_info(channel) %>
+            <%= if channel.network == "facebook" do %>
+              <%= link(
+                "Reauthorize Facebook",
+                to: Routes.facebook_path(BordoWeb.Endpoint, :reauth, %{"brand_id" => channel.brand_id}),
+                data: [integration: "facebook"]
+              ) %>
+            <% end %>
           </div>
         </div>
       </div>
