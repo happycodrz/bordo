@@ -6,8 +6,11 @@ defmodule Bordo.Channels do
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
+  alias Bordo.Brands
   alias Bordo.Brands.Brand
   alias Bordo.Channels.Channel
+
+  alias Stripe.Subscription
 
   @doc """
   Returns the list of channels.
@@ -73,6 +76,7 @@ defmodule Bordo.Channels do
     %Channel{}
     |> Channel.changeset(attrs)
     |> Repo.insert()
+    |> increment_stripe_subscription()
   end
 
   @doc """
@@ -112,6 +116,7 @@ defmodule Bordo.Channels do
     # We need to write a better query and test thoroughly
     # Posts.delete_posts_without_variants(channel.brand_id)
     Repo.delete(channel)
+    |> decrement_stripe_subscription()
   end
 
   @doc """
@@ -125,5 +130,25 @@ defmodule Bordo.Channels do
   """
   def change_channel(%Channel{} = channel) do
     Channel.changeset(channel, %{})
+  end
+
+  def increment_stripe_subscription({:error, changeset}), do: {:error, changeset}
+
+  def increment_stripe_subscription({:ok, channel}) do
+    brand = Brands.get_brand!(channel.brand_id) |> Repo.preload([:team])
+    {:ok, subscription} = Subscription.retrieve(brand.team.stripe_subscription_id)
+    Subscription.update(brand.team.stripe_subscription_id, %{quantity: subscription.quantity + 1})
+
+    {:ok, channel}
+  end
+
+  def decrement_stripe_subscription({:error, channel}), do: {:error, channel}
+
+  def decrement_stripe_subscription({:ok, channel}) do
+    brand = Brands.get_brand!(channel.brand_id) |> Repo.preload([:team])
+    {:ok, subscription} = Subscription.retrieve(brand.team.stripe_subscription_id)
+    Subscription.update(brand.team.stripe_subscription_id, %{quantity: subscription.quantity - 1})
+
+    {:ok, channel}
   end
 end
