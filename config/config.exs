@@ -76,7 +76,7 @@ config :auth0_ex,
 
 config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
 
-config :bordo, :stripe, standard_price_id: "price_1H1vEbIa5ro1VoLoNPDHs0FO"
+config :bordo, :stripe, standard_price_id: "price_1HCuUsIa5ro1VoLo8QDydMJL"
 
 ####
 # Integration configuration
