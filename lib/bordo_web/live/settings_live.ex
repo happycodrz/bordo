@@ -48,17 +48,17 @@ defmodule BordoWeb.SettingsLive do
           </div>
         <% end %>
         <%= if Enum.any?(remaining_channels(@channels)) do %>
-          <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600">Connect a channel</h3>
-          <div class="mb-4 grid grid-cols-5 gap-6">
+          <h3 class="border-b border-gray-100 mb-8 mt-14 pb-2 text-gray-800">Connect a channel</h3>
+          <ul class="grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <%= for channel <- remaining_channels(@channels) do %>
               <%= add_channel_card(channel, @active_brand.id) %>
             <% end %>
-          </div>
+          </ul>
         <% end %>
       </div>
       <div class="p-9">
         <div class="bg-white rounded-lg shadow p-8">
-          <h3 class="mb-4 grid grid-cols-5 gap-4">Danger Zone</h3>
+          <h3 class="mb-4 grid grid-cols-4 gap-4">Danger Zone</h3>
           <p>Deleting a brand is irreversable! Bordo will remove everything associated with the brand if removed.</p>
           <button phx-click="delete-brand" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
         </div>
@@ -173,19 +173,26 @@ defmodule BordoWeb.SettingsLive do
       end
 
     ~e"""
-      <%= link(
-        to: link,
-        class:
-          "group hover:shadow-lg transition transition-all duration-150 bg-white flex flex-col overflow-hidden rounded shadow-md",
-        data: [integration: "facebook"]
-      ) do %>
-        <div class="flex flex-1 items-center justify-center w-full py-15">
-          <%= card_logo(channel) %>
+    <li class="col-span-1 flex shadow-sm rounded-md">
+      <div class="flex-1 flex items-center justify-between border border-gray-100 bg-white rounded-md truncate">
+        <div class="flex-1 flex items-center content-center px-4 py-3 text-sm leading-5 truncate">
+          <div class="mr-3">
+            <%= card_logo(channel) %>
+          </div>
+          <h3 class="text-gray-900 font-medium text-base"><%= String.capitalize(channel) %></h3>
         </div>
-        <div class="bg-blue-600 block group-hover:bg-blue-500 transition transition-all duration-150 hover:no-underline items-center px-4 py-2 shadow-md text-center text-white w-100">
-          Connect →
-        </div>
-      <% end %>
+        <div class="flex-shrink-0 pr-3">
+          <span class="inline-flex rounded-md shadow-sm">
+          <%= link(
+            to: link,
+            class:
+              "inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150"
+          ) do %>
+            <%= feather_icon("plus") %>
+          <% end %>
+        </span>
+      </div>
+    </li>
     """
   end
 
