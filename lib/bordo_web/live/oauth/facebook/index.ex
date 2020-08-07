@@ -15,10 +15,13 @@ defmodule BordoWeb.Oauth.FacebookLive.Index do
         <p class="mb-5 text-gray-500 text-lg tracking-wide">Select the Facebook profile or organization you want to post as:</p>
         <div class="gap-4 grid grid-cols-2">
           <%= for org <- @orgs do %>
-            <a href="#" phx-click="org-selected" phx-value-org_id="<%= org["id"] %>" class="block duration-150 hover:shadow-md hover:text-gray-900 p-8 rounded-lg shadow text-gray-600 text-xl transition transition-all">
-              <%= org["name"] %>
+            <a href="#" phx-click="org-selected" phx-value-org_id="<%= org["id"] %>">
+              <div class="flex items-center block duration-150 hover:shadow-md hover:text-gray-900 p-2 rounded-lg shadow text-gray-600 text-xl transition transition-all cursor-pointer">
+                <img src="<%= org["image"]["url"] %>" width=100 height=100 class="mr-4" />
+                <%= org["name"] %>
+              </div>
             </a>
-          <% end %>
+            <% end %>
         </div>
       </div>
     <% end %>
@@ -37,7 +40,14 @@ defmodule BordoWeb.Oauth.FacebookLive.Index do
     with {:ok, %{"access_token" => access_token}} <- get_access_token(code),
          {:ok, %{"access_token" => long_lived_token}} <- upgrade_access_token(access_token),
          {:ok, accounts} <- Facebook.my_accounts(access_token) do
-      {:noreply, assign(socket, orgs: accounts["data"], access_token: long_lived_token)}
+      accounts =
+        accounts["data"]
+        |> Enum.map(fn account ->
+          {:ok, img} = Facebook.picture(account["id"], 350, 350, access_token)
+          Enum.into(account, %{"image" => img["data"]})
+        end)
+
+      {:noreply, assign(socket, orgs: accounts, access_token: long_lived_token)}
     else
       {:error, err} ->
         {:noreply, assign(socket, orgs: [], error: err)}
