@@ -41,11 +41,11 @@ defmodule BordoWeb.SettingsLive do
         </div>
         <%= if Enum.any?(@channels) do %>
           <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600">Your channels</h3>
-          <div class="mb-4 grid grid-cols-5 gap-4">
+          <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <%= for channel <- @channels do %>
               <%= channel_card(channel) %>
             <% end %>
-          </div>
+          </ul>
         <% end %>
         <%= if Enum.any?(remaining_channels(@channels)) do %>
           <h3 class="border-b border-gray-100 mb-8 mt-14 pb-2 text-gray-800">Connect a channel</h3>
@@ -125,34 +125,47 @@ defmodule BordoWeb.SettingsLive do
 
   def channel_card(channel) do
     ~e"""
-    <div class="flex flex-col transition transition-all duration-150 hover:shadow-lg bg-white overflow-hidden sm:rounded-lg sm:shadow">
-      <div class="flex-1 py-8">
-        <div>
-          <div class="mb-4 flex items-center w-full justify-center">
-            <div class="w-10 h-10 mr-2">
-              <%= card_logo(channel.network) %>
-            </div>
-            <%= feather_icon("link", "mr-2 text-gray-500") %>
-            <div class="flex-shrink-0">
-              <img class="h-12 w-12 rounded-full" src="<%= connection_url(channel) %>" alt="" />
-            </div>
+    <li class="col-span-1 flex flex-col text-center bg-white rounded-lg shadow">
+      <div class="flex-1 flex flex-col p-8 relative">
+        <div x-data="{ open: false }" @keydown.window.escape="open = false" @click.away="open = false" class="absolute right-0 top-0 mt-3 mr-2">
+          <div>
+            <button @click="open = !open" type="button" class="px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" x-bind:aria-expanded="open">
+              <%= feather_icon("chevron-down") %>
+            </button>
           </div>
-          <div class="text-center">
-            <%= card_resource_info(channel) %>
-            <%= if channel.network == "facebook" do %>
-              <%= link(
-                "Reauthorize Facebook",
-                to: Routes.facebook_path(BordoWeb.Endpoint, :reauth, %{"brand_id" => channel.brand_id}),
-                data: [integration: "facebook"]
-              ) %>
-            <% end %>
+
+          <div x-show="open" x-description="Dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg" style="display: none;">
+            <div class="rounded-md bg-white shadow-xs">
+              <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                <a href="#" phx-click="delete-channel" phx-value-channel_id="<%= channel.id %>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem" data-confirm="Are you sure? This will remove EVERYTHING associated with this channel.">Remove Channel</a>
+              </div>
+            </div>
           </div>
         </div>
+        <div class="mb-4 flex items-center w-full justify-center">
+          <div class="w-10 h-10 mr-2">
+            <%= card_logo(channel.network) %>
+          </div>
+          <%= feather_icon("link", "mr-2 text-gray-500") %>
+          <div class="flex-shrink-0">
+            <img class="h-12 w-12 rounded-full" src="<%= connection_url(channel) %>" alt="" />
+          </div>
+        </div>
+        <%= card_resource_info(channel) %>
       </div>
-      <button phx-click="delete-channel" phx-value-channel_id="<%= channel.id %>" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white w-100">
-        Remove Connection
-      </button>
-    </div>
+      <%= if channel.network == "facebook" do %>
+        <div class="border-t border-gray-100">
+          <div class="-mt-px flex">
+            <div class="w-0 flex-1 flex">
+              <a href="#" class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150">
+                <%= feather_icon("refresh-cw") %>
+                <span class="ml-3">Reauthorize</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </li>
     """
   end
 
