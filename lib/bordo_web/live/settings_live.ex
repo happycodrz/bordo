@@ -157,10 +157,10 @@ defmodule BordoWeb.SettingsLive do
         <div class="border-t border-gray-100">
           <div class="-mt-px flex">
             <div class="w-0 flex-1 flex">
-              <a href="#" class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150">
+              <%= link to: Routes.facebook_path(BordoWeb.Endpoint, :reauth, %{"brand_id" => channel.brand_id}), class: "relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150" do %>
                 <%= feather_icon("refresh-cw") %>
                 <span class="ml-3">Reauthorize</span>
-              </a>
+              <% end %>
             </div>
           </div>
         </div>
