@@ -66,7 +66,8 @@ config :appsignal, :config,
   name: "Bordo",
   push_api_key: System.get_env("APPSIGNAL_PUSH_API_KEY"),
   env: System.get_env("MIX_ENV", "dev"),
-  revision: System.get_env("APP_REVISION")
+  revision: System.get_env("APP_REVISION"),
+  ignore_actions: ["BordoWeb.HealthzController#index"]
 
 config :auth0_ex,
   domain: System.get_env("AUTH0_DOMAIN"),
