@@ -20,4 +20,9 @@ defmodule Auth.Guardian.SessionErrorHandler do
     |> send_resp(401, "insufficient_permission")
     |> halt()
   end
+
+  def auth_error(conn, _, _opts) do
+    conn
+    |> Phoenix.Controller.redirect(to: BordoWeb.Router.Helpers.login_path(conn, :index))
+  end
 end
