@@ -4,6 +4,9 @@ defmodule Auth.Guardian.SessionErrorHandler do
   """
   import Plug.Conn
 
+  alias BordoWeb.Router.Helpers, as: Routes
+  alias Phoenix.Controller
+
   @behaviour Guardian.Plug.ErrorHandler
 
   @impl Guardian.Plug.ErrorHandler
@@ -11,7 +14,7 @@ defmodule Auth.Guardian.SessionErrorHandler do
   @doc false
   def auth_error(conn, {:no_resource_found, _reason}, _opts) do
     conn
-    |> Phoenix.Controller.redirect(to: BordoWeb.Router.Helpers.login_path(conn, :index))
+    |> Controller.redirect(to: Routes.login_path(conn, :index))
   end
 
   def auth_error(conn, {:unauthorized, :insufficient_permission}, _opts) do
@@ -23,6 +26,6 @@ defmodule Auth.Guardian.SessionErrorHandler do
 
   def auth_error(conn, _, _opts) do
     conn
-    |> Phoenix.Controller.redirect(to: BordoWeb.Router.Helpers.login_path(conn, :index))
+    |> Controller.redirect(to: Routes.login_path(conn, :index))
   end
 end
