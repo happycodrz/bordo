@@ -37,15 +37,17 @@ const FileUploadDropzone = ({ setFileData, setFileType }) => {
         })
     }, [])
 
-    const { getRootProps, getInputProps } = useDropzone({
+    const { getRootProps, getInputProps, fileRejections } = useDropzone({
         onDrop: onDrop,
         multiple: false,
+        accept: 'image/*'
     })
 
     return (
         <div {...classes()} {...getRootProps()}>
             <input {...getInputProps()} />
             <p {...classes('text')}>Drag your files here, or click to select.</p>
+            {fileRejections.length ? <p className="text-danger"><strong>Only image files are supported.</strong> Try a .jpg, .png, or .gif file.</p> : null}
         </div>
     )
 }
