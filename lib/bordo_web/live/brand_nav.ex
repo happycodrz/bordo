@@ -1,6 +1,5 @@
 defmodule BordoWeb.BrandNav do
   use BordoWeb, :client_live_view
-  import PhoenixLiveReact
 
   alias Bordo.Brands
   alias Bordo.Users
@@ -41,10 +40,14 @@ defmodule BordoWeb.BrandNav do
           <%= nav_link(Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), @nav_item, "Media", "image") %>
           <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
         </nav>
-        <div class="pin-b">
-          <%= live_react_component("Components.SidebarNewPostButton", %{brandId: @active_brand.id, brandSlug: @active_brand.slug}) %>
+        <div class="pin-b px-4 mb-2">
+          <button id="post-slideover-button" class="btn btn-danger btn-lg btn-block d-flex align-items-center justify-content-center mb-2" phx-target="#new-post" phx-click="open-slideover">
+            <%= feather_icon("send", "mr-2") %>
+            New Post
+          </button>
         </div>
       </aside>
+      <%= live_component(@socket, BordoWeb.Posts.NewLive, id: "post-slideover", active_brand: @active_brand, channels: [], changeset: nil, show_slideover: false, post: nil, current_user: @current_user) %>
     </nav>
     """
   end

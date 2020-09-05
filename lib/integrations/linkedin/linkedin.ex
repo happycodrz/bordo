@@ -98,7 +98,6 @@ defmodule Linkedin do
       [{"X-Restli-Protocol-Version", "2.0.0"}, {"Authorization", "Bearer #{token}"}]
     )
     |> Map.get(:body)
-    |> IO.inspect()
     |> Jason.decode()
   end
 

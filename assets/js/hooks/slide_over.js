@@ -3,8 +3,9 @@ export const initSlideOver = {
     const handleOpenCloseEvent = (event) => {
       if (event.detail.open === false) {
         this.el.removeEventListener('slideover-change', handleOpenCloseEvent)
+
         setTimeout(() => {
-          this.pushEvent('close-slideover', { id: this.el.id })
+          this.pushEventTo(event.detail.id, 'close-slideover', {})
         }, 300)
       }
     }

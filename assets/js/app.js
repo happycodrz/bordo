@@ -14,6 +14,7 @@ import '../css/app.css'
 //
 import 'phoenix_html'
 import 'alpinejs'
+import flatpickr from 'flatpickr'
 import { Socket } from 'phoenix'
 import NProgress from 'nprogress'
 import { LiveSocket } from 'phoenix_live_view'
@@ -32,6 +33,13 @@ Hooks.FeatherIcon = {
   mounted() {
     feather.replace()
   },
+}
+Hooks.DatePicker = {
+  mounted() {
+    flatpickr(this.el, {
+      enableTime: true
+    });
+  }
 }
 
 Hooks = { ...Hooks, InitModal, initSlideOver, Toast }
@@ -64,12 +72,10 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)
 window.liveSocket = liveSocket
 
-import SidebarNewPostButton from './react/components/SidebarNewPostButton'
 import Media from './react/components/Media'
 import Settings from './react/components/Settings'
 
 window.Components = {
-  SidebarNewPostButton,
   Media,
   Settings,
 }

@@ -40,7 +40,11 @@ defmodule Bordo.Posts.Post do
   def create_changeset(post, attrs) do
     post
     |> cast(attrs, [:title, :brand_id, :user_id, :scheduled_for])
-    |> cast_assoc(:post_variants, with: &Bordo.PostVariants.PostVariant.create_changeset/2)
+    |> cast_assoc(:post_variants,
+      with: &Bordo.PostVariants.PostVariant.create_changeset/2,
+      required: true,
+      required_message: "Must add at least one channel"
+    )
     |> foreign_key_constraint(:brand_id)
     |> validate_required([:title, :brand_id, :user_id])
     |> NumberableSlug.maybe_generate_slug()

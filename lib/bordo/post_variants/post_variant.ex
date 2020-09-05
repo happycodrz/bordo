@@ -8,6 +8,9 @@ defmodule Bordo.PostVariants.PostVariant do
     field :content, :string
     field :status, :string
     field :external_id, :string
+    field :temp_id, :string, virtual: true
+    field :delete, :boolean, virtual: true
+
     belongs_to :channel, Bordo.Channels.Channel
     belongs_to :post, Bordo.Posts.Post
     has_many :post_variant_media, Bordo.PostVariants.PostVariantMedia, on_replace: :delete
@@ -20,7 +23,9 @@ defmodule Bordo.PostVariants.PostVariant do
   @doc false
   def changeset(post_variant, attrs) do
     post_variant
+    |> Map.put(:temp_id, post_variant.temp_id || attrs["temp_id"])
     |> cast(attrs, [:channel_id, :status, :post_id, :content, :external_id])
+    |> cast_assoc(:post_variant_media, default: [])
     |> validate_required([:channel_id, :status, :content])
     |> validate_inclusion(:status, @post_statuses)
   end
@@ -31,30 +36,33 @@ defmodule Bordo.PostVariants.PostVariant do
   def update_content_changeset(post_variant, attrs) do
     # Used to drop blank media_id, which comes from editing posts
     # This can probably be done a lot better
-    new_attrs =
-      if Map.get(attrs, "post_variant_media") do
-        pv_attrs =
-          attrs
-          |> Map.get("post_variant_media")
-          |> Enum.filter(fn {_id, pvm} -> pvm["media_id"] != "" end)
-          |> Enum.into(%{})
+    # new_attrs =
+    #   if Map.get(attrs, "post_variant_media") do
+    #     pv_attrs =
+    #       attrs
+    #       |> Map.get("post_variant_media")
+    #       |> Enum.filter(fn {_id, pvm} -> pvm["media_id"] != "" end)
+    #       |> Enum.into(%{})
 
-        attrs |> Map.replace!("post_variant_media", pv_attrs)
-      else
-        attrs
-      end
+    #     attrs |> Map.replace!("post_variant_media", pv_attrs)
+    #   else
+    #     attrs
+    #   end
 
     post_variant
-    |> cast(new_attrs, [:status, :post_id, :content])
+    |> Map.put(:temp_id, post_variant.temp_id || attrs["temp_id"])
+    |> cast(attrs, [:status, :post_id, :content])
     |> cast_assoc(:post_variant_media, default: [])
     |> validate_not_published(post_variant)
     |> put_change(:status, "scheduled")
     |> validate_required([:status, :content])
     |> validate_inclusion(:status, @post_statuses)
+    |> maybe_mark_for_deletion()
   end
 
   def create_changeset(post_variant, attrs) do
     post_variant
+    |> Map.put(:temp_id, post_variant.temp_id || attrs["temp_id"])
     |> cast(attrs, [:channel_id, :status, :post_id, :content])
     |> cast_assoc(:post_variant_media)
     |> put_change(:status, "scheduled")
@@ -66,6 +74,16 @@ defmodule Bordo.PostVariants.PostVariant do
     case post_variant.status == "published" do
       true -> add_error(changeset, :status, "cannot update a published post")
       false -> changeset
+    end
+  end
+
+  defp maybe_mark_for_deletion(%{data: %{id: nil}} = changeset), do: changeset
+
+  defp maybe_mark_for_deletion(changeset) do
+    if get_change(changeset, :delete) do
+      %{changeset | action: :delete}
+    else
+      changeset
     end
   end
 end

@@ -11,8 +11,8 @@ defmodule Bordo.PostVariants.PostVariantMedia do
   end
 
   @doc false
-  def changeset(user_brand, attrs) do
-    user_brand
+  def changeset(pvm, attrs) do
+    pvm
     |> cast(attrs, [:post_variant_id, :media_id])
     |> foreign_key_constraint(:post_variant_id)
     |> foreign_key_constraint(:media_id)

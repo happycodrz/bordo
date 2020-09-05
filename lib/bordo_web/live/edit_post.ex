@@ -69,20 +69,6 @@ defmodule BordoWeb.EditPost do
         end)
       )
 
-    # TODO: Use changesets to track
-    # updated_changeset =
-    #   Changeset.update_change(socket.assigns.changeset, :post_variants, fn pvs ->
-    #     Enum.map(pvs, fn pv ->
-    #       if Changeset.get_field(pv, :id) == post_variant_id do
-    #         IO.inspect("A MATCH")
-    #         pv |> Changeset.change(post_variant_media: %{media_id: picked_media.id})
-    #       else
-    #         IO.inspect("NO MATCH")
-    #         pv
-    #       end
-    #     end)
-    #   end)
-
     {:noreply, socket |> assign(changeset: updated_changeset)}
   end
 

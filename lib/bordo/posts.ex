@@ -10,6 +10,7 @@ defmodule Bordo.Posts do
 
   alias Bordo.Brands.Brand
   alias Bordo.Posts.Post
+  alias Bordo.PostVariants.PostVariant
 
   @topic inspect(__MODULE__)
 
@@ -45,7 +46,7 @@ defmodule Bordo.Posts do
 
     Filtrex.query(base_query, filter)
     |> Repo.all()
-    |> Repo.preload(post_variants: [:channel, :media])
+    |> Repo.preload(post_variants: [:channel, :media, :post_variant_media])
   end
 
   @doc """
@@ -110,7 +111,7 @@ defmodule Bordo.Posts do
     # maybe this can be done in one swoop, but I'm not sure how right now
 
     case %Post{}
-         |> Repo.preload(post_variants: [:post_variant_media])
+         |> Repo.preload(post_variants: [:channel, :post_variant_media])
          |> Post.create_changeset(attrs)
          |> Repo.insert()
          |> notify_subscribers([:post, :created]) do
@@ -216,6 +217,10 @@ defmodule Bordo.Posts do
   """
   def change_post(%Post{} = post, changes \\ %{}) do
     Post.update_changeset(post, changes)
+  end
+
+  def change_post_variant(%PostVariant{} = post_variant, changes \\ %{}) do
+    PostVariant.changeset(post_variant, changes)
   end
 
   defp notify_subscribers({:ok, result}, event) do
