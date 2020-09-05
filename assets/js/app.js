@@ -72,12 +72,10 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)
 window.liveSocket = liveSocket
 
-import SidebarNewPostButton from './react/components/SidebarNewPostButton'
 import Media from './react/components/Media'
 import Settings from './react/components/Settings'
 
 window.Components = {
-  SidebarNewPostButton,
   Media,
   Settings,
 }

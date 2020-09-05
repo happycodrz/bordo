@@ -10,15 +10,10 @@
 @import './components/MediaDetailModal';
 @import './components/LoaderButton';
 @import './components/FileUpload';
-@import './components/NewPostSchedule';
-@import './components/BrandSidebar';
 @import './components/BrandNavigation';
 @import './components/ScheduleCalendar';
-@import './components/NewPostModal';
 @import './components/UnsplashSearch';
 @import './components/Notification';
-@import './components/ContentEditor';
-@import './components/EditableInput';
 @import './components/MediaSelectModal';
 // Freestyle
 
@@ -30,17 +25,6 @@ body {
 .calendar {
     position: relative;
     background-color: rgba(255, 255, 255, 0.75);
-}
-
-.calendar__loader {
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    justify-content: center;
-    align-items: center;
 }
 
 .calendar__header {
