@@ -14,7 +14,7 @@ defmodule BordoWeb.Components.SlideOver do
         x-data="{ open: false }"
         x-init="() => {
             setTimeout(() => open = true, 100);
-            $watch('open', isOpen => $dispatch('slideover-change', { open: isOpen }))
+            $watch('open', isOpen => $dispatch('slideover-change', { open: isOpen, id: '#<%= @id %>' }))
           }"
         @close-slideover="setTimeout(() => open = false, 100)"
         @keydown.window.escape="open = false; setTimeout(() => open = true, 100);"

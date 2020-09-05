@@ -136,6 +136,8 @@ defmodule BordoWeb.Router do
     scope "/:brand_slug" do
       live "/launchpad", LaunchpadLive
       live "/media", MediaLive
+      live "/posts/new", Posts.NewLive
+      live "/posts/:id/edit", Posts.NewLive, :edit
       live "/schedule", CalendarLive
       live "/schedule/:post_id", CalendarLive
       live "/settings", SettingsLive

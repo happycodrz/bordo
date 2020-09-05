@@ -21,7 +21,7 @@ defmodule BordoWeb.LaunchpadLive do
         </p>
         <h1 class="mb-5">What do you want to accomplish today?</h1>
         <div class="pt-5 card-deck">
-          <div class="text-dark bdo-launchpadCard card cursor-pointer transition duration-300 ease-in-out transform hover:- hover:scale-110 hover:shadow-xl" style="text-decoration: none;" onclick="document.getElementById('newPostButton').click()">
+          <div class="text-dark bdo-launchpadCard card cursor-pointer transition duration-300 ease-in-out transform hover:- hover:scale-110 hover:shadow-xl" style="text-decoration: none;" onclick="document.getElementById('post-slideover-button').click()">
             <div class="card-body">
               <div class="mb-5 bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto text-white"
                 style="width: 75px; height: 75px; margin-top: -24%;"><%= feather_icon("send", "w-48") %></div>
