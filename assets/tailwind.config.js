@@ -37,6 +37,7 @@ module.exports = {
           '900': '#132836',
         },
         gray: {
+          '50': '#f9fafb',
           '100': '#DEDEDE',
           '200': '#C7C7C7',
           '300': '#ADADAD',
