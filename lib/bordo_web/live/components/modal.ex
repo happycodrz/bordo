@@ -79,7 +79,7 @@ defmodule BordoWeb.Components.Modal do
               </button>
             </div>
             <!-- MODAL BODY -->
-            <div class="relative flex-auto p-4">
+            <div class="relative flex-auto p-4 h-screen overflow-scroll">
               <%= @inner_content.([]) %>
             </div>
           </div>

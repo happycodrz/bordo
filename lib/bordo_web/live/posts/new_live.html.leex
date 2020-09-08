@@ -77,7 +77,7 @@
 <% end %>
 <%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: "Change media", size: "large" do %>
   <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    <%= for media <- Bordo.Media.list_media(brand_id: @active_brand.id) do %>
+    <%= for media <- Bordo.Media.list_media do %>
       <li class="col-span-1 bg-white rounded-lg shadow" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected" >
         <div class="bdo-mediaAsset bdo-mediaAsset--image card">
           <div class="bdo-mediaAsset__header">
