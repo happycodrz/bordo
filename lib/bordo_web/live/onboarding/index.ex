@@ -3,65 +3,192 @@ defmodule BordoWeb.OnboardingLive.Index do
 
   alias Bordo.Brands.Brand
   alias Bordo.Teams.Team
-  alias Bordo.{Brands, Teams}
-  alias Bordo.Users
+  alias Bordo.{Brands, Teams, Users}
   alias BordoWeb.Live.AuthHelper
 
-  def render(%{step: :create_team} = assigns) do
-    ~L"""
-    <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 class="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900 mb-6">Create a team</h2>
-        <p class="text-gray-600">If you want to join a team, stop here and request access from the team's owner.</p>
-      </div>
-      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <%= f = form_for @changeset, "#", [as: :team, phx_submit: "save"] %>
-          <div>
-            <%= label f, :name, "Team Name", class: "block text-sm font-medium leading-5 text-gray-700" %>
-            <div class="mt-1 rounded-md shadow-sm">
-              <%= text_input f, :name, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
-              <%= error_tag f, :name %>
-            </div>
-          </div>
+  @steps [:create_team, :create_brand]
+  @step_text ["Create your team", "Add brands"]
 
-          <div class="mt-6">
-            <span class="block w-full rounded-md shadow-sm">
-              <button type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-                phx-disable-with="Saving...">Create my team</button>
-            </span>
+  def render(assigns) do
+    ~L"""
+    <div class="h-screen flex bg-gray-50">
+      <div class="flex flex-col w-1/3">
+        <div class="flex flex-col h-0 flex-1 bg-gray-800 items-center justify-content-center">
+          <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+            <nav class="mt-5 flex-1 px-2 bg-gray-800 space-y-1 flex items-center">
+              <nav>
+                <ul class="overflow-hidden">
+                  <%= step(@step) %>
+                </ul>
+              </nav>
+            </nav>
           </div>
-          </form>
+        </div>
+      </div>
+      <div class="flex w-full items-center justify-center">
+        <div class="sm:w-full md:w-full lg:w-2/3 2xl:w-1/3 max-w-6xl">
+          <%= step_content(assigns) %>
         </div>
       </div>
     </div>
     """
   end
 
-  def render(%{step: :create_brand} = assigns) do
-    ~L"""
-    <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 class="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900 mb-6">Create a brand</h2>
-        <p class="text-gray-600">Don't worry, you can change this later.</p>
+  def step(current_step) do
+    @steps
+    |> Enum.with_index
+    |> Enum.map(fn {step, index} ->
+      step_text = Enum.at(@step_text, index)
+      case step_sign(current_step, index) do
+        :negative ->
+          step_incomplete(step_text)
+        :positive ->
+          step_completed(step_text)
+        :equal ->
+          step_current(index, step_text)
+      end
+    end)
+  end
+
+  def step_sign(current_step, index) do
+    step_index = Enum.find_index(@steps, fn x -> x == current_step end)
+    x = step_index - index
+    cond do
+      x == 0 ->
+        :equal
+      x < 0 ->
+        :negative
+      x > 0 ->
+        :positive
+    end
+  end
+
+  def last_step?(step_number) do
+    step_number == length(@steps) - 1
+  end
+
+  def step_completed(text) do
+    ~e"""
+    <li class="relative pb-10">
+      <div class="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-indigo-500"></div>
+      <a href="#" class="relative flex items-center space-x-4 group focus:outline-none">
+        <div class="h-9 flex items-center">
+          <span class="relative z-10 w-8 h-8 flex items-center justify-center bg-indigo-600 rounded-full group-hover:bg-indigo-800 group-focus:bg-indigo-800 transition ease-in-out duration-150">
+            <svg class="w-5 h-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </div>
+        <div class="min-w-0">
+          <h3 class="text-xs leading-4 font-semibold uppercase tracking-wide text-white"><%= text %></h3>
+        </div>
+      </a>
+    </li>
+    """
+  end
+
+  def step_current(step_number, text) do
+    ~e"""
+    <li class="relative pb-10">
+      <%= unless last_step?(step_number) do %>
+        <div class="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-gray-300"></div>
+      <% end %>
+      <div class="relative flex items-center space-x-4 group focus:outline-none">
+        <div class="h-9 flex items-center">
+          <span class="relative z-10 w-8 h-8 flex items-center justify-center bg-white border-2 border-indigo-600 rounded-full">
+            <span class="h-2.5 w-2.5 bg-indigo-600 rounded-full"></span>
+          </span>
+        </div>
+        <div class="min-w-0">
+          <h3 class="text-xs leading-4 font-semibold uppercase tracking-wide text-indigo-400"><%= text %></h3>
+        </div>
       </div>
-      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+    </li>
+    """
+  end
+
+  def step_incomplete(text) do
+    ~e"""
+    <li class="relative">
+      <a href="#" class="relative flex items-center space-x-4 group focus:outline-none">
+        <div class="h-9 flex items-center">
+          <span class="relative z-10 w-8 h-8 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full group-hover:border-gray-400 group-focus:border-gray-400 transition ease-in-out duration-150">
+            <span class="h-2.5 w-2.5 bg-transparent rounded-full group-hover:bg-gray-300 group-focus:bg-gray-300 transition ease-in-out duration-150"></span>
+          </span>
+        </div>
+        <div class="min-w-0">
+          <h3 class="text-xs leading-4 font-semibold uppercase tracking-wide text-gray-400"><%= text %></h3>
+        </div>
+      </a>
+    </li>
+    """
+  end
+
+  def step_content(%{step: :create_team} = assigns) do
+    ~L"""
+    <div class="p-4">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Create your team
+          </h3>
+          <p class="mt-1 text-sm leading-5 text-gray-500">
+            Teams are the homebase. Next, you will add brands to this team.
+          </p>
+        </div>
+        <%= f = form_for @changeset, "#", [as: :team, phx_submit: "save"] %>
+        <div class="mt-6">
+          <%= label f, :name, "Team Name", class: "block text-sm font-medium leading-5 text-gray-700" %>
+          <div class="mt-1 rounded-md shadow-sm">
+            <%= text_input f, :name, placeholder: "Dunder Mifflin", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
+          </div>
+          <%= error_tag f, :name %>
+          <p class="mt-2 text-sm text-gray-500">If you want to join a team, stop here and request access from the team's owner.</p>
+        </div>
+        <div class="mt-6">
+          <%= label f, :timezone, class: "block text-sm leading-5 font-medium text-gray-700" %>
+          <%= select f, :timezone, Tzdata.zone_list |> Enum.filter(&(&1 == "America/Chicago")), selected: "America/Chicago", class: "mt-1 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" %>
+        </div>
+        <div class="mt-6">
+          <span class="block w-full rounded-md shadow-sm">
+            <button type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+              phx-disable-with="Validating...">Create my team</button>
+          </span>
+        </div>
+        </form>
+      </div>
+    </div>
+    """
+  end
+
+  def step_content(%{step: :create_brand} = assigns) do
+    ~L"""
+    <div class="p-4">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Add Brands
+          </h3>
+          <p class="mt-1 text-sm leading-5 text-gray-500">
+            You just need to add a single brand to start. You can easily add more later.
+          </p>
+        </div>
+        <div class="mt-6">
           <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save"] %>
           <div>
             <%= label f, :name, "Brand Name", class: "block text-sm font-medium leading-5 text-gray-700" %>
             <div class="mt-1 rounded-md shadow-sm">
-              <%= text_input f, :name, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
-              <%= error_tag f, :name %>
+              <%= text_input f, :name, placeholder: "Scranton Branch", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
             </div>
+            <%= error_tag f, :name %>
           </div>
 
           <div class="mt-6">
             <span class="block w-full rounded-md shadow-sm">
               <button type="submit"
                 class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-                phx-disable-with="Adding brand...">Add a brand</button>
+                phx-disable-with="Validating...">Add a brand</button>
             </span>
           </div>
           </form>
