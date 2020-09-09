@@ -76,7 +76,7 @@
   <%= hidden_input f, :user_id, value: @current_user.id %>
 <% end %>
 <%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: "Change media", size: "large" do %>
-  <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 h-screen overflow-scroll">
     <%= for media <- Bordo.Media.list_media do %>
       <li class="col-span-1 bg-white rounded-lg shadow" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected" >
         <div class="bdo-mediaAsset bdo-mediaAsset--image card">
