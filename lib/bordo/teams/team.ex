@@ -8,7 +8,7 @@ defmodule Bordo.Teams.Team do
     field :stripe_customer_id, :string
     field :stripe_subscription_id, :string
 
-    field :timezone, :string, virtual: true, default: "America/Chicago"
+    field :timezone, :string, default: "America/Chicago"
     belongs_to :owner, Bordo.Users.User
     has_many :brands, Bordo.Brands.Brand
 
@@ -23,7 +23,8 @@ defmodule Bordo.Teams.Team do
       :owner_id,
       :stripe_customer_id,
       :stripe_subscription_id,
-      :last_paid_at
+      :last_paid_at,
+      :timezone
     ])
     |> validate_required([:name, :owner_id])
   end
