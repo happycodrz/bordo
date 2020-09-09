@@ -111,7 +111,7 @@ defmodule Bordo.Teams do
 
   """
   def change_team(team, attrs \\ %{}) do
-    Team.changeset(team, %{})
+    Team.changeset(team, attrs)
   end
 
   def setup_stripe({:error, result}), do: {:error, result}
@@ -119,24 +119,23 @@ defmodule Bordo.Teams do
   def setup_stripe({:ok, result}) do
     team = get_team!(result.id) |> Repo.preload([:owner])
 
-    {:ok, resp} =
-      Customer.create(%{
-        email: team.owner.email,
-        metadata: %{team_id: result.id, team_name: result.name}
-      })
+    with {:ok, resp} <-
+           Customer.create(%{
+             email: team.owner.email,
+             metadata: %{team_id: result.id, team_name: result.name}
+           }),
+         {:ok, sub_resp} <-
+           Subscription.create(%{
+             customer: resp.id,
+             items: [
+               %{price: Application.fetch_env!(:bordo, :stripe)[:standard_price_id], quantity: 0}
+             ]
+           }) do
+      update_team(team, %{stripe_customer_id: resp.id})
+      update_team(team, %{stripe_subscription_id: sub_resp.id})
 
-    {:ok, sub_resp} =
-      Subscription.create(%{
-        customer: resp.id,
-        items: [
-          %{price: Application.fetch_env!(:bordo, :stripe)[:standard_price_id], quantity: 0}
-        ]
-      })
-
-    update_team(team, %{stripe_customer_id: resp.id})
-    update_team(team, %{stripe_subscription_id: sub_resp.id})
-
-    {:ok, result}
+      {:ok, result}
+    end
   end
 
   defp notify_subscribers({:ok, result}, event) do
