@@ -5,6 +5,8 @@ defmodule Bordo.Providers.Facebook do
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
 
+  def handle_event(%PostVariant{status: "published"} = post_variant), do: {:ok, post_variant}
+
   def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
     case create_post(channel, content, media) do
       {:ok, post} ->
