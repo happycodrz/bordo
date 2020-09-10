@@ -13,7 +13,7 @@ defmodule BordoWeb.LaunchpadLive do
         class="h-screen d-flex align-items-center justify-content-center bg-geometry"
       >
       <header class="text-center">
-        <p class="h2">
+        <p class="text-5xl">
           <%= @greeting %>, <span class="text-primary"><%= @user_greeting %></span>!
           <span class="wave" role="img">
             👋

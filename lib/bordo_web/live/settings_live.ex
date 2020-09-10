@@ -10,13 +10,13 @@ defmodule BordoWeb.SettingsLive do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="w-full h-full">
+    <div class="min-w-full min-h-full bg-gray-50">
       <div class="p-9">
         <div class="flex items-center mb-5">
           <%= live_react_component("Components.Settings", brandId: @active_brand.id, brandImage: @active_brand.image_url) %>
           <div>
             <%= if !@editing_name do %>
-              <h3><%= @active_brand.name %></h3>
+              <h3 class="text-2xl"><%= @active_brand.name %></h3>
               <span class="text-blue-700 cursor-pointer" phx-click="edit-brand">Edit</span>
             <% else %>
               <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save"] %>
@@ -40,33 +40,36 @@ defmodule BordoWeb.SettingsLive do
           </div>
         </div>
         <%= if Enum.any?(@channels) do %>
-          <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600">Your channels</h3>
-          <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <%= for channel <- @channels do %>
-              <%= channel_card(channel) %>
-            <% end %>
-          </ul>
+          <div class="mb-14">
+            <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600 text-xl">Your channels</h3>
+            <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              <%= for channel <- @channels do %>
+                <%= channel_card(channel) %>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
         <%= if Enum.any?(remaining_channels(@channels)) do %>
-          <h3 class="border-b border-gray-100 mb-8 mt-14 pb-2 text-gray-800">Connect a channel</h3>
-          <ul class="grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <%= for channel <- remaining_channels(@channels) do %>
-              <%= add_channel_card(channel, @active_brand.id) %>
-            <% end %>
-          </ul>
+          <div class="mb-14">
+            <h3 class="border-b mb-8 pb-2 text-gray-600 text-xl">Connect a channel</h3>
+            <p class="mb-8 text-gray-400">To connect social media channels to this brand, click a button below. You'll be taken to their site to finish the authorization. Don't worry! You'll be right back.</p>
+            <ul class="grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <%= for channel <- remaining_channels(@channels) do %>
+                <%= add_channel_card(channel, @active_brand.id) %>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
-      </div>
-      <div class="p-9">
-        <div class="bg-white rounded-lg shadow p-8">
-          <h3 class="mb-4 grid grid-cols-4 gap-4">Danger Zone</h3>
-          <p>Deleting a brand is irreversable! Bordo will remove everything associated with the brand if removed.</p>
-          <button phx-click="delete-brand" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
+        <div class="mb-14 bg-white rounded-lg shadow-md p-8">
+          <h3 class="border-b mb-4 pb-2 text-gray-600 text-xl">Danger Zone</h3>
+          <p class="mb-4 text-gray-400">Deleting a brand is irreversable! Bordo will remove everything associated with the brand if deleted.</p>
+          <button phx-click="delete-brand" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="rounded-md bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
         </div>
-      </div>
-      <div class="pin-b">
-        <p class="text-xs text-center text-gray-500 mb-2">
-          <%= System.get_env("RENDER_GIT_COMMIT", "dev") %>&nbsp;&nbsp;|&nbsp;&nbsp;&copy;<%= DateTime.utc_now.year %> Bordo, LLC&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://hellobordo.com/privacy-policy" class="text-gray-500 underline">Privacy Policy</a>
-        </p>
+        <div class="pin-b">
+          <p class="text-xs text-center text-gray-500 mb-2">
+            <%= System.get_env("RENDER_GIT_COMMIT", "dev") %>&nbsp;&nbsp;|&nbsp;&nbsp;&copy;<%= DateTime.utc_now.year %> Bordo, LLC&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://hellobordo.com/privacy-policy" class="text-gray-500 underline">Privacy Policy</a>
+          </p>
+        </div>
       </div>
     </div>
     """
@@ -125,20 +128,18 @@ defmodule BordoWeb.SettingsLive do
 
   def channel_card(channel) do
     ~e"""
-    <li class="col-span-1 flex flex-col text-center bg-white rounded-lg shadow">
+    <li class="col-span-1 flex flex-col text-center bg-white rounded-lg shadow-sm">
       <div class="flex-1 flex flex-col p-8 relative">
         <div x-data="{ open: false }" @keydown.window.escape="open = false" @click.away="open = false" class="absolute right-0 top-0 mt-3 mr-2">
           <div>
-            <button @click="open = !open" type="button" class="px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" x-bind:aria-expanded="open">
+            <button @click="open = !open" type="button" class="p-2 bg-transparent text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" x-bind:aria-expanded="open">
               <%= feather_icon("chevron-down") %>
             </button>
           </div>
 
-          <div x-show="open" x-description="Dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg" style="display: none;">
-            <div class="rounded-md bg-white shadow-xs">
-              <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                <a href="#" phx-click="delete-channel" phx-value-channel_id="<%= channel.id %>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem" data-confirm="Are you sure? This will remove EVERYTHING associated with this channel.">Remove Channel</a>
-              </div>
+          <div x-show="open" x-description="Dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 border w-56 rounded-md shadow-md" style="display: none;">
+            <div class="py-1 rounded-md bg-white" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+              <a href="#" phx-click="delete-channel" phx-value-channel_id="<%= channel.id %>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-blue-500 hover:text-white focus:outline-none focus:bg-blue-500 focus:text-white" role="menuitem" data-confirm="Are you sure? This will remove EVERYTHING associated with this channel.">Remove Channel</a>
             </div>
           </div>
         </div>
@@ -154,14 +155,12 @@ defmodule BordoWeb.SettingsLive do
         <%= card_resource_info(channel) %>
       </div>
       <%= if channel.network == "facebook" do %>
-        <div class="border-t border-gray-100">
-          <div class="-mt-px flex">
-            <div class="w-0 flex-1 flex">
-              <%= link to: Routes.facebook_path(BordoWeb.Endpoint, :reauth, %{"brand_id" => channel.brand_id}), class: "relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150" do %>
-                <%= feather_icon("refresh-cw") %>
-                <span class="ml-3">Reauthorize</span>
-              <% end %>
-            </div>
+        <div class="-mt-px flex">
+          <div class="w-0 flex-1 flex">
+            <%= link to: Routes.facebook_path(BordoWeb.Endpoint, :reauth, %{"brand_id" => channel.brand_id}), class: "-mr-px bg-gray-50 border-gray-100 border-t duration-150 ease-in-out flex-1 focus:border-blue-300 focus:outline-none focus:shadow-outline-blue focus:z-10 font-medium hover:text-gray-500 inline-flex items-center justify-center py-2 relative rounded-bl-lg text-gray-700 text-sm transition w-0" do %>
+              <%= feather_icon("refresh-cw") %>
+              <span class="ml-3">Reauthorize</span>
+            <% end %>
           </div>
         </div>
       <% end %>
@@ -187,7 +186,7 @@ defmodule BordoWeb.SettingsLive do
 
     ~e"""
     <li class="col-span-1 flex shadow-sm rounded-md">
-      <div class="flex-1 flex items-center justify-between border border-gray-100 bg-white rounded-md truncate">
+      <div class="flex-1 flex items-center justify-between bg-white rounded-md truncate">
         <div class="flex-1 flex items-center content-center px-4 py-3 text-sm leading-5 truncate">
           <div class="mr-3">
             <%= card_logo(channel) %>
@@ -195,11 +194,11 @@ defmodule BordoWeb.SettingsLive do
           <h3 class="text-gray-900 font-medium text-base"><%= String.capitalize(channel) %></h3>
         </div>
         <div class="flex-shrink-0 pr-3">
-          <span class="inline-flex rounded-md shadow-sm">
+          <span class="inline-flex rounded-md">
           <%= link(
             to: link,
             class:
-              "inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150"
+              "inline-flex items-center px-2.5 py-1.5 bg-gray-50 text-xs leading-4 font-medium rounded text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150"
           ) do %>
             <%= feather_icon("plus") %>
           <% end %>

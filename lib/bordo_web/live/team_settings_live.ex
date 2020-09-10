@@ -21,10 +21,10 @@ defmodule BordoWeb.TeamSettingsLive do
 
   def render(assigns) do
     ~L"""
-    <div class="p-8">
-      <h2 class="mt-2 mb-8">Team Settings</h2>
-      <div class="bg-white rounded-lg shadow p-8 mb-10">
-        <h3 class="mb-3">Add Team Member</h3>
+    <div class="p-8 bg-gray-50">
+      <h2 class="mt-2 mb-8 text-3xl">Team Settings</h2>
+      <div class="bg-white rounded-lg shadow-md p-8 mb-10">
+        <h3 class="mb-3 text-xl">Add Team Member</h3>
         <p class="text-gray-500 mb-4">To add a user to your team, type their email and a new password below. They'll receive an email letting them know they're in!<p>
         <%= f = form_for @changeset, "#", [phx_submit: :add_user] %>
           <div class="grid grid-cols-12 gap-3 mb-4">
@@ -39,15 +39,15 @@ defmodule BordoWeb.TeamSettingsLive do
             </div>
             <div class="col-span-2">
               <%= submit "Add New User", phx_disable_with: "Adding...", class: "inline-flex justify-center py-2
-              px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white
+              px-4 border-transparent text-sm leading-5 font-medium rounded-md text-white
               bg-red-500 hover:bg-red-600 focus:outline-none focus:border-red-500
               focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out w-100" %>
             </div>
           </div>
         </form>
       </div>
-      <div class="bg-white rounded-lg shadow p-8">
-        <h3 class="mb-3">Your Team</h3>
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <h3 class="mb-3 text-xl">Your Team</h3>
         <table class="table">
           <thead>
             <th>Name</th>

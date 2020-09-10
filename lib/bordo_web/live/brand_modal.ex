@@ -26,14 +26,14 @@ defmodule BordoWeb.BrandModal do
       <div id="new-brand-handler">
         <%= live_component @socket, BordoWeb.Components.Modal, id: "new-brand-modal", title: "Add a new brand" do %>
           <%= f = form_for @changeset, "#", [phx_submit: :save, phx_target: "#new-brand-handler"] %>
-            <div class="grid grid-cols-6 gap-6 mb-4">
+            <div class="mb-4">
               <div class="col-span-12">
                 <%= text_input f, :name, class: "mt-1 form-input text-black block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autofocus: true, placeholder: "New Brand Name" %>
                 <%= hidden_input f, :team_id, value: @team_id %>
                 <%= error_tag f, :name %>
               </div>
             </div>
-            <div class="border-t border-gray-200 pt-2">
+            <div class="border-t border-gray-200 pt-4">
               <div class="flex justify-end">
                 <span class="inline-flex rounded-md shadow-sm">
                   <button type="button"
@@ -44,7 +44,7 @@ defmodule BordoWeb.BrandModal do
                 </span>
                 <span class="ml-3 inline-flex rounded-md shadow-sm">
                   <button type="submit"
-                    class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">
+                    class="inline-flex justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">
                     Add New Brand
                   </button>
                 </span>
