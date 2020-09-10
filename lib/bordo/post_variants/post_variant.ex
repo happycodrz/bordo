@@ -2,6 +2,8 @@ defmodule Bordo.PostVariants.PostVariant do
   use Bordo.Schema
   import Ecto.Changeset
 
+  alias Bordo.Channels
+
   @post_statuses ["draft", "published", "scheduled", "failed"]
 
   schema "post_variants" do
@@ -64,6 +66,7 @@ defmodule Bordo.PostVariants.PostVariant do
     post_variant
     |> Map.put(:temp_id, post_variant.temp_id || attrs["temp_id"])
     |> cast(attrs, [:channel_id, :status, :post_id, :content])
+    |> validate_twitter_length()
     |> cast_assoc(:post_variant_media)
     |> put_change(:status, "scheduled")
     |> validate_required([:channel_id, :status, :content])
@@ -82,6 +85,20 @@ defmodule Bordo.PostVariants.PostVariant do
   defp maybe_mark_for_deletion(changeset) do
     if get_change(changeset, :delete) do
       %{changeset | action: :delete}
+    else
+      changeset
+    end
+  end
+
+  defp validate_twitter_length(changeset) do
+    channel = Channels.get_channel!(get_field(changeset, :channel_id))
+
+    if channel.network == "twitter" do
+      if String.length(get_field(changeset, :content)) > 280 do
+        add_error(changeset, :content, "Must be less than 280 characters")
+      else
+        changeset
+      end
     else
       changeset
     end
