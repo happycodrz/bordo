@@ -28,7 +28,7 @@ defmodule BordoWeb.Components.PostSlideOver do
               x-transition:enter="ease-in-out duration-100" x-transition:enter-start="opacity-0"
               x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-100"
               x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-              class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+              class="absolute inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
             <% end %>
           <section
             class="absolute inset-y-0 right-0 pl-10 max-w-full flex">
@@ -39,7 +39,7 @@ defmodule BordoWeb.Components.PostSlideOver do
               x-transition:leave-end="translate-x-full">
               <div class="h-full flex flex-col space-y-6 bg-white shadow-xl overflow-y-scroll">
                 <div class="flex-1">
-                  <header class="px-4 py-6 bg-gray-50 sm:px-6">
+                  <header class="px-4 py-6 bg-gray-50 sm:px-6 border-b border-gray-100">
                     <div class="flex items-start justify-between space-x-3">
                       <div class="space-y-1">
                         <h2 class="text-lg leading-7 font-medium text-gray-900">
@@ -62,7 +62,7 @@ defmodule BordoWeb.Components.PostSlideOver do
                     <%= @inner_content.([]) %>
                   </div>
                 </div>
-                <div class="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
+                <div class="flex-shrink-0 px-4 border-t border-gray-200 py-3 sm:px-6">
                   <div class="space-x-3 flex justify-end">
                     <span class="inline-flex rounded-md shadow-sm">
                       <button @click="open = false; setTimeout(() => open = true, 100);" type="button" class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
@@ -70,7 +70,7 @@ defmodule BordoWeb.Components.PostSlideOver do
                       </button>
                     </span>
                     <span class="inline-flex rounded-md shadow-sm">
-                      <button form="post-form" phx-disable-with="Submitting" type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                      <button form="post-form" phx-disable-with="Submitting" type="submit" class="inline-flex justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
                         Schedule Post
                       </button>
                     </span>

@@ -70,10 +70,10 @@ defmodule BordoWeb.OnboardingLive.Index do
   def step_completed(text) do
     ~e"""
     <li class="relative pb-10">
-      <div class="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-indigo-500"></div>
+      <div class="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-blue-500"></div>
       <a href="#" class="relative flex items-center space-x-4 group focus:outline-none">
         <div class="h-9 flex items-center">
-          <span class="relative z-10 w-8 h-8 flex items-center justify-center bg-indigo-600 rounded-full group-hover:bg-indigo-800 group-focus:bg-indigo-800 transition ease-in-out duration-150">
+          <span class="relative z-10 w-8 h-8 flex items-center justify-center bg-blue-600 rounded-full group-hover:bg-blue-800 group-focus:bg-blue-800 transition ease-in-out duration-150">
             <svg class="w-5 h-5 text-white" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
@@ -95,12 +95,12 @@ defmodule BordoWeb.OnboardingLive.Index do
       <% end %>
       <div class="relative flex items-center space-x-4 group focus:outline-none">
         <div class="h-9 flex items-center">
-          <span class="relative z-10 w-8 h-8 flex items-center justify-center bg-white border-2 border-indigo-600 rounded-full">
-            <span class="h-2.5 w-2.5 bg-indigo-600 rounded-full"></span>
+          <span class="relative z-10 w-8 h-8 flex items-center justify-center bg-white border-2 border-blue-600 rounded-full">
+            <span class="h-2.5 w-2.5 bg-blue-600 rounded-full"></span>
           </span>
         </div>
         <div class="min-w-0">
-          <h3 class="text-xs leading-4 font-semibold uppercase tracking-wide text-indigo-400"><%= text %></h3>
+          <h3 class="text-xs leading-4 font-semibold uppercase tracking-wide text-blue-400"><%= text %></h3>
         </div>
       </div>
     </li>
@@ -152,7 +152,7 @@ defmodule BordoWeb.OnboardingLive.Index do
         <div class="mt-6">
           <span class="block w-full rounded-md shadow-sm">
             <button type="submit"
-              class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+              class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
               phx-disable-with="Validating...">Create my team</button>
           </span>
         </div>
@@ -187,7 +187,7 @@ defmodule BordoWeb.OnboardingLive.Index do
           <div class="mt-6">
             <span class="block w-full rounded-md shadow-sm">
               <button type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
                 phx-disable-with="Validating...">Add a brand</button>
             </span>
           </div>

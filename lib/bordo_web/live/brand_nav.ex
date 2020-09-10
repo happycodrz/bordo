@@ -20,27 +20,27 @@ defmodule BordoWeb.BrandNav do
           <%= live_component(@socket, BordoWeb.BrandModal, id: "brand-modal", team_id: @current_user.team_id) %>
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
-          <%= live_redirect to: Routes.live_path(@socket, BordoWeb.TeamSettingsLive, @active_brand.slug), class: "block p-2 text-center" do %>
-            <i data-feather="settings" class="text-gray-300"></i>
+          <%= live_redirect to: Routes.live_path(@socket, BordoWeb.TeamSettingsLive, @active_brand.slug), class: "block p-2 text-center text-blue-300 hover:text-blue-100" do %>
+            <i data-feather="settings"></i>
           <% end %>
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
-          <%= link to: Routes.logout_path(@socket, :index), class: "block p-2 text-center" do %>
-            <i data-feather="log-out" class="text-gray-300"></i>
+          <%= link to: Routes.logout_path(@socket, :index), class: "block p-2 text-center text-blue-300 hover:text-blue-100" do %>
+            <i data-feather="log-out"></i>
           <% end %>
         </div>
       </div>
-      <aside class="bdo-brandSidebar flex flex-col">
-        <header class="bg-white px-3 py-10 flex justify-content-between align-items-center">
-            <h2 class="m-0"><%= @active_brand.name %></h2>
+      <aside class="bdo-brandSidebar flex flex-col shadow-md border-r border-gray-100 relative">
+        <header class="bg-white px-3 py-10 flex justify-content-between align-items-center border-b border-gray-100">
+            <h2 class="text-3xl m-0"><%= @active_brand.name %></h2>
         </header>
-        <nav class="nav flex-column nav-secondary h-full">
+        <nav class="nav flex-column nav-secondary h-full bg-gray-50">
           <%= nav_link(Routes.live_path(@socket, BordoWeb.LaunchpadLive, @active_brand.slug), @nav_item, "Launchpad", "zap") %>
           <%= nav_link(Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), @nav_item, "Schedule", "calendar") %>
           <%= nav_link(Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), @nav_item, "Media", "image") %>
           <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
         </nav>
-        <div class="pin-b px-4 mb-2">
+        <div class="pin-b px-4 mb-2 bg-gray-50">
           <button id="post-slideover-button" class="btn btn-danger btn-lg btn-block d-flex align-items-center justify-content-center mb-2" phx-target="#new-post" phx-click="open-slideover">
             <%= feather_icon("send", "mr-2") %>
             New Post
