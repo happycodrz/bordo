@@ -23,7 +23,7 @@ defmodule Bordo.Workers.PostSchedulerTest do
         Bordo.Workers.PostScheduler.new(%{"post_id" => post.id})
         |> Oban.insert!()
 
-      Bordo.Workers.PostScheduler.perform(%{"post_id" => post.id}, job)
+      Bordo.Workers.PostScheduler.perform(job)
 
       post = Bordo.Posts.get_post!(post.id)
       post_variant = Enum.at(post.post_variants, 0)
