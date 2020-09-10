@@ -36,14 +36,17 @@ defmodule BordoWeb.OnboardingLive.Index do
 
   def step(current_step) do
     @steps
-    |> Enum.with_index
-    |> Enum.map(fn {step, index} ->
+    |> Enum.with_index()
+    |> Enum.map(fn {_step, index} ->
       step_text = Enum.at(@step_text, index)
+
       case step_sign(current_step, index) do
         :negative ->
           step_incomplete(step_text)
+
         :positive ->
           step_completed(step_text)
+
         :equal ->
           step_current(index, step_text)
       end
@@ -53,11 +56,14 @@ defmodule BordoWeb.OnboardingLive.Index do
   def step_sign(current_step, index) do
     step_index = Enum.find_index(@steps, fn x -> x == current_step end)
     x = step_index - index
+
     cond do
       x == 0 ->
         :equal
+
       x < 0 ->
         :negative
+
       x > 0 ->
         :positive
     end
