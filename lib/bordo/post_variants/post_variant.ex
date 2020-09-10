@@ -95,6 +95,7 @@ defmodule Bordo.PostVariants.PostVariant do
 
     if channel.network == "twitter" do
       content = get_field(changeset, :content) || ""
+
       if String.length(content) > 280 do
         add_error(changeset, :content, "Must be less than 280 characters")
       else
