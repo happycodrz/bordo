@@ -9,4 +9,12 @@ defmodule StripeApiMock do
   def request(:post, "https://api.stripe.com/v1/subscriptions", _, _, _) do
     {:ok, 200, [], File.read!("test/fixtures/stripe/new_subscription.json")}
   end
+
+  def request(:get, "https://api.stripe.com/v1/subscriptions/sub_stripe_id", _, _, _) do
+    {:ok, 200, [], File.read!("test/fixtures/stripe/subscription.json")}
+  end
+
+  def request(:post, "https://api.stripe.com/v1/subscriptions/sub_stripe_id", _, _, _) do
+    {:ok, 200, [], "{}"}
+  end
 end
