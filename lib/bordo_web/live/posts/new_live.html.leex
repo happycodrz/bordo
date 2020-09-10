@@ -44,12 +44,15 @@
       <!-- Description -->
       <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
         <div>
-          <label class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2"><%= String.capitalize(Bordo.Channels.get_channel!(Ecto.Changeset.get_field(pv.source, :channel_id)).network) %></label>
+          <% network_name = String.capitalize(Bordo.Channels.get_channel!(Ecto.Changeset.get_field(pv.source, :channel_id)).network) %>
+          <label class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2"><%= network_name %></label>
         </div>
         <div class="sm:col-span-2">
           <div class="flex items-center">
-            <div class="flex w-5/6 rounded-md shadow-sm">
-              <%= textarea pv, :content, class: "form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
+            <div class="w-5/6">
+              <div class="flex w-5/6 rounded-md shadow-sm">
+                <%= textarea pv, :content, class: "form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5", phx_hook: if network_name == "Twitter", do: "TwitterLimit" %>
+              </div>
             </div>
             <div class="ml-4">
               <%= hidden_input pv, :temp_id %>
