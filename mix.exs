@@ -50,7 +50,7 @@ defmodule Bordo.MixProject do
       {:jason, "~> 1.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:oauther, "~> 1.1"},
-      {:oban, "~> 1.2.0"},
+      {:oban, "~> 2.1.0"},
       {:phoenix, "~> 1.5.1"},
       {:phoenix_ecto, "~> 4.1"},
       {:phoenix_html, "2.14.2"},
