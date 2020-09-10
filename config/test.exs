@@ -14,6 +14,10 @@ config :bordo, BordoWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :stripity_stripe,
+  http_module: StripeApiMock,
+  log_level: :debug
+
 # Print only warnings and errors during test
 config :logger, level: :warn
 
