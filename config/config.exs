@@ -58,7 +58,7 @@ config :cloudex,
 
 config :bordo, Oban,
   repo: Bordo.Repo,
-  prune: {:maxlen, 10_000},
+  plugins: [{Oban.Plugins.Pruner, max_age: 300}],
   queues: [default: 10, events: 50, media: 20]
 
 config :appsignal, :config,
