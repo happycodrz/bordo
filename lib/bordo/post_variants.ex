@@ -22,6 +22,16 @@ defmodule Bordo.PostVariants do
   def get_post_variant_media!(id), do: Repo.get!(PostVariantMedia, id)
 
   @doc """
+  Creates a post_variant. This should only be used as a helper method right now, in tests only!
+  """
+  def create_post_variant(attrs \\ %{}) do
+    %PostVariant{}
+    |> Repo.preload(:channel)
+    |> PostVariant.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
   Updates a post_variant.
 
   ## Examples

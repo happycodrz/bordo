@@ -1,8 +1,11 @@
 defmodule Bordo.Providers.Twitter do
   require Logger
-  alias ExTwitter.Model.Tweet
+
   alias Bordo.PostVariants
   alias Bordo.PostVariants.PostVariant
+  alias ExTwitter.Model.Tweet
+
+  def handle_event(%PostVariant{status: "published"} = post_variant), do: {:ok, post_variant}
 
   def handle_event(%PostVariant{channel: channel, content: content, media: media} = post_variant) do
     case create_tweet(channel, content, media) do

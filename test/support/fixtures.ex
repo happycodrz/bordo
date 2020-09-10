@@ -1,11 +1,12 @@
 defmodule Bordo.Fixtures do
-  alias Bordo.{Brands, Channels, Posts, Teams, Users}
+  alias Bordo.{Brands, Channels, Posts, PostVariants, Teams, Users}
   alias Bordo.{PostVariants.PostVariant}
 
   alias Faker.{
     Blockchain.Bitcoin,
     Company,
     Internet,
+    Lorem.Shakespeare,
     Team
   }
 
@@ -81,5 +82,16 @@ defmodule Bordo.Fixtures do
       })
 
     post
+  end
+
+  def fixture(:post_variant, assoc, attrs) do
+    channel = assoc[:channel] || fixture(:channel)
+
+    {:ok, post_variant} =
+      attrs
+      |> Enum.into(%{channel_id: channel.id, content: Shakespeare.hamlet()})
+      |> PostVariants.create_post_variant()
+
+    post_variant
   end
 end
