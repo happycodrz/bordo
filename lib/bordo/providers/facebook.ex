@@ -49,6 +49,7 @@ defmodule Bordo.Providers.Facebook do
       end
     else
       Logger.info("FACEBOOK POST CREATED")
+      {:ok, %{"id" => Integer.to_string(Enum.random(0..1000))}}
     end
   end
 end

@@ -1,13 +1,13 @@
-defmodule Bordo.Providers.TwitterTest do
+defmodule Bordo.Providers.FacebookTest do
   use Bordo.DataCase
 
   alias Bordo.PostVariants
-  alias Bordo.Providers.Twitter
+  alias Bordo.Providers.Facebook
   alias Bordo.Repo
 
   describe "#handle_event/1" do
     test "it creates a tweet when scheduled" do
-      channel = fixture(:channel, network: "twitter")
+      channel = fixture(:channel, network: "facebook")
 
       post_variant =
         PostVariants.get_post_variant!(
@@ -16,12 +16,12 @@ defmodule Bordo.Providers.TwitterTest do
         |> Repo.preload(:channel)
 
       assert post_variant.status == "scheduled"
-      {:ok, updated_post_variant} = Twitter.handle_event(post_variant)
+      {:ok, updated_post_variant} = Facebook.handle_event(post_variant)
       assert updated_post_variant.status == "published"
     end
 
     test "it does not resend a tweet when published" do
-      channel = fixture(:channel, network: "twitter")
+      channel = fixture(:channel, network: "facebook")
 
       post_variant =
         PostVariants.get_post_variant!(
@@ -30,7 +30,7 @@ defmodule Bordo.Providers.TwitterTest do
         |> Repo.preload(:channel)
 
       external_id = post_variant.external_id
-      {:ok, updated_post_variant} = Twitter.handle_event(post_variant)
+      {:ok, updated_post_variant} = Facebook.handle_event(post_variant)
       assert external_id == updated_post_variant.external_id
     end
   end

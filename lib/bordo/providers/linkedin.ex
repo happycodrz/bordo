@@ -32,6 +32,7 @@ defmodule Bordo.Providers.Linkedin do
       end
     else
       Logger.info("LINKEDIN SHARE CREATED")
+      {:ok, %{"id" => Integer.to_string(Enum.random(0..1000))}}
     end
   end
 end
