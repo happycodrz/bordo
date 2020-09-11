@@ -20,6 +20,10 @@
             opacity: 0.2;
             animation: fadeInPast .25s 1;
         }
+
+        &--attention {
+          background:darken(orange, 5%);
+        }
     }
 }
 

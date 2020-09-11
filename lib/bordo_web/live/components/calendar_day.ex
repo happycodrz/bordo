@@ -43,7 +43,7 @@ defmodule BordoWeb.Components.CalendarDay do
     assigns = %{socket: socket}
 
     ~L"""
-      <div class="<%= post_css(post.scheduled_for) %>" phx-click="dispatch-edit-state" phx-value-post_id="<%= post.id %>">
+      <div class="<%= post_css(post) %>" phx-click="dispatch-edit-state" phx-value-post_id="<%= post.id %>">
         <div class="flex items-center justify-between mb-1">
           <span class="text-truncate pr-1"><%= post.title %></span><span><%= scheduled_for %></span>
         </div>
@@ -92,13 +92,23 @@ defmodule BordoWeb.Components.CalendarDay do
     Map.take(assigns.day, [:year, :month]) != Map.take(assigns.current_date, [:year, :month])
   end
 
-  def post_css(scheduled_for) do
-    case Timex.compare(Timex.now(), scheduled_for) do
-      1 ->
-        "bdo-scheduleCalendar__post bdo-scheduleCalendar__post--past"
+  def post_css(post) do
+    failed =
+      post.post_variants |> Enum.map(fn pv -> pv.status end) |> Enum.filter(&(&1 == "failed"))
 
-      _ ->
-        "bdo-scheduleCalendar__post"
+    main_css =
+      case Timex.compare(Timex.now(), post.scheduled_for) do
+        1 ->
+          "bdo-scheduleCalendar__post bdo-scheduleCalendar__post--past"
+
+        _ ->
+          "bdo-scheduleCalendar__post"
+      end
+
+    if Enum.any?(failed) do
+      main_css <> " bdo-scheduleCalendar__post--attention"
+    else
+      main_css
     end
   end
 end
