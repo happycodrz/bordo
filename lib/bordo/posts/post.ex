@@ -34,6 +34,7 @@ defmodule Bordo.Posts.Post do
     |> cast(attrs, [:title, :scheduled_for])
     |> cast_assoc(:post_variants, with: &Bordo.PostVariants.PostVariant.update_content_changeset/2)
     |> validate_required([:title])
+    |> validate_current_or_future_date(:scheduled_for)
   end
 
   @doc false
@@ -47,6 +48,7 @@ defmodule Bordo.Posts.Post do
     )
     |> foreign_key_constraint(:brand_id)
     |> validate_required([:title, :brand_id, :user_id])
+    |> validate_current_or_future_date(:scheduled_for)
     |> NumberableSlug.maybe_generate_slug()
     |> NumberableSlug.unique_constraint()
     |> slug_to_int()
@@ -56,5 +58,22 @@ defmodule Bordo.Posts.Post do
     slug = String.to_integer(changeset.changes.slug)
 
     put_change(changeset, :slug, slug)
+  end
+
+  def validate_current_or_future_date(%{changes: changes} = changeset, field) do
+    if date = changes[field] do
+      do_validate_current_or_future_date(changeset, field, date)
+    else
+      changeset
+    end
+  end
+
+  defp do_validate_current_or_future_date(changeset, field, date) do
+    if Timex.compare(date, Timex.now(), :hour) == -1 do
+      changeset
+      |> add_error(field, "You cannot schedule things in the past")
+    else
+      changeset
+    end
   end
 end
