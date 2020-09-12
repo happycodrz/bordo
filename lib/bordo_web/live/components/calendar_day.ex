@@ -73,7 +73,7 @@ defmodule BordoWeb.Components.CalendarDay do
   end
 
   defp social_logo("facebook") do
-    Svg.social_icon("facebook_white",
+    Svg.social_icon("fb_white",
       class: "fill-current text-white mr-1",
       style: "width: 10px; height: 10px;"
     )
