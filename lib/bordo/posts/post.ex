@@ -68,6 +68,9 @@ defmodule Bordo.Posts.Post do
     end
   end
 
+  # We want to allow a fairly lenient time in the past just incase there
+  # is a submission from a modal left open for a while. We want to give them a warning
+  # if they try to submit something that's more obviously in the past
   defp do_validate_current_or_future_date(changeset, field, date) do
     if Timex.compare(date, Timex.now(), :hour) == -1 do
       changeset

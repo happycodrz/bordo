@@ -61,6 +61,32 @@ defmodule Bordo.PostsTest do
       assert_enqueued(worker: Bordo.Workers.PostScheduler, args: %{"post_id" => post.id})
     end
 
+    test "changeset is invalid if scheduled_for is in the past over 1 hour" do
+      changeset =
+        %Post{}
+        |> Post.update_changeset(
+          @valid_attrs
+          |> Map.put(:scheduled_for, Timex.now() |> Timex.subtract(Timex.Duration.from_hours(1)))
+        )
+
+      refute changeset.valid?
+      assert %{scheduled_for: ["You cannot schedule things in the past"]} = errors_on(changeset)
+    end
+
+    test "scheduled_for can be 59 minutes in the past" do
+      changeset =
+        %Post{}
+        |> Post.update_changeset(
+          @valid_attrs
+          |> Map.put(
+            :scheduled_for,
+            Timex.now() |> Timex.subtract(Timex.Duration.from_minutes(59))
+          )
+        )
+
+      assert changeset.valid?
+    end
+
     test "create_post/1 with invalid data returns error changeset" do
       brand = fixture(:brand)
 
