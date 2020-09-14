@@ -2,8 +2,9 @@
   <%= if @show_slideover do %>
     <%= live_component(@socket,
       BordoWeb.Components.PostSlideOver,
-      id: "new-post",
+      id:  "new-post",
       title: "New Post",
+      live_action: assigns[:live_action],
       with_overlay: true,
       size: "large",
       target: "#new-post") do %>
@@ -29,6 +30,7 @@
           <div>
             <%= text_input f, :scheduled_for, id: "datepicker", phx_hook: "DatePicker", class: "form-input block w-full sm:text-sm sm:leading-5" %>
           </div>
+          <%= error_tag f, :scheduled_for %>
         </div>
       </div>
       <%= channel_selector(@channels) %>
@@ -56,7 +58,7 @@
             </div>
             <div class="ml-4">
               <%= hidden_input pv, :temp_id %>
-              <a href="#" phx-click="remove-variant" phx-target="#new-post" phx-value-remove="<%= Ecto.Changeset.get_field(pv.source, :temp_id) %>" phx-value-channel_id="<%= Ecto.Changeset.get_field(pv.source, :channel_id) %>">
+              <a href="#" phx-click="remove-variant" phx-target="#new-post" phx-value-remove="<%= Ecto.Changeset.get_field(pv.source, :temp_id) || Ecto.Changeset.get_field(pv.source, :id) %>" phx-value-channel_id="<%= Ecto.Changeset.get_field(pv.source, :channel_id) %>">
                 <%= feather_icon("trash", "h-4 w-4") %>
               </a>
             </div>
@@ -76,7 +78,7 @@
     </div>
   <% end %>
   <%= hidden_input f, :brand_id, value: @active_brand.id %>
-  <%= hidden_input f, :user_id, value: @current_user.id %>
+  <%= hidden_input f, :user_id, value: @current_user_id %>
 <% end %>
 <%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: "Change media", size: "large" do %>
   <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 h-screen overflow-scroll">

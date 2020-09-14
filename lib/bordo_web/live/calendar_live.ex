@@ -4,11 +4,12 @@ defmodule BordoWeb.CalendarLive do
 
   alias Bordo.Brands
   alias Bordo.Posts
-  alias Ecto.Changeset
+  alias BordoWeb.Live.AuthHelper
 
   @week_start_at :sun
 
-  def mount(%{"brand_slug" => brand_slug}, _session, socket) do
+  def mount(%{"brand_slug" => brand_slug}, session, socket) do
+    {:ok, current_identity} = AuthHelper.load_user(session)
     active_brand = Brands.get_brand!(slug: brand_slug)
     current_date = Timex.now()
     posts = fetch_posts(active_brand.id, current_date)
@@ -22,7 +23,8 @@ defmodule BordoWeb.CalendarLive do
       active_brand: active_brand,
       nav_item: "schedule",
       posts: mapped_posts,
-      show_slideover: false
+      show_slideover: false,
+      current_user_id: current_identity.user_id
     ]
 
     {:ok, assign(socket, assigns)}
@@ -114,57 +116,5 @@ defmodule BordoWeb.CalendarLive do
     ]
 
     {:noreply, assign(socket, assigns)}
-  end
-
-  def handle_event("dispatch-edit-state", %{"post_id" => post_id}, socket) do
-    {:noreply,
-     push_patch(socket,
-       to:
-         Routes.live_path(
-           socket,
-           BordoWeb.CalendarLive,
-           socket.assigns.active_brand.slug,
-           post_id
-         )
-     )}
-  end
-
-  def handle_event("close-slideover", _params, socket) do
-    {
-      :noreply,
-      socket
-      |> push_patch(
-        to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
-      )
-    }
-  end
-
-  def handle_params(%{"post_id" => post_id}, _uri, socket) do
-    post = Posts.get_post!(post_id)
-
-    changeset =
-      Posts.change_post(post)
-      |> Changeset.put_assoc(
-        :post_variants,
-        post.post_variants
-        |> Enum.map(fn pv ->
-          if pv.post_variant_media |> Enum.empty?() do
-            pv |> Changeset.change(post_variant_media: [%{media_id: nil}])
-          else
-            pv
-          end
-        end)
-      )
-
-    {:noreply,
-     socket
-     |> assign(:show_slideover, true)
-     |> assign(:post, post)
-     |> assign(:changeset, changeset)
-     |> assign(:active_brand, socket.assigns.active_brand)}
-  end
-
-  def handle_params(_, _uri, socket) do
-    {:noreply, socket |> assign(:show_slideover, false)}
   end
 end

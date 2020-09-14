@@ -14,7 +14,13 @@ defmodule BordoWeb.Posts.NewLive do
   alias Timex.Timezone
 
   def preload([assigns]) do
-    post = get_post(nil)
+    post =
+      if assigns[:live_action] == :edit do
+        assigns[:post] || get_post(nil)
+      else
+        get_post(nil)
+      end
+
     changeset = Posts.change_post(post)
 
     [
@@ -22,14 +28,10 @@ defmodule BordoWeb.Posts.NewLive do
       |> Map.merge(%{
         channels: fetch_available_channels(assigns.active_brand.id),
         changeset: changeset,
-        post: post
+        post: post,
+        live_action: assigns[:live_action] || :new
       })
     ]
-  end
-
-  def mount(socket) do
-    # TODO: Handle edit live_action
-    {:ok, socket}
   end
 
   # TODO: Add validate event, after refactoring validation pipeline
@@ -43,40 +45,40 @@ defmodule BordoWeb.Posts.NewLive do
   def handle_event("save", %{"post" => post_params}, socket) do
     params = post_params |> prepare_data()
 
-    case Posts.create_and_schedule_post(params) do
-      {:ok, _post} ->
-        {:noreply,
-         socket
-         |> redirect(
-           to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
-         )}
+    if socket.assigns.live_action == :edit do
+      case Posts.update_and_schedule_post(socket.assigns.post, params) do
+        {:ok, _post} ->
+          {:noreply,
+           socket
+           |> redirect(
+             to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
+           )}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        prepared_changeset =
-          changeset
-          |> Changeset.put_change(
-            :scheduled_for,
-            Changeset.get_field(changeset, :scheduled_for) |> format_for_input()
-          )
-          |> Changeset.update_change(:post_variants, &inject_media_when_empty(&1))
+        {:error, %Ecto.Changeset{} = changeset} ->
+          {:noreply, assign(socket, changeset: prepare_error_changeset(changeset))}
+      end
+    else
+      case Posts.create_and_schedule_post(params) do
+        {:ok, _post} ->
+          {:noreply,
+           socket
+           |> redirect(
+             to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
+           )}
 
-        {:noreply, assign(socket, changeset: prepared_changeset)}
+        {:error, %Ecto.Changeset{} = changeset} ->
+          {:noreply, assign(socket, changeset: prepare_error_changeset(changeset))}
+      end
     end
   end
 
-  def inject_media_when_empty(pv_changeset) do
-    pv_changeset
-    |> Enum.map(fn pv ->
-      if Enum.empty?(Changeset.get_field(pv, :post_variant_media)) do
-        Changeset.put_change(pv, :post_variant_media, [%PostVariantMedia{}])
-      else
-        pv
-      end
-    end)
-  end
+  def handle_event("delete", _params, socket) do
+    Posts.delete_post(socket.assigns.post)
 
-  def handle_pv_changeset(kvpair) do
-    kvpair
+    {:noreply,
+     redirect(socket,
+       to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
+     )}
   end
 
   def handle_event("add-variant", %{"channel_id" => channel_id}, socket) do
@@ -130,11 +132,15 @@ defmodule BordoWeb.Posts.NewLive do
   end
 
   def handle_event("close-slideover", _data, socket) do
-    {:noreply, socket |> assign(:show_slideover, false)}
+    {:noreply, socket |> assign(show_slideover: false, changeset: nil)}
   end
 
-  def handle_event("open-slideover", _meta, socket) do
-    {:noreply, socket |> assign(:show_slideover, true)}
+  def handle_event("open-slideover", %{"post_id" => post_id}, socket) do
+    {:noreply, build_slideover_assigns(socket, post_id)}
+  end
+
+  def handle_event("open-slideover", _data, socket) do
+    {:noreply, build_slideover_assigns(socket, nil)}
   end
 
   def handle_event("selecting-media", %{"post_variant_id" => post_variant_id}, socket) do
@@ -155,16 +161,76 @@ defmodule BordoWeb.Posts.NewLive do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
+  def build_slideover_assigns(socket, post_id) do
+    live_action =
+      if is_nil(post_id) do
+        :new
+      else
+        :edit
+      end
+
+    post = get_post(post_id)
+    changeset = Posts.change_post(post)
+    existing_variants = existing_variants(%{changeset: changeset, post: post})
+
+    # reject existing channels in the post-variant changeset
+    channels =
+      fetch_available_channels(socket.assigns.active_brand.id)
+      |> Enum.reject(fn channel ->
+        existing_variants |> Enum.map(& &1.channel_id) |> Enum.member?(channel.id)
+      end)
+      |> Enum.sort_by(& &1.network)
+
+    socket
+    |> assign(
+      show_slideover: true,
+      channels: channels,
+      changeset: changeset,
+      live_action: live_action,
+      post: post
+    )
+  end
+
+  def prepare_error_changeset(changeset) do
+    changeset
+    |> Changeset.put_change(
+      :scheduled_for,
+      Changeset.get_field(changeset, :scheduled_for) |> format_for_input()
+    )
+    |> Changeset.update_change(:post_variants, &inject_media_when_empty(&1))
+  end
+
+  def inject_media_when_empty(pv_changeset) do
+    pv_changeset
+    |> Enum.map(fn pv ->
+      if Enum.empty?(Changeset.get_field(pv, :post_variant_media)) do
+        Changeset.put_change(pv, :post_variant_media, [%PostVariantMedia{}])
+      else
+        pv
+      end
+    end)
+  end
+
+  def handle_pv_changeset(kvpair) do
+    kvpair
+  end
+
   def add_media(existing_variants, media_id, socket) do
     existing_variants
     |> Enum.map(fn pv ->
-      if pv.data.temp_id == socket.assigns.selected_post_variant_id do
-        Changeset.put_change(pv, :post_variant_media, [
+      if pv.id == socket.assigns.selected_post_variant_id ||
+           pv.temp_id == socket.assigns.selected_post_variant_id do
+        Posts.change_post_variant(
+          pv,
           %{
-            id: generate_temp_id(),
-            media_id: media_id
+            post_variant_media: [
+              %{
+                id: generate_temp_id(),
+                media_id: media_id
+              }
+            ]
           }
-        ])
+        )
       else
         pv
       end
@@ -174,15 +240,14 @@ defmodule BordoWeb.Posts.NewLive do
   def remove_media(existing_variants, post_variant_media_id, post_variant_id) do
     existing_variants
     |> Enum.map(fn pv ->
-      if (pv.data.id == post_variant_id || pv.data.temp_id == post_variant_id) &&
-           pv.changes.post_variant_media
-           |> Enum.map(& &1.changes)
-           |> Enum.map(&get_in(&1, [:media_id]))
+      if (pv.id == post_variant_id || pv.temp_id == post_variant_id) &&
+           pv.post_variant_media
+           |> Enum.map(& &1.media_id)
            |> Enum.any?(&(&1 == post_variant_media_id)) do
         Posts.change_post_variant(
-          pv.data,
+          pv,
           %{
-            channel_id: Changeset.get_field(pv, :channel_id),
+            channel_id: pv.channel_id,
             post_variant_media: [%{id: generate_temp_id()}]
           }
         )
@@ -308,8 +373,8 @@ defmodule BordoWeb.Posts.NewLive do
     """
   end
 
-  defp existing_variants(assigns) do
-    Map.get(assigns.changeset.changes, :post_variants, assigns.post.post_variants)
+  def existing_variants(assigns) do
+    Changeset.get_field(assigns.changeset, :post_variants)
   end
 
   defp add_variant(existing_variants, channel_id) do
@@ -325,8 +390,11 @@ defmodule BordoWeb.Posts.NewLive do
 
   defp remove_variant(existing_variants, remove_id) do
     existing_variants
-    |> Enum.reject(fn %{data: variant} ->
-      variant.temp_id == remove_id
+    |> Enum.reject(fn variant ->
+      [variant.id, variant.temp_id]
+      |> Enum.reject(&(:string.is_empty(&1) || is_nil(&1)))
+      |> hd ==
+        remove_id
     end)
   end
 

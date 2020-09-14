@@ -27,9 +27,4 @@
       <% end %>
     </div>
   </section>
-  <%= if @show_slideover do %>
-    <%= live_component(@socket, BordoWeb.Components.SlideOver, id: "edit-post", title: "Post Info", with_overlay: true, size: "large") do %>
-      <%= live_component(@socket, BordoWeb.EditPost, post: @post, id: "edit-post-inner", changeset: @changeset, active_brand: @active_brand) %>
-    <% end %>
-  <% end %>
 </div>

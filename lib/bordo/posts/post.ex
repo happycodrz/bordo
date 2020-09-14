@@ -12,7 +12,7 @@ defmodule Bordo.Posts.Post do
     belongs_to(:brand, Bordo.Brands.Brand)
     belongs_to(:user, Bordo.Users.User)
 
-    has_many :post_variants, Bordo.PostVariants.PostVariant
+    has_many :post_variants, Bordo.PostVariants.PostVariant, on_replace: :delete
     many_to_many :channels, Bordo.Channels.Channel, join_through: "post_variants"
     timestamps()
   end

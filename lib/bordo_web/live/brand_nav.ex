@@ -47,7 +47,7 @@ defmodule BordoWeb.BrandNav do
           </button>
         </div>
       </aside>
-      <%= live_component(@socket, BordoWeb.Posts.NewLive, id: "post-slideover", active_brand: @active_brand, channels: [], changeset: nil, show_slideover: false, post: nil, current_user: @current_user) %>
+      <%= live_component(@socket, BordoWeb.Posts.NewLive, id: "post-slideover", active_brand: @active_brand, channels: [], changeset: nil, show_slideover: false, post: nil, current_user_id: @current_user.id, live_action: :new) %>
     </nav>
     """
   end

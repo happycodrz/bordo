@@ -43,7 +43,7 @@ defmodule BordoWeb.Components.CalendarDay do
     assigns = %{socket: socket}
 
     ~L"""
-      <div class="<%= post_css(post) %>" phx-click="dispatch-edit-state" phx-value-post_id="<%= post.id %>">
+      <div class="<%= post_css(post) %>" phx-click="open-slideover" phx-target="#new-post" phx-value-post_id="<%= post.id %>">
         <div class="flex items-center justify-between mb-1">
           <span class="text-truncate pr-1"><%= post.title %></span><span><%= scheduled_for %></span>
         </div>

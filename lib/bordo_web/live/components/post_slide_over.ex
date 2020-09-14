@@ -63,24 +63,53 @@ defmodule BordoWeb.Components.PostSlideOver do
                   </div>
                 </div>
                 <div class="flex-shrink-0 px-4 border-t border-gray-200 py-3 sm:px-6">
-                  <div class="space-x-3 flex justify-end">
-                    <span class="inline-flex rounded-md shadow-sm">
-                      <button @click="open = false; setTimeout(() => open = true, 100);" type="button" class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                        Cancel
-                      </button>
-                    </span>
-                    <span class="inline-flex rounded-md shadow-sm">
-                      <button form="post-form" phx-disable-with="Submitting" type="submit" class="inline-flex justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
-                        Schedule Post
-                      </button>
-                    </span>
-                  </div>
+                  <%= footer_content(assigns[:live_action]) %>
                 </div>
               </div>
             </div>
           </section>
         </div>
       </div>
+    </div>
+    """
+  end
+
+  defp footer_content(:edit) do
+    ~e"""
+    <div class="flex justify-between">
+      <button type="button" class="inline-flex bg-red-600 justify-between items-center w-auto rounded-md border border-gray-300 px-4 py-2 text-white leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5" phx-click="delete" phx-target="#new-post">
+        <%= feather_icon("trash", "mr-2") %>
+        Delete Post
+      </button>
+      <div class="space-x-3 flex justify-end">
+        <span class="inline-flex rounded-md shadow-sm">
+          <button @click="open = false; setTimeout(() => open = true, 100);" type="button" class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+            Cancel
+          </button>
+        </span>
+        <span class="inline-flex rounded-md shadow-sm">
+          <button form="post-form" phx-disable-with="Submitting" type="submit" class="justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
+            Update Post
+          </button>
+        </span>
+      </div>
+    </div>
+    """
+  end
+
+  defp footer_content(:new) do
+    ~e"""
+    <div class="space-x-3 flex justify-end">
+      <span class="inline-flex rounded-md shadow-sm">
+        <button @click="open = false; setTimeout(() => open = true, 100);" type="button" class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+          Cancel
+        </button>
+      </span>
+      <span class="inline-flex rounded-md shadow-sm">
+        <button form="post-form" phx-disable-with="Submitting" type="submit" class="inline-flex justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
+          Schedule Post
+        </button>
+      </span>
     </div>
     """
   end

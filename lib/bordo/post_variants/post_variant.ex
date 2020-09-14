@@ -14,7 +14,7 @@ defmodule Bordo.PostVariants.PostVariant do
     field :delete, :boolean, virtual: true
 
     belongs_to :channel, Bordo.Channels.Channel
-    belongs_to :post, Bordo.Posts.Post
+    belongs_to :post, Bordo.Posts.Post, on_replace: :delete
     has_many :post_variant_media, Bordo.PostVariants.PostVariantMedia, on_replace: :delete
 
     many_to_many :media, Bordo.Media.Media, join_through: "post_variant_media"
