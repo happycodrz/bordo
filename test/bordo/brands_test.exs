@@ -40,7 +40,7 @@ defmodule Bordo.BrandsTest do
       assert brand.slug == "some-name"
       assert {:ok, %Brand{} = brand} = Brands.update_brand(brand, @update_attrs)
       assert brand.name == "some updated name"
-      assert brand.slug == "some-updated-name"
+      assert brand.slug =~ "some-updated-name"
     end
 
     test "update_brand/2 with invalid data returns error changeset" do
