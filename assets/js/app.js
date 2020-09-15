@@ -14,7 +14,6 @@ import '../css/app.css'
 //
 import 'phoenix_html'
 import 'alpinejs'
-import flatpickr from 'flatpickr'
 import { Socket } from 'phoenix'
 import NProgress from 'nprogress'
 import { LiveSocket } from 'phoenix_live_view'
@@ -22,6 +21,7 @@ import { LiveSocket } from 'phoenix_live_view'
 // Hooks
 import LiveReact, { initLiveReact } from 'phoenix_live_react'
 import { InitModal } from './hooks/modal'
+import { DatePicker } from './hooks/date_picker'
 import { initSlideOver } from './hooks/slide_over'
 import { Toast } from './hooks/toast'
 
@@ -32,13 +32,6 @@ Hooks.LiveReact = LiveReact
 Hooks.FeatherIcon = {
   mounted() {
     feather.replace()
-  },
-}
-Hooks.DatePicker = {
-  mounted() {
-    flatpickr(this.el, {
-      enableTime: true,
-    })
   },
 }
 Hooks.TwitterLimit = {
@@ -60,7 +53,7 @@ Hooks.TwitterLimit = {
   },
 }
 
-Hooks = { ...Hooks, InitModal, initSlideOver, Toast }
+Hooks = { ...Hooks, InitModal, initSlideOver, Toast, DatePicker }
 
 import Choices from 'choices.js'
 let csrfToken = document
