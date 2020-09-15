@@ -34,13 +34,15 @@ defmodule BordoWeb.Posts.NewLive do
     ]
   end
 
-  # TODO: Add validate event, after refactoring validation pipeline
-  # def handle_event("validate", %{"post" => post_params}, socket) do
-  #   params = post_params |> prepare_data()
+  def handle_event("validate", %{"post" => post_params}, socket) do
+    params = post_params |> prepare_data()
 
-  #   updated_changeset = Posts.change_post(%Post{}, params)
-  #   {:noreply, assign(socket, changeset: updated_changeset)}
-  # end
+    updated_changeset =
+      Posts.change_post(socket.assigns.post, params)
+      |> prepare_error_changeset()
+
+    {:noreply, assign(socket, changeset: updated_changeset)}
+  end
 
   def handle_event("save", %{"post" => post_params}, socket) do
     params = post_params |> prepare_data()
@@ -259,7 +261,7 @@ defmodule BordoWeb.Posts.NewLive do
 
   def prepare_data(params) do
     params
-    |> Map.replace!("scheduled_for", parse_scheduled_for(params))
+    |> convert_scheduled_for_to_utc()
     |> drop_empty_media()
   end
 
@@ -304,12 +306,16 @@ defmodule BordoWeb.Posts.NewLive do
     |> Timex.format!("%Y-%m-%d %H:%M", :strftime)
   end
 
-  defp parse_scheduled_for(post_params) do
+  defp convert_scheduled_for_to_utc(post_params) do
     post_params
-    |> Map.get("scheduled_for")
-    |> Timex.parse!("%Y-%m-%d %H:%M", :strftime)
-    |> Timex.to_datetime("America/Chicago")
-    |> Timezone.convert("UTC")
+    |> Map.replace!(
+      "scheduled_for",
+      post_params
+      |> Map.get("scheduled_for")
+      |> Timex.parse!("%Y-%m-%d %H:%M", :strftime)
+      |> Timex.to_datetime("America/Chicago")
+      |> Timezone.convert("UTC")
+    )
   end
 
   defp media_selector(pv_media, post_variant_id) do

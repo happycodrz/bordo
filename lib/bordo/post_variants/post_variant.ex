@@ -53,7 +53,7 @@ defmodule Bordo.PostVariants.PostVariant do
 
     post_variant
     |> Map.put(:temp_id, post_variant.temp_id || attrs["temp_id"])
-    |> cast(attrs, [:status, :post_id, :content])
+    |> cast(attrs, [:status, :post_id, :content, :channel_id])
     |> cast_assoc(:post_variant_media, default: [])
     |> validate_not_published(post_variant)
     |> put_change(:status, "scheduled")
