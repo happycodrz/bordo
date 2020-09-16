@@ -4,6 +4,7 @@ defmodule BordoWeb.OnboardingLive.Index do
   alias Bordo.Brands.Brand
   alias Bordo.Teams.Team
   alias Bordo.{Brands, Teams, Users}
+  alias BordoWeb.Helpers.BrandHelper
   alias BordoWeb.Live.AuthHelper
 
   @steps [:create_team, :create_brand]
@@ -191,16 +192,46 @@ defmodule BordoWeb.OnboardingLive.Index do
           </div>
 
           <div class="mt-6">
-            <span class="block w-full rounded-md shadow-sm">
+            <span class="rounded-md shadow-sm">
               <button type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
+                class="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
                 phx-disable-with="Validating...">Add a brand</button>
             </span>
           </div>
           </form>
+          <%= if Enum.any?(@brands) do %>
+            <%= brand_table(@brands) %>
+          <% end %>
         </div>
       </div>
+      <%= if Enum.any?(@brands) do %>
+        <div class="mt-6">
+          <button type="submit"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
+                  phx-click="finish-onboarding"
+                  phx-disable-with="Woo!">I'm all done adding brands &rarr;</button>
+        </div>
+      <% end %>
     </div>
+    """
+  end
+
+  def brand_table(brands) do
+    ~e"""
+      <ul class="mt-8 grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <%= for brand <- brands do %>
+          <li class="col-span-1 flex shadow-sm rounded-md">
+            <div class="flex-shrink-0 flex items-center justify-center w-16 bg-red-500 text-white text-sm leading-5 font-medium rounded-l-md">
+              <%= BrandHelper.brand_letters(brand) %>
+            </div>
+            <div class="flex-1 flex items-center justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md truncate">
+              <div class="flex-1 px-4 py-2 text-sm leading-5 truncate">
+                <%= brand.name %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
     """
   end
 
@@ -209,18 +240,25 @@ defmodule BordoWeb.OnboardingLive.Index do
   def mount(_params, session, socket) do
     {:ok, user} = AuthHelper.load_user(session)
 
-    if user.team_id != nil do
-      brands = Brands.list_brands_for_team(user.team_id)
-
-      if Enum.any?(brands) do
-        brand = Enum.at(brands, 0)
-        {:ok, redirect(socket, to: Routes.live_path(socket, BordoWeb.LaunchpadLive, brand.slug))}
+    team =
+      if is_nil(user.team_id) do
+        nil
       else
-        {:ok, determine_step(socket, user)}
+        Teams.get_team!(user.team_id)
       end
-    else
-      {:ok, determine_step(socket, user)}
+
+    brands = fetch_brands(user.team_id)
+
+    case [!is_nil(team) && team.completed_onboarding, Enum.any?(brands)] do
+      [true, true] -> {:ok, redirect(socket, to: home_path(socket, brands))}
+      [false, true] -> {:ok, determine_step(assign(socket, brands: brands, team: team), user)}
+      [_, _] -> {:ok, determine_step(socket, user)}
     end
+  end
+
+  def home_path(socket, brands) do
+    brand = Enum.at(brands, 0)
+    Routes.live_path(socket, BordoWeb.LaunchpadLive, brand.slug)
   end
 
   def handle_event("save", %{"team" => team_params}, socket) do
@@ -250,14 +288,23 @@ defmodule BordoWeb.OnboardingLive.Index do
            })
          ) do
       {:ok, brand} ->
-        {:noreply,
-         redirect(socket,
-           to: Routes.live_path(BordoWeb.Endpoint, BordoWeb.LaunchpadLive, brand.slug)
-         )}
+        {:noreply, socket |> assign(:brands, Enum.concat(socket.assigns.brands, [brand]))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(changeset: changeset)}
     end
+  end
+
+  def handle_event("finish-onboarding", _data, socket) do
+    brand = Enum.at(socket.assigns.brands, 0)
+    Teams.update_team(socket.assigns.team, %{completed_onboarding: true}) |> IO.inspect()
+    {:noreply, redirect(socket, to: Routes.live_path(socket, BordoWeb.LaunchpadLive, brand.slug))}
+  end
+
+  defp fetch_brands(nil), do: []
+
+  defp fetch_brands(team_id) do
+    Brands.list_brands_for_team(team_id)
   end
 
   defp determine_step(socket, user) do
@@ -268,16 +315,17 @@ defmodule BordoWeb.OnboardingLive.Index do
         current_user: user,
         step: :create_team,
         skip_flash: true,
-        changeset: Team.changeset(%Team{}, %{})
+        changeset: Team.changeset(%Team{}, %{}),
+        brands: socket.assigns[:brands] || []
       )
     else
       assign(socket,
-        team: nil,
         errors: nil,
         current_user: user,
         step: :create_brand,
         skip_flash: true,
-        changeset: Brand.changeset(%Brand{}, %{})
+        changeset: Brand.changeset(%Brand{}, %{}),
+        brands: socket.assigns[:brands] || []
       )
     end
   end
