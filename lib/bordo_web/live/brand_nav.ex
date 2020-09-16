@@ -3,6 +3,7 @@ defmodule BordoWeb.BrandNav do
 
   alias Bordo.Brands
   alias Bordo.Users
+  alias BordoWeb.Helpers.BrandHelper
   alias BordoWeb.Live.AuthHelper
 
   def render(assigns) do
@@ -76,16 +77,10 @@ defmodule BordoWeb.BrandNav do
     active = brand.slug == current_brand_slug
 
     if brand.image_url == nil do
-      letters =
-        brand.name
-        |> String.split(" ")
-        |> Enum.map(fn x -> x |> String.graphemes() |> Enum.at(0) end)
-        |> Enum.join()
-
       ~e"""
       <div
         class="<%= avatar_class(active) %>">
-        <%= letters %>
+        <%= BrandHelper.brand_letters(brand) %>
       </div>
       """
     else
