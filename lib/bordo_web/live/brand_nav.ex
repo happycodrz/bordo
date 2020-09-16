@@ -2,6 +2,7 @@ defmodule BordoWeb.BrandNav do
   use BordoWeb, :client_live_view
 
   alias Bordo.Brands
+  alias Bordo.Brands.Brand
   alias Bordo.Users
   alias BordoWeb.Helpers.BrandHelper
   alias BordoWeb.Live.AuthHelper
@@ -37,9 +38,11 @@ defmodule BordoWeb.BrandNav do
         </header>
         <nav class="nav flex-column nav-secondary h-full bg-gray-50">
           <%= nav_link(Routes.live_path(@socket, BordoWeb.LaunchpadLive, @active_brand.slug), @nav_item, "Launchpad", "zap") %>
-          <%= nav_link(Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), @nav_item, "Schedule", "calendar") %>
-          <%= nav_link(Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), @nav_item, "Media", "image") %>
-          <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
+          <%= if brand_configured?(@active_brand) do %>
+            <%= nav_link(Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), @nav_item, "Schedule", "calendar") %>
+            <%= nav_link(Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), @nav_item, "Media", "image") %>
+            <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
+          <% end %>
         </nav>
         <div class="pin-b px-4 mb-2 bg-gray-50">
           <button id="post-slideover-button" class="btn btn-danger btn-lg btn-block d-flex align-items-center justify-content-center mb-2" phx-target="#new-post" phx-click="open-slideover">
@@ -58,7 +61,7 @@ defmodule BordoWeb.BrandNav do
     current_user = Users.get_user!(current_identity.user_id)
 
     brands = fetch_brands(current_user.team_id)
-    active_brand = Brands.get_brand!(slug: brand_slug)
+    active_brand = Brands.get_brand!(slug: brand_slug, preloads: [:channels])
 
     {:ok,
      assign(socket,
@@ -119,5 +122,9 @@ defmodule BordoWeb.BrandNav do
       <% end %>
     </div>
     """
+  end
+
+  defp brand_configured?(%Brand{channels: channels}) do
+    Enum.any?(channels)
   end
 end

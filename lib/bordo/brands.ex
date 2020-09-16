@@ -49,6 +49,10 @@ defmodule Bordo.Brands do
 
   """
   def get_brand!(slug: slug), do: Repo.get_by!(Brand, slug: slug)
+
+  def get_brand!(slug: slug, preloads: preloads),
+    do: Repo.get_by!(Brand, slug: slug) |> Repo.preload(preloads)
+
   def get_brand!(id), do: Repo.get!(Brand, id)
 
   @doc """

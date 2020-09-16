@@ -10,6 +10,7 @@ defmodule Bordo.Brands.Brand do
     field :image_url
 
     belongs_to :team, Bordo.Teams.Team
+    has_many :channels, Bordo.Channels.Channel
 
     timestamps()
   end
