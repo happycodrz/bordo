@@ -272,7 +272,7 @@ defmodule BordoWeb.OnboardingLive.Index do
         user = Users.get_user!(user_id)
         {:ok, updated_user} = Users.update_user(user, %{team_id: team.id})
 
-        {:noreply, determine_step(socket, updated_user)}
+        {:noreply, determine_step(assign(socket, :team, team), updated_user)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(changeset: changeset)}
@@ -297,7 +297,7 @@ defmodule BordoWeb.OnboardingLive.Index do
 
   def handle_event("finish-onboarding", _data, socket) do
     brand = Enum.at(socket.assigns.brands, 0)
-    Teams.update_team(socket.assigns.team, %{completed_onboarding: true}) |> IO.inspect()
+    Teams.update_team(socket.assigns.team, %{completed_onboarding: true})
     {:noreply, redirect(socket, to: Routes.live_path(socket, BordoWeb.LaunchpadLive, brand.slug))}
   end
 
