@@ -58,6 +58,20 @@ defmodule Bordo.Channels do
       ** (Ecto.NoResultsError)
 
   """
+
+  def get_channel!(brand_id: brand_id, network: network) do
+    query =
+      from c in Channel,
+        left_join: b in Brand,
+        on: b.id == c.brand_id,
+        where:
+          b.id ==
+            ^brand_id and
+            c.network == ^network
+
+    query |> Repo.one()
+  end
+
   def get_channel!(id), do: Repo.get!(Channel, id)
 
   @doc """

@@ -2,6 +2,7 @@ defmodule BordoWeb.Providers.FacebookController do
   use BordoWeb, :controller
 
   alias Bordo.Brands
+  alias Bordo.Channels
 
   def auth(conn, %{"brand_id" => brand_id}) do
     conn
@@ -16,8 +17,15 @@ defmodule BordoWeb.Providers.FacebookController do
   Handles callback after following a redirect from an already connected channel.
   """
   def reauth_callback(conn, params) do
-    %{"code" => _code, "state" => state} = params
+    %{"code" => code, "state" => state} = params
     %{"brand_id" => brand_id} = URI.decode_query(state)
+
+    with {:ok, %{"access_token" => access_token}} <- get_access_token(code),
+         {:ok, %{"access_token" => long_lived_token}} <- upgrade_access_token(access_token) do
+      channel = Channels.get_channel!(brand_id: brand_id, network: "facebook")
+      Channels.update_channel(channel, %{"token" => long_lived_token})
+    end
+
     brand = Brands.get_brand!(brand_id)
 
     conn
@@ -50,5 +58,22 @@ defmodule BordoWeb.Providers.FacebookController do
     else
       System.get_env("FACEBOOK_REDIRECT_URI")
     end
+  end
+
+  def get_access_token(code) do
+    Facebook.access_token(
+      System.get_env("FACEBOOK_APP_ID"),
+      System.get_env("FACEBOOK_APP_SECRET"),
+      redirect_location(true),
+      code
+    )
+  end
+
+  def upgrade_access_token(access_token) do
+    Facebook.long_lived_access_token(
+      System.get_env("FACEBOOK_APP_ID"),
+      System.get_env("FACEBOOK_APP_SECRET"),
+      access_token
+    )
   end
 end
