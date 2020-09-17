@@ -22,30 +22,37 @@ defmodule Bordo.Providers.Facebook do
 
   def create_post(channel, content, media) do
     if Application.get_env(:bordo, :facebook_live) do
-      {:ok, page_info} = Facebook.page(channel.resource_id, channel.token, ["access_token"])
+      case Facebook.page(channel.resource_id, channel.token, ["access_token"]) do
+        {:ok, page_info} ->
+          parsed_content = ContentParser.parse(:facebook, content)
 
-      parsed_content = ContentParser.parse(:facebook, content)
+          if length(media) > 0 do
+            media = Enum.at(media, 0)
+            file_name = media.url |> String.split("/") |> Enum.at(-1)
+            %HTTPoison.Response{body: body} = HTTPoison.get!(media.url)
+            File.write!("/tmp/" <> file_name, body)
 
-      if length(media) > 0 do
-        media = Enum.at(media, 0)
-        file_name = media.url |> String.split("/") |> Enum.at(-1)
-        %HTTPoison.Response{body: body} = HTTPoison.get!(media.url)
-        File.write!("/tmp/" <> file_name, body)
+            Facebook.publish(
+              :photo,
+              channel.resource_id,
+              "/tmp/" <> file_name,
+              [message: parsed_content[:message], link: parsed_content[:links] |> List.first()],
+              page_info["access_token"]
+            )
+          else
+            Facebook.publish(
+              :feed,
+              channel.resource_id,
+              [message: parsed_content[:message], link: parsed_content[:links] |> List.first()],
+              page_info["access_token"]
+            )
+          end
 
-        Facebook.publish(
-          :photo,
-          channel.resource_id,
-          "/tmp/" <> file_name,
-          [message: parsed_content[:message], link: parsed_content[:links] |> List.first()],
-          page_info["access_token"]
-        )
-      else
-        Facebook.publish(
-          :feed,
-          channel.resource_id,
-          [message: parsed_content[:message], link: parsed_content[:links] |> List.first()],
-          page_info["access_token"]
-        )
+        {:error, error} ->
+          {:error, error}
+
+        _ ->
+          {:error, "An uncaptured error occurred"}
       end
     else
       Logger.info("FACEBOOK POST CREATED")
