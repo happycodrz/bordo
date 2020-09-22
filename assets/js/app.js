@@ -20,10 +20,11 @@ import { LiveSocket } from 'phoenix_live_view'
 
 // Hooks
 import LiveReact, { initLiveReact } from 'phoenix_live_react'
-import { InitModal } from './hooks/modal'
 import { DatePicker } from './hooks/date_picker'
-import { initSlideOver } from './hooks/slide_over'
+import { InitModal } from './hooks/modal'
 import { Toast } from './hooks/toast'
+import { UploadMedia } from './hooks/upload_media'
+import { initSlideOver } from './hooks/slide_over'
 
 const feather = require('feather-icons')
 
@@ -53,7 +54,14 @@ Hooks.TwitterLimit = {
   },
 }
 
-Hooks = { ...Hooks, InitModal, initSlideOver, Toast, DatePicker }
+Hooks = {
+  ...Hooks,
+  DatePicker,
+  InitModal,
+  Toast,
+  UploadMedia,
+  initSlideOver,
+}
 
 import Choices from 'choices.js'
 let csrfToken = document
