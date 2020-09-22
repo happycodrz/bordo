@@ -10,7 +10,7 @@ defmodule EctoSlugs.Bordo.Brands.TitleSlug do
   def build_slug(sources, changeset) do
     team_id = get_change(changeset, :team_id)
 
-    if is_nil(team_id) || slug_exists?(team_id) do
+    if name_changed?(changeset) && (is_nil(team_id) || slug_exists?(team_id)) do
       new_slug =
         sources <> "-" <> (4 |> :crypto.strong_rand_bytes() |> Base.url_encode64(padding: false))
 
@@ -23,4 +23,6 @@ defmodule EctoSlugs.Bordo.Brands.TitleSlug do
   def slug_exists?(team_id) do
     Repo.exists?(from b in Brand, where: b.team_id == ^team_id)
   end
+
+  def name_changed?(changeset), do: changeset.changes |> Map.keys() |> Enum.member?(:name)
 end
