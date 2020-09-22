@@ -22,7 +22,7 @@ export const UploadMedia = {
       },
     )
 
-    document.getElementById('upload_widget').addEventListener(
+    this.el.addEventListener(
       'click',
       function () {
         cloudinaryUpload.open()
