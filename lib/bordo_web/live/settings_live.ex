@@ -1,6 +1,5 @@
 defmodule BordoWeb.SettingsLive do
   use BordoWeb, :client_live_view
-  import PhoenixLiveReact
   alias Bordo.Brands
   alias Bordo.Brands.Brand
   alias Bordo.Channels
@@ -13,7 +12,9 @@ defmodule BordoWeb.SettingsLive do
     <div class="min-w-full min-h-full bg-gray-50">
       <div class="p-9">
         <div class="flex items-center mb-5">
-          <%= live_react_component("Components.Settings", brandId: @active_brand.id, brandImage: @active_brand.image_url) %>
+          <div className="flex align-items-center">
+            <img phx-hook="UploadMedia" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer" src="<%= @active_brand.image_url %>" alt="">
+          </div>
           <div>
             <%= if !@editing_name do %>
               <h3 class="text-2xl"><%= @active_brand.name %></h3>
@@ -112,6 +113,20 @@ defmodule BordoWeb.SettingsLive do
 
   def handle_event("edit-brand", _params, socket) do
     {:noreply, assign(socket, editing_name: !socket.assigns.editing_name)}
+  end
+
+  def handle_event("upload-success", params, socket) do
+    brand = socket.assigns.active_brand
+
+    case Brands.update_brand(brand, %{"image_url" => params["thumbnail_url"]}) do
+      {:ok, %Brand{} = brand} ->
+        {:noreply,
+         assign(socket, active_brand: brand)
+         |> put_flash(:success, "Your brand image is updated!")}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
   end
 
   def handle_event("save", params, socket) do
