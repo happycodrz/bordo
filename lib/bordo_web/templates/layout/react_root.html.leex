@@ -9,6 +9,7 @@
   <meta name="current-user" content="<%= @current_identity.user_id %>" />
   <meta name="auth-token" content="<%= Auth.Guardian.Plug.current_token(@conn) %>" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script defer src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>  
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/react.css") %>" />
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>" />
   <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/react.js") %>"></script>
