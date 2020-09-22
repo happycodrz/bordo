@@ -22,6 +22,7 @@ import { LiveSocket } from 'phoenix_live_view'
 import LiveReact, { initLiveReact } from 'phoenix_live_react'
 import { DatePicker } from './hooks/date_picker'
 import { InitModal } from './hooks/modal'
+import { ScrollLock } from './hooks/scroll_lock'
 import { Toast } from './hooks/toast'
 import { UploadMedia } from './hooks/upload_media'
 import { initSlideOver } from './hooks/slide_over'
@@ -58,6 +59,7 @@ Hooks = {
   ...Hooks,
   DatePicker,
   InitModal,
+  ScrollLock,
   Toast,
   UploadMedia,
   initSlideOver,
