@@ -8,11 +8,19 @@ defmodule BordoWeb.MediaLive do
       <div class="flex-1 mb-4">
         <%= search_menu(assigns) %>
         <%= if Enum.empty?(@medias) do %>
-          <div class="bg-gray-50 overflow-hidden rounded-lg mt-8">
-            <div class="px-4 py-5 sm:p-6">
-              Use the dropdown menu to add media.
+          <%= if @search == "" do %>
+            <div class="bg-gray-50 overflow-hidden rounded-lg mt-8">
+              <div class="px-4 py-5 sm:p-6">
+                Use the dropdown menu to add media.
+              </div>
             </div>
-          </div>
+          <% else %>
+            <div class="bg-gray-50 overflow-hidden rounded-lg mt-8">
+              <div class="px-4 py-5 sm:p-6">
+                No results.
+              </div>
+            </div>
+          <% end %>
         <% else %>
           <ul class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mt-3 flex-grow flex-1">
             <%= for media <- @medias do %>
