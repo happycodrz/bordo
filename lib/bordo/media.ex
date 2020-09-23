@@ -98,6 +98,7 @@ defmodule Bordo.Media do
 
   """
   def delete_media(%Media{} = media) do
+    Cloudex.delete([media.public_id])
     Repo.delete(media)
   end
 
