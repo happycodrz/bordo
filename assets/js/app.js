@@ -20,6 +20,7 @@ import { LiveSocket } from 'phoenix_live_view'
 
 // Hooks
 import LiveReact, { initLiveReact } from 'phoenix_live_react'
+import { Canva } from './hooks/canva'
 import { DatePicker } from './hooks/date_picker'
 import { InitModal } from './hooks/modal'
 import { ScrollLock } from './hooks/scroll_lock'
@@ -57,6 +58,7 @@ Hooks.TwitterLimit = {
 
 Hooks = {
   ...Hooks,
+  Canva,
   DatePicker,
   InitModal,
   ScrollLock,
