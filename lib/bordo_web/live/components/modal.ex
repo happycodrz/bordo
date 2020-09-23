@@ -59,28 +59,32 @@ defmodule BordoWeb.Components.Modal do
           <div class="absolute inset-0 bg-gray-900 opacity-50"></div>
         </div>
 
-        <!-- MODAL DIALOG -->
-        <div
-          x-show="open"
-          x-transition:enter="ease-out duration-300"
-          x-transition:enter-start="opacity-0 mb-2 sm:mb-8 sm:mt-2 sm:scale-95"
-          x-transition:enter-end="opacity-100 mb-8 sm:mt-8 sm:scale-100"
-          x-transition:leave="ease-in duration-200"
-          x-transition:leave-start="opacity-100  mb-8 sm:mt-8  sm:scale-100"
-          x-transition:leave-end="opacity-0  mb-2 sm:mb-8 sm:mt-2  sm:scale-95"
-          class="relative <%= modal_size(assigns[:size]) %>">
+        <!-- MODAL WRAPPER FOR SCROLLLOCK -->
+        <div class="fixed flex overflow-y-auto top-0 right-0 bottom-0 left-0 items-center justify-content-center"
+          phx-hook="ScrollLock">
+          <!-- MODAL DIALOG -->
+          <div
+            x-show="open"
+            x-transition:enter="ease-out duration-300"
+            x-transition:enter-start="opacity-0 mb-2 sm:mb-8 sm:mt-2 sm:scale-95"
+            x-transition:enter-end="opacity-100 mb-8 sm:mt-8 sm:scale-100"
+            x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100  mb-8 sm:mt-8  sm:scale-100"
+            x-transition:leave-end="opacity-0  mb-2 sm:mb-8 sm:mt-2  sm:scale-95"
+            class="relative <%= modal_size(assigns[:size]) %>">
 
-          <div @click.away="open = false" class="relative flex flex-col bg-white border border-gray-200 rounded-lg">
-            <!-- MODAL HEADER -->
-            <div class="flex items-center justify-between p-4 border-b border-gray-200 rounded-t">
-              <h5 class="mb-0 text-base font-semibold text-gray-500 uppercase"><%= assigns[:title] %></h5>
-              <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
-                &times;
-              </button>
-            </div>
-            <!-- MODAL BODY -->
-            <div class="relative flex-auto p-4">
-              <%= @inner_content.([]) %>
+            <div @click.away="open = false" class="relative flex flex-col bg-white border border-gray-200 rounded-lg">
+              <!-- MODAL HEADER -->
+              <div class="flex items-center justify-between p-4 border-b border-gray-200 rounded-t">
+                <h5 class="mb-0 text-base font-semibold text-gray-500 uppercase"><%= assigns[:title] %></h5>
+                <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
+                  &times;
+                </button>
+              </div>
+              <!-- MODAL BODY -->
+              <div class="relative flex-auto p-4">
+                <%= @inner_content.([]) %>
+              </div>
             </div>
           </div>
         </div>
