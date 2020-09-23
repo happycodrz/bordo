@@ -19,7 +19,6 @@ import NProgress from 'nprogress'
 import { LiveSocket } from 'phoenix_live_view'
 
 // Hooks
-import LiveReact, { initLiveReact } from 'phoenix_live_react'
 import { Canva } from './hooks/canva'
 import { DatePicker } from './hooks/date_picker'
 import { InitModal } from './hooks/modal'
@@ -31,7 +30,6 @@ import { initSlideOver } from './hooks/slide_over'
 const feather = require('feather-icons')
 
 let Hooks = {}
-Hooks.LiveReact = LiveReact
 Hooks.FeatherIcon = {
   mounted() {
     feather.replace()
@@ -95,17 +93,8 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)
 window.liveSocket = liveSocket
 
-import Media from './react/components/Media'
-import Settings from './react/components/Settings'
-
-window.Components = {
-  Media,
-  Settings,
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   feather.replace({ width: '1em', height: '1em' })
-  initLiveReact()
   const element = document.querySelector('.js-choice')
   if (element) {
     new Choices(element, {
