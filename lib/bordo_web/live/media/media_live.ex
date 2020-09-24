@@ -50,7 +50,7 @@ defmodule BordoWeb.MediaLive do
         ) do %>
         <%= live_component(@socket, BordoWeb.Media.UnsplashSearch, id: "unsplash-search", unsplash_search: "", unsplash_results: [], page: 1, active_brand: @active_brand, loading: false) %>
       <% end %>
-      <div id="CanvaHook" phx-hook="Canva" phx-update="ignore"></div>
+      <div id="CanvaHook" phx-hook="Canva"></div>
     </div>
     """
   end
