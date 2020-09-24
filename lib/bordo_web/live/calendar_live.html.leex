@@ -1,30 +1,42 @@
-<div class="m-8" id="edit-post">
-  <section class="bdo-scheduleCalendar">
-    <header class="flex items-center justify-between mb-8">
-      <h1 class="text-3xl">
-        <strong><%= Timex.format!(@current_date, "%B", :strftime) %></strong>
-        <%= Timex.format!(@current_date, "%Y", :strftime) %>
-      </h1>
-      <div>
-        <button type="button" class="btn btn-link" phx-click="prev-month">
-          <%= feather_icon("chevron-left", "w-6") %>
-        </button>
-        <button type="button" class="btn btn-link" phx-click="next-month">
-          <%= feather_icon("chevron-right", "w-6") %>
-        </button>
+
+
+<div class="p-8 bg-gray-50 min-h-full" id="edit-post">
+  <div class="flex items-center justify-between  mb-6">
+    <h1 class="text-2xl font-semibold text-gray-900">Schedule</h1>
+  </div>
+  <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+    <div class="border-b border-gray-200 p-3 sm:p-4 sm:pl-5 flex items-center justify-between flex-wrap sm:flex-no-wrap ">
+      <h3 class="text-xl leading-6 text-gray-700">
+        <strong><%= Timex.format!(@current_date, "%B", :strftime) %></strong> <%= Timex.format!(@current_date, "%Y", :strftime) %>
+      </h3>
+      <div class="flex-shrink-0">
+        <span class="relative z-0 inline-flex shadow-sm">
+          <button type="button"
+            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
+            aria-label="Previous"
+            phx-click="prev-month">
+              <%= feather_icon("chevron-left", "w-5 h-5") %>
+          </button>
+          <button type="button"
+            class="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
+            aria-label="Next"
+            phx-click="next-month">
+              <%= feather_icon("chevron-right", "w-6") %>
+          </button>
+        </span>
       </div>
-    </header>
-    <div class="calendar__header">
+    </div>
+    <div class="w-full grid grid-cols-7 py-2 text-center border-b border-gray-200">
       <%= for day_name <- @day_names do %>
-        <div><%= day_name %></div>
+        <div class="text-sm text-gray-400"><%= day_name %></div>
       <% end %>
     </div>
-    <div class="calendar__body">
+    <div class="w-full grid grid-cols-7">
       <%= for week <- @week_rows do %>
         <%= for day <- week do %>
           <%= live_component @socket, BordoWeb.Components.CalendarDay, day: day, current_date: @current_date, posts: @posts[day], id: day %>
         <% end %>
       <% end %>
     </div>
-  </section>
+  </div>
 </div>
