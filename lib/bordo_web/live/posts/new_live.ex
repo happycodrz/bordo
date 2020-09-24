@@ -147,7 +147,13 @@ defmodule BordoWeb.Posts.NewLive do
 
   def handle_event("selecting-media", %{"post_variant_id" => post_variant_id}, socket) do
     send_update(BordoWeb.Components.Modal, id: "choose-media", state: "OPEN")
-    {:noreply, socket |> assign(:selected_post_variant_id, post_variant_id)}
+
+    {:noreply,
+     socket
+     |> assign(
+       selected_post_variant_id: post_variant_id,
+       media: Media.list_media_for_brand(socket.assigns.active_brand.id)
+     )}
   end
 
   def handle_event("media-selected", %{"media_id" => media_id}, socket) do

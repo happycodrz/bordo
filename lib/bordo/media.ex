@@ -3,18 +3,25 @@ defmodule Bordo.Media do
   The Media context.
   """
 
+  import Filtrex.Type.Config
   import Ecto.Query, warn: false
   alias Bordo.Repo
 
-  alias Bordo.Media.Media
   alias Bordo.Brands.Brand
+  alias Bordo.Media.Media
+
+  def filter_options(:search_media) do
+    defconfig do
+      text([:title])
+    end
+  end
 
   @doc """
   Returns the list of Media.
 
   ## Examples
 
-      iex> list_medias()
+      iex> list_media()
       [%Media{}, ...]
 
   """
@@ -22,15 +29,35 @@ defmodule Bordo.Media do
     Repo.all(Media)
   end
 
-  def list_media(brand_id: brand_id) do
-    base_query =
-      from m in Media,
-        left_join: b in Brand,
-        on: b.id == m.brand_id,
-        where: b.id == ^brand_id
+  def list_media(brand_id, params \\ []) do
+    search = Keyword.get(params, :search, "")
 
-    base_query
-    |> Bordo.Repo.all()
+    {:ok, filter} =
+      Filtrex.parse_params(filter_options(:search_media), %{"title_contains" => search})
+
+    base_media_for_brand(brand_id)
+    |> Filtrex.query(filter)
+    |> order_by(desc: :inserted_at)
+    |> Repo.paginate(params)
+  end
+
+  # Temporary, used for select-media modal until we can get that paginated
+  def list_media_for_brand(brand_id) do
+    base_media_for_brand(brand_id)
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
+  end
+
+  def base_media_for_brand(brand_id) do
+    from m in Media,
+      left_join: b in Brand,
+      on: b.id == m.brand_id,
+      where: b.id == ^brand_id
+  end
+
+  def paginate_media(brand_id, params \\ []) do
+    base_media_for_brand(brand_id)
+    |> Repo.paginate(params)
   end
 
   @doc """
@@ -98,6 +125,7 @@ defmodule Bordo.Media do
 
   """
   def delete_media(%Media{} = media) do
+    Cloudex.delete([media.public_id])
     Repo.delete(media)
   end
 

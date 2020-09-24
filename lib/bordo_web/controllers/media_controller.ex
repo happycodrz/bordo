@@ -7,7 +7,7 @@ defmodule BordoWeb.Brands.MediaController do
   action_fallback BordoWeb.FallbackController
 
   def index(conn, %{"brand_id" => brand_id}) do
-    media = MediaResource.list_media(brand_id: brand_id)
+    media = MediaResource.list_media(brand_id)
     render(conn, "index.json", media: media)
   end
 

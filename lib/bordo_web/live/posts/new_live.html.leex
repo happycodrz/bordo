@@ -80,10 +80,10 @@
   <%= hidden_input f, :brand_id, value: @active_brand.id %>
   <%= hidden_input f, :user_id, value: @current_user_id %>
 <% end %>
-<%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: "Change media", size: "large" do %>
-  <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 h-screen overflow-scroll">
-    <%= for media <- Bordo.Media.list_media(brand_id: @active_brand.id) do %>
-      <li class="col-span-1 bg-white rounded-lg shadow" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected" >
+<%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: if(@live_action == :new, do: "Choose Media", else: "Change Media"), size: "large" do %>
+  <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <%= for media <- @media do %>
+      <li class="col-span-1 bg-white rounded-lg shadow" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected">
         <div class="bdo-mediaAsset bdo-mediaAsset--image card">
           <div class="bdo-mediaAsset__header">
             <div class="bdo-mediaAsset__iconBar">

@@ -7,7 +7,7 @@ defmodule BordoWeb.Components.Toast do
 
   def render(assigns) do
     ~L"""
-    <div class="fixed inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end" phx-hook="Toast">
+    <div class="fixed inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end z-50" phx-hook="Toast">
       <%= if @show do %>
         <div
           x-data="{ open: false }"
