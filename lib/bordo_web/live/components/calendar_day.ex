@@ -11,7 +11,7 @@ defmodule BordoWeb.Components.CalendarDay do
       <span class="inline-flex items-center -ml-2 px-2 py-1 rounded-full text-sm font-light text-gray-600 leading-5 <%= @day_class %>">
         <%= Timex.format!(@day, "%e", :strftime) %>
       </span>
-      <div class="overflow-scroll mt-2 w-full">
+      <div class="overflow-y-auto mt-2 w-full">
         <%= for post <- @posts do %>
           <%= calendar_day_post(@socket, post) %>
         <% end %>
