@@ -32,17 +32,8 @@ defmodule BordoWeb.Router do
     plug :put_root_layout, {BordoWeb.LayoutView, :onboarding}
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   pipeline :private do
     plug Auth.Guardian.SessionPipeline
-  end
-
-  # Pipeline for private apis, requires Authorisation header with Bearer token
-  pipeline :private_api do
-    plug Auth.Guardian.ApiPipeline
   end
 
   get "/healthy-otter", BordoWeb.HealthzController, :index
@@ -69,12 +60,6 @@ defmodule BordoWeb.Router do
     end
   end
 
-  scope "/auth", BordoWeb do
-    pipe_through :api
-
-    post "/sign-in", AuthController, :create
-  end
-
   scope "/", BordoWeb do
     post("/hooks", WebhookController, :hook)
   end
@@ -93,23 +78,6 @@ defmodule BordoWeb.Router do
     live "/onboarding", OnboardingLive.Index
   end
 
-  scope "/", BordoWeb do
-    pipe_through [:api, :private_api]
-
-    resources "/brands", BrandController, except: [:create] do
-      resources "/channels", Brands.ChannelController
-      resources "/media", Brands.MediaController
-      resources "/posts", Brands.PostController
-      resources "/users", Brands.UserController
-    end
-
-    resources "/brand-users", BrandUserController, only: [:create]
-
-    get "/profile", ProfileController, :show
-    resources "/teams", TeamController
-  end
-
-  # This must be defined last as a catchall /*path so react-routing will work
   scope "/", BordoWeb do
     pipe_through [:browser, :private, :onboarding_layout]
 
