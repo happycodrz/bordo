@@ -326,7 +326,7 @@ defmodule BordoWeb.MediaLive do
   def slideover_header(assigns) do
     ~e"""
     <header class="relative h-96 bg-gray-700">
-      <button @click="open = false; setTimeout(() => open = true, 100);" aria-label="Close panel"
+      <button type="button" phx-click="close-slideover"
       class="absolute top-5 right-8 text-gray-400 hover:text-gray-500 transition ease-in-out duration-100">
         <%= feather_icon("x", "h-6 w-6") %>
       </button>
