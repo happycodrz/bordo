@@ -12,11 +12,6 @@ defmodule BordoWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :react do
-    plug :put_root_layout, {BordoWeb.LayoutView, :react_root}
-    plug :assign_current_user
-  end
-
   pipeline :unauthenticated do
     plug :put_root_layout, {BordoWeb.LayoutView, :unauthenticated_root}
     plug Guardian.Plug.EnsureNotAuthenticated
@@ -33,6 +28,7 @@ defmodule BordoWeb.Router do
   end
 
   pipeline :private do
+    plug :put_root_layout, {BordoWeb.LayoutView, :root}
     plug Auth.Guardian.SessionPipeline
   end
 
@@ -88,7 +84,7 @@ defmodule BordoWeb.Router do
   end
 
   scope "/", BordoWeb do
-    pipe_through [:browser, :private, :react]
+    pipe_through [:browser, :private]
 
     scope "/providers" do
       get "/facebook/auth", Providers.FacebookController, :auth
