@@ -83,19 +83,20 @@
 <%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: if(@live_action == :new, do: "Choose Media", else: "Change Media"), size: "large" do %>
   <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     <%= for media <- @media do %>
-      <li class="col-span-1 bg-white rounded-lg shadow" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected">
-        <div class="bdo-mediaAsset bdo-mediaAsset--image card">
-          <div class="bdo-mediaAsset__header">
-            <div class="bdo-mediaAsset__iconBar">
-              <%= feather_icon("image", "w-6 h-6 text-white") %>
+      <div class="cursor-pointer group" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected">
+          <div class="bg-white shadow-sm rounded-sm overflow-hidden relative">
+            <div class="absolute text-white p-2 z-10">
+              <%= feather_icon("image", "w-6 h-6") %>
             </div>
-            <img class="card-img-top bdo-mediaAsset__thumbnail" src="<%= media.thumbnail_url %>"></div>
-          <div class="bdo-mediaAsset__body card-body">
-            <div class="bdo-mediaAsset__date card-subtitle h6">July 1, 2020</div>
-            <div class="bdo-mediaAsset__title card-title h5"><%= media.title %></div>
+            <div class="md:flex-shrink-0 overflow-hidden">
+              <img src="<%= media.thumbnail_url %>" class="w-full h-64 object-cover transform group-hover:scale-110 transition duration-150 ease-out">
+            </div>
+            <div class="px-4 py-2 mt-2">
+              <span class="text-sm text-gray-400"><%= DateHelper.local_date(media.inserted_at) %></span>
+              <h2 class="font-bold text-xl mb-2 text-gray-800 tracking-normal truncate"><%= media.title %></h2>
+            </div>
           </div>
-        </div>
-      </li>
+      </div>
     <% end %>
   </ul>
 <% end %>

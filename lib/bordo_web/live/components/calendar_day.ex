@@ -43,7 +43,6 @@ defmodule BordoWeb.Components.CalendarDay do
       Timex.format!(time, "%H:%M", :strftime) <>
         String.downcase(Timex.format!(time, "%p", :strftime))
 
-    networks = post.post_variants |> Enum.map(& &1.channel.network)
     assigns = %{socket: socket}
 
     ~L"""
@@ -56,9 +55,6 @@ defmodule BordoWeb.Components.CalendarDay do
         </span>
     </div>
     """
-    # <%= for network <- networks do %>
-    #   <%= social_logo(network) %>
-    # <% end %>
   end
 
   defp social_logo("twitter") do

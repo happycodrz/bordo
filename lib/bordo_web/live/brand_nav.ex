@@ -32,7 +32,7 @@ defmodule BordoWeb.BrandNav do
           <% end %>
         </div>
       </div>
-      <aside class="bdo-brandSidebar flex flex-col shadow-md border-r border-gray-100 relative">
+      <aside class="flex flex-col shadow-md border-r border-gray-100 relative">
         <header class="bg-white px-3 py-10 flex justify-content-between align-items-center border-b border-gray-100">
             <h2 class="text-3xl m-0"><%= @active_brand.name %></h2>
         </header>
