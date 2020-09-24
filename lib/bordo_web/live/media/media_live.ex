@@ -160,44 +160,28 @@ defmodule BordoWeb.MediaLive do
   end
 
   def handle_event("upload-success", params, socket) do
-    Media.create_media(%{
-      "title" => params["title"],
-      "public_id" => params["public_id"],
-      "url" => params["url"],
-      "thumbnail_url" => params["thumbnail_url"],
-      "bytes" => params["bytes"],
-      "width" => params["width"],
-      "height" => params["height"],
-      "resource_type" => "image",
-      "brand_id" => socket.assigns.active_brand.id
-    })
+    {:ok, media} =
+      Media.create_media(%{
+        "title" => params["title"],
+        "public_id" => params["public_id"],
+        "url" => params["url"],
+        "thumbnail_url" => params["thumbnail_url"],
+        "bytes" => params["bytes"],
+        "width" => params["width"],
+        "height" => params["height"],
+        "resource_type" => "image",
+        "brand_id" => socket.assigns.active_brand.id
+      })
 
     {:noreply,
      socket
-     |> put_flash(:success, "Uploaded #{params["title"]}")}
+     |> put_flash(:success, "Uploaded #{params["title"]}")
+     |> assign(:medias, Enum.concat(socket.assigns.medias, [media]))}
   end
 
   def handle_event("canva-upload", %{"url" => url}, socket) do
-    {:ok, result} = Cloudex.upload([url], %{eager: "c_fit,w_400,h_400"})
-
-    Media.create_media(%{
-      "title" => result.original_filename,
-      "public_id" => result.public_id,
-      "url" => result.url,
-      "thumbnail_url" => result.eager |> Enum.at(0) |> Map.get("url"),
-      "bytes" => result.bytes,
-      "width" => result.width,
-      "height" => result.height,
-      "resource_type" => "image",
-      "brand_id" => socket.assigns.active_brand.id
-    })
-
-    {:noreply,
-     socket
-     |> put_flash(:success, "Uploaded #{result.original_filename}")
-     |> push_redirect(
-       to: Routes.live_path(socket, BordoWeb.MediaLive, socket.assigns.active_brand.slug)
-     )}
+    send(self(), {:upload, url})
+    {:noreply, socket}
   end
 
   def handle_event("open-canva", _data, socket) do
