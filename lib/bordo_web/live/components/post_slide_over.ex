@@ -20,7 +20,8 @@ defmodule BordoWeb.Components.PostSlideOver do
           }"
         @close-slideover="setTimeout(() => open = false, 100)"
         @keydown.window.escape="open = false; setTimeout(() => open = true, 100);"
-        class="fixed inset-0 z-20 overflow-hidden">
+        class="fixed inset-0 z-20 overflow-hidden"
+        id="new-post-slideover">
         <div class="absolute inset-0 overflow-hidden">
           <%= if assigns[:with_overlay] do %>
             <div x-show="open" x-description="Background overlay, show/hide based on slide-over state."

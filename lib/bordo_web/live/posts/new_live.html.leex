@@ -52,12 +52,15 @@
         <div class="sm:col-span-2">
           <div class="flex items-center">
             <div class="flex w-full rounded-md shadow-sm">
-              <%= textarea pv, :content, class: "form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5", phx_hook: if network_name == "Twitter", do: "TwitterLimit" %>
+              <%= textarea pv, :content, class: "form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5", "data-content-count": network_name %>
             </div>
             <div class="ml-4">
               <%= hidden_input pv, :temp_id %>
             </div>
           </div>
+          <%= if network_name == "Twitter" do %>
+            <p id="twitter-limit" phx-hook="TwitterLimit" phx-update="ignore" class="mt-2 text-sm text-gray-500"></p>
+          <% end %>
           <%= error_tag pv, :content %>
         </div>
       </div>
