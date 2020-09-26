@@ -68,26 +68,6 @@ defmodule BordoWeb.BrandNav do
     """
   end
 
-  # <aside class="bdo-brandSidebar flex flex-col shadow-md border-r border-gray-100 relative">
-  #       <header class="bg-white px-3 py-10 flex justify-content-between align-items-center border-b border-gray-100">
-  #           <h2 class="text-3xl m-0"><%= @active_brand.name %></h2>
-  #       </header>
-  #       <nav class="nav flex-column nav-secondary h-full bg-gray-50">
-  #         <%= nav_link(Routes.live_path(@socket, BordoWeb.LaunchpadLive, @active_brand.slug), @nav_item, "Launchpad", "zap") %>
-  #         <%= if brand_configured?(@active_brand) do %>
-  #           <%= nav_link(Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), @nav_item, "Schedule", "calendar") %>
-  #           <%= nav_link(Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), @nav_item, "Media", "image") %>
-  #           <%= nav_link(Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), @nav_item, "Settings", "settings") %>
-  #         <% end %>
-  #       </nav>
-  #       <div class="pin-b px-4 mb-2 bg-gray-50">
-  #         <button id="post-slideover-button" class="btn btn-danger btn-lg btn-block d-flex align-items-center justify-content-center mb-2" phx-target="#new-post" phx-click="open-slideover">
-  #           <%= feather_icon("send", "mr-2") %>
-  #           New Post
-  #         </button>
-  #       </div>
-  #     </aside>
-
   def mount(_, %{"brand_slug" => brand_slug, "nav_item" => nav_item} = session, socket) do
     {:ok, current_identity} = AuthHelper.load_user(session)
     current_user = Users.get_user!(current_identity.user_id)
@@ -137,12 +117,15 @@ defmodule BordoWeb.BrandNav do
   end
 
   defp nav_link_class(active) do
-    link_class = "group flex items-center py-2 px-4 text-sm leading-5 font-medium border-r-4 transition ease-in-out duration-150 hover:no-underline"
+    link_class =
+      "group flex items-center py-2 px-4 text-sm leading-5 font-medium border-r-4 transition ease-in-out duration-150 hover:no-underline"
 
     if active do
-      link_class <> " text-blue-600 bg-blue-100 border-blue-600 focus:outline-none focus:bg-blue-100"
+      link_class <>
+        " text-blue-600 bg-blue-100 border-blue-600 focus:outline-none focus:bg-blue-100"
     else
-      link_class <> " border-transparent hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100"
+      link_class <>
+        " border-transparent hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100"
     end
   end
 
