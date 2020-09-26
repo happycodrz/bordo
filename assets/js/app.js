@@ -27,14 +27,8 @@ import { Toast } from './hooks/toast'
 import { UploadMedia } from './hooks/upload_media'
 import { initSlideOver } from './hooks/slide_over'
 
-const feather = require('feather-icons')
-
 let Hooks = {}
-Hooks.FeatherIcon = {
-  mounted() {
-    feather.replace()
-  },
-}
+
 Hooks.TwitterLimit = {
   textAreaUpdated(event, helpText) {
     helpText.textContent = `${event.target.textLength}/280`
@@ -94,12 +88,10 @@ liveSocket.connect()
 window.liveSocket = liveSocket
 
 document.addEventListener('DOMContentLoaded', () => {
-  feather.replace({ width: '1em', height: '1em' })
   const element = document.querySelector('.js-choice')
   if (element) {
     new Choices(element, {
       searchEnabled: true,
     })
   }
-  feather.replace()
 })

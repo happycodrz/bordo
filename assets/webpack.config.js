@@ -64,7 +64,7 @@ module.exports = (env, options) => {
     },
     plugins: [
       new MiniCssExtractPlugin({ filename: '../css/[name].css', chunkFilename: '../css/[id].css' }),
-      new CopyWebpackPlugin([{ from: 'static/', to: '../' }]),
+      new CopyWebpackPlugin([{ from: 'static/', to: '../' }, { from: 'node_modules/feather-icons/dist/feather-sprite.svg', to: '../images'}]),
       new webpack.HotModuleReplacementPlugin()
     ],
     resolve: {

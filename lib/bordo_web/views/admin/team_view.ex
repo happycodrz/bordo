@@ -32,7 +32,7 @@ defmodule BordoWeb.Admin.TeamView do
     ~e"""
       <div class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
         Active
-        <i data-feather="check-circle" class="text-green-800 ml-1" width="12" phx-hook="FeatherIcon"></i>
+        <%= feather_icon("check-circle", "text-green-800 ml-1") %>
       </div>
       <div class="text-sm leading-5 text-gray-500">Last paid: <%= Timex.format!(last_paid_at, "%Y-%m-%d", :strftime) %></div>
     """
@@ -42,7 +42,7 @@ defmodule BordoWeb.Admin.TeamView do
     ~e"""
       <div class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
         Never Paid
-        <i data-feather="alert-circle" class="text-red-800 ml-1" width="12" phx-hook="FeatherIcon"></i>
+        <%= feather_icon("alert-circle", "text-red-800 ml-1") %>
       </div>
     """
   end
@@ -51,7 +51,7 @@ defmodule BordoWeb.Admin.TeamView do
     ~e"""
       <div class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
         Not Current
-        <i data-feather="alert-circle" class="text-red-800 ml-1" width="12" phx-hook="FeatherIcon"></i>
+        <%= feather_icon("alert-circle", "text-red-800 ml-1") %>
       </div>
       <div class="text-sm leading-5 text-gray-500">Last paid: <%= Timex.format!(last_paid_at, "%Y-%m-%d", :strftime) %></div>
     """

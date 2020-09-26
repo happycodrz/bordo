@@ -18,7 +18,9 @@ defmodule BordoWeb.Admin.SharedView do
 
   def feather_icon(name, class \\ "") do
     ~e"""
-      <i data-feather="<%= name %>" class="<%= class %>" phx-hook="FeatherIcon" width="18"></i>
+    <svg class="feather <%= class %>">
+      <use xlink:href="<%= BordoWeb.Router.Helpers.static_path(BordoWeb.Endpoint, "/images/feather-sprite.svg#"<> name) %>"/>
+    </svg>
     """
   end
 

@@ -18,7 +18,7 @@
             aria-label="Notifications">
             <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
             <%= link to: Routes.live_dashboard_path(@conn, :home) do %>
-            <i data-feather="activity"></i>
+            <%= feather_icon("activity") %>
             <% end %>
             <% end %>
           </button>

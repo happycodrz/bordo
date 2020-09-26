@@ -23,12 +23,12 @@ defmodule BordoWeb.BrandNav do
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
           <%= live_redirect to: Routes.live_path(@socket, BordoWeb.TeamSettingsLive, @active_brand.slug), class: "block p-2 text-center text-blue-300 hover:text-blue-100" do %>
-            <i data-feather="settings"></i>
+            <%= feather_icon("settings") %>
           <% end %>
         </div>
         <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
           <%= link to: Routes.logout_path(@socket, :index), class: "block p-2 text-center text-blue-300 hover:text-blue-100" do %>
-            <i data-feather="log-out"></i>
+            <%= feather_icon("log-out") %>
           <% end %>
         </div>
       </div>
