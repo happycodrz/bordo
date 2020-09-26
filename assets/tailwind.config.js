@@ -65,5 +65,8 @@ module.exports = {
     scale: ['responsive', 'hover', 'focus', 'group-hover'],
     opacity: ['responsive', 'hover', 'focus', 'group-hover'],
   },
-  plugins: [require('@tailwindcss/ui'), require('tailwindcss-spinner')()],
+  plugins: [
+    require('@tailwindcss/ui'),
+    require('tailwindcss-spinner')()
+  ],
 }

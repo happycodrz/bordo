@@ -29,18 +29,18 @@ defmodule BordoWeb.TeamSettingsLive do
         <%= f = form_for @changeset, "#", [phx_submit: :add_user] %>
           <div class="grid grid-cols-12 gap-3 mb-4">
             <div class="col-span-5">
-              <%= text_input f, :email, class: "form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-red focus:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", placeholder: "Email Address" %>
+              <%= text_input f, :email, class: "form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow focus:outline-none focus:shadow-outline-red focus:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", placeholder: "Email Address" %>
               <%= error_tag f, :email %>
               <%= hidden_input f, :team_id, value: @active_brand.team_id %>
             </div>
             <div class="col-span-5">
-              <%= password_input f, :password, class: "form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-red focus:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", placeholder: "Password" %>
+              <%= password_input f, :password, class: "form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow focus:outline-none focus:shadow-outline-red focus:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", placeholder: "Password" %>
               <%= error_tag f, :password %>
             </div>
             <div class="col-span-2">
               <%= submit "Add New User", phx_disable_with: "Adding...", class: "inline-flex justify-center py-2
               px-4 border-transparent text-sm leading-5 font-medium rounded-md text-white
-              bg-red-500 hover:bg-red-600 focus:outline-none focus:border-red-500
+              bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-500
               focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out w-100" %>
             </div>
           </div>

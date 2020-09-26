@@ -53,8 +53,8 @@ defmodule BordoWeb.BrandNav do
             </nav>
           </div>
           <div class="flex-shrink-0 flex p-6">
-            <span class="flex rounded-md shadow-sm w-full">
-              <button id="post-slideover-button" class="w-full inline-flex justify-center items-center px-4 py-3 border border-transparent leading-6 font-medium rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition ease-in-out duration-150 text-lg" phx-target="#new-post" phx-click="open-slideover">
+            <span class="flex rounded-md shadow w-full">
+              <button id="post-slideover-button" class="w-full inline-flex justify-center items-center px-4 py-3 border border-transparent leading-6 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition ease-in-out duration-150 text-lg" phx-target="#new-post" phx-click="open-slideover">
                 <%= feather_icon("send", "-ml-1 mr-3 w-5 h-5") %>
                 New Post
               </button>

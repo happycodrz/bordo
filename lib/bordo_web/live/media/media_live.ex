@@ -246,7 +246,7 @@ defmodule BordoWeb.MediaLive do
       <div class="w-1/3">
         <form phx-submit="search">
           <label for="search_candidate" class="sr-only">Search</label>
-          <div class="flex rounded-md shadow-sm">
+          <div class="flex rounded-md shadow">
             <div class="relative flex-grow focus-within:z-10">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <!-- Heroicon name: search -->
@@ -272,7 +272,7 @@ defmodule BordoWeb.MediaLive do
   defp media_card(media) do
     ~e"""
     <div class="cursor-pointer group" phx-click="open-slideover" phx-value-media_id="<%= media.id %>">
-        <div class="bg-white shadow-sm rounded-sm overflow-hidden relative">
+        <div class="bg-white shadow rounded-sm overflow-hidden relative">
           <div class="absolute text-white p-2 z-10">
             <%= feather_icon("image", "w-6 h-6") %>
           </div>
@@ -328,7 +328,7 @@ defmodule BordoWeb.MediaLive do
           <%= label @f, :title, class: "block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2" %>
         </div>
         <div class="sm:col-span-2">
-          <div class="rounded-md shadow-sm">
+          <div class="rounded-md shadow">
             <%= text_input @f, :title, class: "form-input block w-full sm:text-sm sm:leading-5" %>
           </div>
           <%= error_tag @f, :title %>
@@ -374,7 +374,7 @@ defmodule BordoWeb.MediaLive do
             File URL
           </dt>
           <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2 w-full">
-            <div class="rounded-md shadow-sm">
+            <div class="rounded-md shadow">
               <input type="text" readonly class="form-input block w-full sm:text-sm sm:leading-5 bg-gray-100 cursor-not-allowed" value="<%= @media.url %>" />
             </div>
           </dd>
@@ -388,18 +388,21 @@ defmodule BordoWeb.MediaLive do
     ~e"""
     <div class="flex w-full justify-between">
       <div>
-        <span class="inline-flex rounded-md shadow-sm">
-          <button class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out" phx-click="delete" data-confirm="Are you sure you want to delete this asset?">Delete</button>
+        <span class="inline-flex rounded-md shadow">
+          <button class="inline-flex items-center justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out" phx-click="delete" data-confirm="Are you sure you want to delete this asset?">
+            <%= feather_icon("trash", "mr-2 w-4 h-4") %>
+            Delete
+          </button>
         </span>
       </div>
       <div>
-        <span class="inline-flex rounded-md shadow-sm">
+        <span class="inline-flex rounded-md shadow">
           <button type="button" phx-click="close-slideover" class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
             Cancel
           </button>
         </span>
-        <span class="inline-flex rounded-md shadow-sm">
-          <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
+        <span class="inline-flex rounded-md shadow">
+          <button type="submit" class="justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-400 transition duration-150 ease-in-out">
             Save
           </button>
         </span>
@@ -412,7 +415,7 @@ defmodule BordoWeb.MediaLive do
     ~e"""
     <div x-data="{ open: false }" @keydown.escape="open = false" @click.away="open = false" class="relative inline-block text-left">
     <div>
-      <span class="rounded-md shadow-sm">
+      <span class="rounded-md shadow">
         <button @click="open = !open" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" aria-expanded="true" x-bind:aria-expanded="open">
           Add Media
           <svg class="-mr-1 ml-2 h-5 w-5" x-description="Heroicon name: chevron-down" viewBox="0 0 20 20" fill="currentColor">
