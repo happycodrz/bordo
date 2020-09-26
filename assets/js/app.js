@@ -24,29 +24,11 @@ import { DatePicker } from './hooks/date_picker'
 import { InitModal } from './hooks/modal'
 import { ScrollLock } from './hooks/scroll_lock'
 import { Toast } from './hooks/toast'
+import { TwitterLimit } from './hooks/twitter_limit'
 import { UploadMedia } from './hooks/upload_media'
 import { initSlideOver } from './hooks/slide_over'
 
 let Hooks = {}
-
-Hooks.TwitterLimit = {
-  textAreaUpdated(event, helpText) {
-    helpText.textContent = `${event.target.textLength}/280`
-  },
-  mounted() {
-    console.log('mounted')
-    const helpText = document.createElement('p')
-    helpText.classList.add('mt-2', 'text-sm', 'text-gray-500')
-    helpText.textContent = '0/280'
-    this.el.parentNode.parentNode.appendChild(helpText)
-    this.el.addEventListener('keyup', (e) => {
-      this.textAreaUpdated(e, helpText)
-    })
-  },
-  destroyed() {
-    this.el.removeEventListener('keyup', this.textAreaUpdated)
-  },
-}
 
 Hooks = {
   ...Hooks,
@@ -57,6 +39,7 @@ Hooks = {
   Toast,
   UploadMedia,
   initSlideOver,
+  TwitterLimit,
 }
 
 import Choices from 'choices.js'
