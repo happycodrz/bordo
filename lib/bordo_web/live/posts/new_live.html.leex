@@ -33,7 +33,7 @@
           <%= error_tag f, :scheduled_for %>
         </div>
       </div>
-      <%= channel_selector(@channels) %>
+      <%= channel_selector(@channels, @picked_channels) %>
       <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
         <div></div>
         <div>
@@ -51,16 +51,11 @@
         </div>
         <div class="sm:col-span-2">
           <div class="flex items-center">
-            <div class="w-5/6">
-              <div class="flex w-5/6 rounded-md shadow-sm">
-                <%= textarea pv, :content, class: "form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5", phx_hook: if network_name == "Twitter", do: "TwitterLimit" %>
-              </div>
+            <div class="flex w-full rounded-md shadow-sm">
+              <%= textarea pv, :content, class: "form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5", phx_hook: if network_name == "Twitter", do: "TwitterLimit" %>
             </div>
             <div class="ml-4">
               <%= hidden_input pv, :temp_id %>
-              <a href="#" phx-click="remove-variant" phx-target="#new-post" phx-value-remove="<%= Ecto.Changeset.get_field(pv.source, :temp_id) || Ecto.Changeset.get_field(pv.source, :id) %>" phx-value-channel_id="<%= Ecto.Changeset.get_field(pv.source, :channel_id) %>">
-                <%= feather_icon("trash", "h-4 w-4") %>
-              </a>
             </div>
           </div>
           <%= error_tag pv, :content %>

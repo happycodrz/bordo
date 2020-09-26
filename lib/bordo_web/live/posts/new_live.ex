@@ -27,6 +27,7 @@ defmodule BordoWeb.Posts.NewLive do
       assigns
       |> Map.merge(%{
         channels: fetch_available_channels(assigns.active_brand.id),
+        picked_channels: [],
         changeset: changeset,
         post: post,
         live_action: assigns[:live_action] || :new
@@ -92,29 +93,23 @@ defmodule BordoWeb.Posts.NewLive do
       socket.assigns.changeset
       |> Changeset.put_assoc(:post_variants, variants)
 
-    channels =
-      socket.assigns.channels
-      |> Enum.reject(fn channel -> channel.id == channel_id end)
-      |> Enum.sort_by(& &1.network)
+    picked_channels = Enum.concat(socket.assigns.picked_channels, [channel_id])
 
-    {:noreply, assign(socket, changeset: changeset, channels: channels)}
+    {:noreply, assign(socket, changeset: changeset, picked_channels: picked_channels)}
   end
 
-  def handle_event("remove-variant", %{"remove" => remove_id, "channel_id" => channel_id}, socket) do
+  def handle_event("remove-variant", %{"channel_id" => channel_id}, socket) do
     variants =
       existing_variants(socket.assigns)
-      |> remove_variant(remove_id)
+      |> remove_variant(channel_id)
 
     changeset =
       socket.assigns.changeset
       |> Changeset.put_assoc(:post_variants, variants)
 
-    channels =
-      socket.assigns.channels
-      |> Enum.concat([Channels.get_channel!(channel_id)])
-      |> Enum.sort_by(& &1.network)
+    picked_channels = List.delete(socket.assigns.picked_channels, channel_id)
 
-    {:noreply, assign(socket, changeset: changeset, channels: channels)}
+    {:noreply, assign(socket, changeset: changeset, picked_channels: picked_channels)}
   end
 
   def handle_event(
@@ -182,17 +177,15 @@ defmodule BordoWeb.Posts.NewLive do
     existing_variants = existing_variants(%{changeset: changeset, post: post})
 
     # reject existing channels in the post-variant changeset
-    channels =
-      fetch_available_channels(socket.assigns.active_brand.id)
-      |> Enum.reject(fn channel ->
-        existing_variants |> Enum.map(& &1.channel_id) |> Enum.member?(channel.id)
-      end)
-      |> Enum.sort_by(& &1.network)
+    channels = fetch_available_channels(socket.assigns.active_brand.id)
+
+    picked_channels = existing_variants |> Enum.map(& &1.channel_id)
 
     socket
     |> assign(
       show_slideover: true,
       channels: channels,
+      picked_channels: picked_channels,
       changeset: changeset,
       live_action: live_action,
       post: post
@@ -360,29 +353,35 @@ defmodule BordoWeb.Posts.NewLive do
     """
   end
 
-  defp channel_selector(channels) do
+  defp channel_selector(channels, picked_channels) do
     ~e"""
     <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
       <div>
         <label class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2">Add Channels</label>
       </div>
       <div class="sm:col-span-2">
-        <%= if Enum.any?(channels) do %>
-          <span class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2">
-            <%= for channel <- channels do %>
-              <span class="inline-flex rounded-md shadow-sm">
+        <span class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2">
+          <%= for channel <- channels do %>
+            <span class="inline-flex rounded-md shadow-sm">
+              <%= if channel_added?(channel.id, picked_channels) do %>
+                <button type="button" phx-click="remove-variant" phx-target="#new-post" phx-value-channel_id="<%= channel.id %>" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                  Remove <%= String.capitalize(channel.network) %>
+                </button>
+              <% else %>
                 <button type="button" phx-click="add-variant" phx-target="#new-post" phx-value-channel_id="<%= channel.id %>" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
                   Add <%= String.capitalize(channel.network) %>
                 </button>
-              </span>
-            <% end %>
-          </span>
-        <% else %>
-          <span class="block text-sm font-medium leading-5 text-gray-300 sm:mt-px sm:pt-2">All channels added. You can add more in Settings.</span>
-        <% end %>
+              <% end %>
+            </span>
+          <% end %>
+        </span>
       </div>
     </div>
     """
+  end
+
+  defp channel_added?(channel_id, picked_channels) do
+    Enum.member?(picked_channels, channel_id)
   end
 
   def existing_variants(assigns) do
@@ -403,10 +402,7 @@ defmodule BordoWeb.Posts.NewLive do
   defp remove_variant(existing_variants, remove_id) do
     existing_variants
     |> Enum.reject(fn variant ->
-      [variant.id, variant.temp_id]
-      |> Enum.reject(&(:string.is_empty(&1) || is_nil(&1)))
-      |> hd ==
-        remove_id
+      variant.channel_id == remove_id
     end)
   end
 
