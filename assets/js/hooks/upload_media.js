@@ -4,7 +4,7 @@ export const UploadMedia = {
       {
         cloudName: 'bordo',
         uploadPreset: 'bdo_image_frontend_upload',
-        sources: ['local'],
+        sources: ['local', 'url', 'dropbox', 'google_drive'],
         show_powered_by: false,
       },
       (error, result) => {
