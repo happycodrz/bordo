@@ -15,7 +15,7 @@
           <%= label f, :title, class: "block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2" %>
         </div>
         <div class="sm:col-span-2">
-          <div class="rounded-md shadow-sm">
+          <div class="rounded-md shadow">
             <%= text_input f, :title, class: "form-input block w-full sm:text-sm sm:leading-5" %>
           </div>
           <%= error_tag f, :title %>
@@ -82,7 +82,7 @@
   <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     <%= for media <- @media do %>
       <div class="cursor-pointer group" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected">
-          <div class="bg-white shadow-sm rounded-sm overflow-hidden relative">
+          <div class="bg-white shadow rounded-sm overflow-hidden relative">
             <div class="absolute text-white p-2 z-10">
               <%= feather_icon("image", "w-6 h-6") %>
             </div>

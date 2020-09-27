@@ -146,7 +146,7 @@ defmodule BordoWeb.OnboardingLive.Index do
         <%= f = form_for @changeset, "#", [as: :team, phx_submit: "save"] %>
         <div class="mt-6">
           <%= label f, :name, "Team Name", class: "block text-sm font-medium leading-5 text-gray-700" %>
-          <div class="mt-1 rounded-md shadow-sm">
+          <div class="mt-1 rounded-md shadow">
             <%= text_input f, :name, placeholder: "Dunder Mifflin", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
           </div>
           <%= error_tag f, :name %>
@@ -157,7 +157,7 @@ defmodule BordoWeb.OnboardingLive.Index do
           <%= select f, :timezone, Tzdata.zone_list |> Enum.filter(&(&1 == "America/Chicago")), selected: "America/Chicago", class: "mt-1 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" %>
         </div>
         <div class="mt-6">
-          <span class="block w-full rounded-md shadow-sm">
+          <span class="block w-full rounded-md shadow">
             <button type="submit"
               class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
               phx-disable-with="Validating...">Create my team</button>
@@ -185,14 +185,14 @@ defmodule BordoWeb.OnboardingLive.Index do
           <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save"] %>
           <div>
             <%= label f, :name, "Brand Name", class: "block text-sm font-medium leading-5 text-gray-700" %>
-            <div class="mt-1 rounded-md shadow-sm">
+            <div class="mt-1 rounded-md shadow">
               <%= text_input f, :name, placeholder: "Scranton Branch", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
             </div>
             <%= error_tag f, :name %>
           </div>
 
           <div class="mt-6">
-            <span class="rounded-md shadow-sm">
+            <span class="rounded-md shadow">
               <button type="submit"
                 class="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
                 phx-disable-with="Validating...">Add a brand</button>
@@ -220,7 +220,7 @@ defmodule BordoWeb.OnboardingLive.Index do
     ~e"""
       <ul class="mt-8 grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <%= for brand <- brands do %>
-          <li class="col-span-1 flex shadow-sm rounded-md">
+          <li class="col-span-1 flex shadow rounded-md">
             <div class="flex-shrink-0 flex items-center justify-center w-16 bg-red-500 text-white text-sm leading-5 font-medium rounded-l-md">
               <%= BrandHelper.brand_letters(brand) %>
             </div>

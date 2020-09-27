@@ -28,21 +28,21 @@ defmodule BordoWeb.BrandModal do
           <%= f = form_for @changeset, "#", [phx_submit: :save, phx_target: "#new-brand-handler"] %>
             <div class="mb-4">
               <div class="col-span-12">
-                <%= text_input f, :name, class: "mt-1 form-input text-black block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autofocus: true, placeholder: "New Brand Name" %>
+                <%= text_input f, :name, class: "mt-1 form-input text-black block w-full py-2 px-3 border border-gray-300 rounded-md shadow focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autofocus: true, placeholder: "New Brand Name" %>
                 <%= hidden_input f, :team_id, value: @team_id %>
                 <%= error_tag f, :name %>
               </div>
             </div>
             <div class="border-t border-gray-200 pt-4">
               <div class="flex justify-end">
-                <span class="inline-flex rounded-md shadow-sm">
+                <span class="inline-flex rounded-md shadow">
                   <button type="button"
                     class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out"
                     @click="open = false">
                     Cancel
                   </button>
                 </span>
-                <span class="ml-3 inline-flex rounded-md shadow-sm">
+                <span class="ml-3 inline-flex rounded-md shadow">
                   <button type="submit"
                     class="inline-flex justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">
                     Add New Brand

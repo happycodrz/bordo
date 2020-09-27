@@ -9,45 +9,32 @@ defmodule BordoWeb.LaunchpadLive do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="h-screen">
-      <section
-        class="h-screen d-flex align-items-center justify-content-center bg-geometry"
-      >
+    <div class="h-full flex flex-col items-center justify-center bg-geometry">
       <%= if brand_configured?(@active_brand) do %>
-        <header class="text-center">
-          <p class="text-5xl">
-            <%= @greeting %>, <span class="text-primary"><%= @user_greeting %></span>!
+          <p class="text-6xl text-gray-700">
+            <%= @greeting %>, <span class="text-blue-600"><%= @user_greeting %></span>!
             <span class="wave" role="img">
               👋
             </span>
           </p>
-          <h1 class="mb-5">What do you want to accomplish today?</h1>
-          <div class="pt-5 card-deck">
-            <div class="text-dark card cursor-pointer transition duration-300 ease-in-out transform hover:- hover:scale-110 hover:shadow-xl" style="text-decoration: none;" onclick="document.getElementById('post-slideover-button').click()">
-              <div class="card-body">
-                <div class="mb-5 bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto text-white"
-                  style="width: 75px; height: 75px; margin-top: -24%;"><%= feather_icon("send", "w-48") %></div>
-                <div class="mb-5 h5 card-title h5">Schedule a new post</div>
-              </div>
-              <div class="bg-primary text-light card-footer">Let's go!</div>
+          <h1 class="mb-20 text-lg text-gray-700">What do you want to accomplish today?</h1>
+          <div class="w-3/5 max-w-4/5 grid grid-cols-3 col-gap-8">
+            <div class="flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" style="text-decoration: none;" onclick="document.getElementById('post-slideover-button').click()">
+              <div class="absolute flex items-center justify-center rounded-full w-16 h-16 top-0 -mt-8 bg-red-500"><%= feather_icon("send", "w-8 h-8 text-white") %></div>
+              <div class="text-xl text-center flex-1 pb-12 px-8 text-gray-700">Schedule a new post</div>
+              <div class="bg-red-500 px-8 py-4 text-white font-medium w-full text-center rounded-b-lg">Let's go!</div>
             </div>
 
-            <%= link to: Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), class: "text-dark card hover:no-underline transition duration-300 ease-in-out transform hover:- hover:scale-110 hover:shadow-xl" do %>
-              <div class="card-body">
-                <div class="mb-5 bg-danger rounded-circle d-flex align-items-center justify-content-center mx-auto text-white"
-                  style="width: 75px; height: 75px; margin-top: -24%;"><%= feather_icon("calendar", "w-48") %></div>
-                <div class="mb-5 h5 card-title h5 text-gray-700">See my upcoming posts</div>
-              </div>
-              <div class="bg-danger text-light card-footer">Let's go!</div>
+            <%= link to: Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), class: "flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer hover:no-underline transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" do %>
+              <div class="absolute flex items-center justify-center rounded-full w-16 h-16 top-0 -mt-8 bg-blue-600"><%= feather_icon("calendar", "w-8 h-8 text-white") %></div>
+              <div class="text-xl text-center flex-1 pb-12 px-8 text-gray-700">See my upcoming posts</div>
+              <div class="bg-blue-600 px-8 py-4 text-white font-medium w-full text-center rounded-b-lg">Let's go!</div>
             <% end %>
 
-            <%= link to: Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), class: "text-dark card hover:no-underline transition duration-300 ease-in-out transform hover:- hover:scale-110 hover:shadow-xl" do %>
-              <div class="card-body">
-                <div class="mb-5 bg-success rounded-circle d-flex align-items-center justify-content-center mx-auto text-white"
-                  style="width: 75px; height: 75px; margin-top: -24%;"><%= feather_icon("image", "w-48") %></div>
-                <div class="mb-5 h5 card-title h5">Upload a new image or graphic</div>
-              </div>
-              <div class="bg-success text-light card-footer">Let's go!</div>
+            <%= link to: Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), class: "flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer hover:no-underline transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" do %>
+              <div class="absolute flex items-center justify-center rounded-full w-16 h-16 top-0 -mt-8 bg-green-400"><%= feather_icon("image", "w-8 h-8 text-white") %></div>
+              <div class="text-xl text-center flex-1 pb-12 px-8 text-gray-700">Upload a new image or graphic</div>
+              <div class="bg-green-400 px-8 py-4 text-white font-medium w-full text-center rounded-b-lg">Let's go!</div>
             <% end %>
           </div>
         <% else %>
@@ -69,7 +56,6 @@ defmodule BordoWeb.LaunchpadLive do
             </div>
           </div>
         <% end %>
-      </section>
     </div>
     """
   end

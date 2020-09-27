@@ -22,7 +22,7 @@ defmodule BordoWeb.SettingsLive do
             <% else %>
               <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save"] %>
                 <div>
-                  <div class="mt-1 rounded-md shadow-sm">
+                  <div class="mt-1 rounded-md shadow">
                     <%= text_input f, :name, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
                     <%= error_tag f, :name %>
                   </div>
@@ -64,7 +64,7 @@ defmodule BordoWeb.SettingsLive do
         <div class="mb-14 bg-white rounded-lg shadow-md p-8">
           <h3 class="border-b mb-4 pb-2 text-gray-600 text-xl">Danger Zone</h3>
           <p class="mb-4 text-gray-400">Deleting a brand is irreversable! Bordo will remove everything associated with the brand if deleted.</p>
-          <button phx-click="delete-brand" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="rounded-md bg-red-600 hover:bg-red-700 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
+          <button phx-click="delete-brand" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="rounded-md bg-red-500 hover:bg-red-400 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
         </div>
         <div class="pin-b">
           <p class="text-xs text-center text-gray-500 mb-2">
@@ -143,7 +143,7 @@ defmodule BordoWeb.SettingsLive do
 
   def channel_card(channel) do
     ~e"""
-    <li class="col-span-1 flex flex-col text-center bg-white rounded-lg shadow-sm">
+    <li class="col-span-1 flex flex-col text-center bg-white rounded-lg shadow">
       <div class="flex-1 flex flex-col p-8 relative">
         <div x-data="{ open: false }" @keydown.window.escape="open = false" @click.away="open = false" class="absolute right-0 top-0 mt-3 mr-2">
           <div>
@@ -200,7 +200,7 @@ defmodule BordoWeb.SettingsLive do
       end
 
     ~e"""
-    <li class="col-span-1 flex shadow-sm rounded-md">
+    <li class="col-span-1 flex shadow rounded-md">
       <div class="flex-1 flex items-center justify-between bg-white rounded-md truncate">
         <div class="flex-1 flex items-center content-center px-4 py-3 text-sm leading-5 truncate">
           <div class="mr-3">

@@ -23,7 +23,7 @@ defmodule BordoWeb.Components.EmptySlideOver do
               x-transition:enter="ease-in-out duration-100" x-transition:enter-start="opacity-0"
               x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-100"
               x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-              class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+              class="absolute inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
             <% end %>
           <section @click.away="open = false; setTimeout(() => open = true, 100);"
             class="absolute inset-y-0 right-0 pl-10 max-w-full flex">

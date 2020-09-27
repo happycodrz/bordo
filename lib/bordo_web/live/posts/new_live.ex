@@ -339,15 +339,13 @@ defmodule BordoWeb.Posts.NewLive do
         </span>
       </span>
     <% else %>
-      <div class="p-3 bg-light border rounded h-100 flex flex-column justify-content-center cursor-pointer" phx-click="selecting-media" phx-target="#new-post" phx-value-post_variant_id="<%= post_variant_id %>">
-        <span class="text-center mb-2">Add Media</span>
-        <span class="text-center">
-          <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-gray-200 text-gray-400 hover:text-gray-500 transition ease-in-out duration-150" aria-label="Add team member">
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-            </svg>
-          </button>
-        </span>
+      <div class="bg-gray-50 border border-gray-100 cursor-pointer flex flex-col group hover:bg-blue-100 hover:border-blue-300 items-center justify-center p-4 rounded" phx-click="selecting-media" phx-target="#new-post" phx-value-post_variant_id="<%= post_variant_id %>">
+        <span class="group-hover:text-blue-600 mb-2 text-center">Add Media</span>
+        <button type="button" class="border-2 border-dashed border-gray-200 group-hover:border-blue-400 group-hover:text-blue-600 h-8 hover:text-gray-500 inline-flex items-center justify-center rounded-full text-gray-400 w-8">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
       </div>
     <% end %>
     """
