@@ -19,8 +19,7 @@ module.exports = (env, options) => {
     entry: {
       'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js']),
       'app_admin': glob.sync('./vendor/**/*.js').concat(['./js/app_admin.js']),
-      'lv': glob.sync('./vendor/**/*.js').concat(['./js/lv.js']),
-      'react': './js/react/index.js'
+      'lv': glob.sync('./vendor/**/*.js').concat(['./js/lv.js'])
     },
     output: {
       filename: '[name].js',
@@ -68,11 +67,7 @@ module.exports = (env, options) => {
       new webpack.HotModuleReplacementPlugin()
     ],
     resolve: {
-        extensions: ['.js', '.scss', '.jsx'],
-        alias: {
-          react: path.resolve(__dirname, './node_modules/react'),
-          'react-dom': path.resolve(__dirname, './node_modules/react-dom')
-        }
+        extensions: ['.js', '.scss', '.jsx']
     }
   }
 };
