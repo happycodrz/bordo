@@ -1,6 +1,7 @@
 defmodule BordoWeb.MediaLive do
   use BordoWeb, :client_live_view
   alias Bordo.{Brands, Media}
+  alias BordoWeb.Helpers.TimeHelper
 
   def render(assigns) do
     ~L"""
@@ -283,7 +284,7 @@ defmodule BordoWeb.MediaLive do
             <img src="<%= media.thumbnail_url %>" class="w-full h-64 object-cover transform group-hover:scale-110 transition duration-150 ease-out">
           </div>
           <div class="px-4 py-2 mt-2">
-            <span class="text-sm text-gray-400"><%= DateHelper.local_date(media.inserted_at) %></span>
+            <span class="text-sm text-gray-400"><%= TimeHelper.local_date(media.inserted_at) %></span>
             <h2 class="font-bold text-xl mb-2 text-gray-800 tracking-normal truncate"><%= media.title %></h2>
           </div>
         </div>
@@ -342,7 +343,7 @@ defmodule BordoWeb.MediaLive do
           </dt>
           <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
             <p>
-              <%= DateHelper.local_date(@media.inserted_at) %>
+              <%= TimeHelper.local_date(@media.inserted_at) %>
             </p>
           </dd>
         </div>

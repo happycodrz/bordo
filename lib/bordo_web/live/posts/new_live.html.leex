@@ -90,7 +90,7 @@
               <img src="<%= media.thumbnail_url %>" class="w-full h-64 object-cover transform group-hover:scale-110 transition duration-150 ease-out">
             </div>
             <div class="px-4 py-2 mt-2">
-              <span class="text-sm text-gray-400"><%= DateHelper.local_date(media.inserted_at) %></span>
+              <span class="text-sm text-gray-400"><%= BordoWeb.Helpers.TimeHelper.local_date(media.inserted_at) %></span>
               <h2 class="font-bold text-xl mb-2 text-gray-800 tracking-normal truncate"><%= media.title %></h2>
             </div>
           </div>
