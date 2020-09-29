@@ -2,7 +2,7 @@ defmodule BordoWeb.Router do
   use BordoWeb, :router
   import Phoenix.LiveView.Router
   import Phoenix.LiveDashboard.Router
-  import BordoWeb.Plug.Session, only: [assign_current_admin: 2, assign_current_user: 2]
+  import BordoWeb.Plug.Session, only: [assign_current_admin: 2, verify_brand_access: 2]
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -30,6 +30,7 @@ defmodule BordoWeb.Router do
   pipeline :private do
     plug :put_root_layout, {BordoWeb.LayoutView, :root}
     plug Auth.Guardian.SessionPipeline
+    plug :verify_brand_access
   end
 
   get "/healthy-otter", BordoWeb.HealthzController, :index

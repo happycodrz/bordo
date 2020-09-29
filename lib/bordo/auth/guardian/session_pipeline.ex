@@ -7,6 +7,8 @@ defmodule Auth.Guardian.SessionPipeline do
     error_handler: Auth.Guardian.SessionErrorHandler,
     module: Auth.Guardian
 
+  alias Guardian.Plug
+
   plug Guardian.Plug.VerifySession
   plug Guardian.Plug.LoadResource
 
@@ -15,6 +17,6 @@ defmodule Auth.Guardian.SessionPipeline do
 
   defp assign_current_identity(conn, _) do
     conn
-    |> assign(:current_identity, Guardian.Plug.current_resource(conn))
+    |> assign(:current_identity, Plug.current_resource(conn))
   end
 end

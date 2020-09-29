@@ -6,6 +6,7 @@ defmodule BordoWeb.Plug.Session do
   import Plug.Conn, only: [get_session: 2, put_session: 3, halt: 1, assign: 3]
   import Phoenix.Controller, only: [redirect: 2]
 
+  alias Bordo.Brands
   alias Bordo.Sessions
   alias Bordo.Sessions.Session
 
@@ -36,6 +37,21 @@ defmodule BordoWeb.Plug.Session do
       conn
     end
   end
+
+  def verify_brand_access(%{params: %{"brand_slug" => slug}} = conn, _) do
+    brand = Brands.get_brand!(slug: slug)
+    if brand.team_id == conn.assigns.current_identity.team_id do
+      conn
+
+    else
+      conn
+      |> put_session(:return_to, conn.request_path)
+      |> redirect(to: BordoWeb.Router.Helpers.login_path(conn, :index))
+      |> halt()
+    end
+  end
+
+  def verify_brand_access(conn, _), do: conn
 
   def insert_session_token(key, user_id) do
     salt = signing_salt()
