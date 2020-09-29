@@ -1,33 +1,19 @@
 defmodule BordoWeb.CalendarLive do
-  use BordoWeb, :client_live_view
+  use BordoWeb, :live_component
   use Timex
 
-  alias Bordo.Brands
   alias Bordo.Posts
-  alias BordoWeb.Live.AuthHelper
 
   @week_start_at :sun
 
-  def mount(%{"brand_slug" => brand_slug}, session, socket) do
-    {:ok, current_identity} = AuthHelper.load_user(session)
-    active_brand = Brands.get_brand!(slug: brand_slug)
-    current_date = Timex.now()
-    posts = fetch_posts(active_brand.id, current_date)
-    week_rows = week_rows(current_date)
-    mapped_posts = mapped_posts(posts, week_rows)
+  def preload(list_of_assigns) do
+    a = list_of_assigns |> Enum.at(0)
+    posts = fetch_posts(a.active_brand.id, a.current_date)
+    mapped_posts = mapped_posts(posts, week_rows(a.current_date))
 
-    assigns = [
-      current_date: current_date,
-      day_names: day_names(@week_start_at),
-      week_rows: week_rows,
-      active_brand: active_brand,
-      nav_item: "schedule",
-      posts: mapped_posts,
-      show_slideover: false,
-      current_user_id: current_identity.user_id
-    ]
-
-    {:ok, assign(socket, assigns)}
+    Enum.map(list_of_assigns, fn assigns ->
+      Map.put(assigns, :posts, mapped_posts)
+    end)
   end
 
   defp day_names(:sun), do: [7, 1, 2, 3, 4, 5, 6] |> Enum.map(&Timex.day_name/1)
@@ -103,16 +89,6 @@ defmodule BordoWeb.CalendarLive do
       current_date: current_date,
       week_rows: week_rows(current_date),
       posts: mapped_posts
-    ]
-
-    {:noreply, assign(socket, assigns)}
-  end
-
-  def handle_event("pick-date", %{"date" => date}, socket) do
-    current_date = Timex.parse!(date, "{YYYY}-{0M}-{D}")
-
-    assigns = [
-      current_date: current_date
     ]
 
     {:noreply, assign(socket, assigns)}

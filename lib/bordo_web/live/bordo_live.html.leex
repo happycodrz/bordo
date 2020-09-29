@@ -1,0 +1,17 @@
+<%= render BordoWeb.NavView, "brand_nav.html", socket: @socket, active_brand: @active_brand, brands: @brands, current_user: @current_user, live_action: @live_action %>
+<%= live_component(@socket, BordoWeb.BrandModal, id: "brand-modal", team_id: @current_user.team_id) %>
+<div class="w-full overflow-y-scroll">
+  <%= case @live_action do %>
+    <% :launchpad -> %>
+      <%= render BordoWeb.LaunchpadView, "index.html", socket: @socket, active_brand: @active_brand, current_user: @current_user %>
+    <% :schedule -> %>
+      <%= live_component @socket, BordoWeb.CalendarLive, id: "calendar-live", socket: @socket, active_brand: @active_brand, current_date: @current_date, current_user: @current_user, posts: @posts %>
+    <% :media -> %>
+      <%= live_component @socket, BordoWeb.MediaLive, id: "media-live", socket: @socket, active_brand: @active_brand, medias: @medias, show_slideover: false, search: "", total_pages: @total_pages, page_number: @page_number %>
+    <% :settings -> %>
+      <%= live_component @socket, BordoWeb.SettingsLive, id: "settings-live", socket: @socket, active_brand: @active_brand, channels: @active_brand.channels, changeset: @changeset, editing_name: false %>
+    <% :team_settings -> %>
+      <%= live_component @socket, BordoWeb.TeamSettingsLive, id: "team-settings-live", socket: @socket, active_brand: @active_brand, changeset: @changeset, users: @users %>
+    <% end %>
+</div>
+<%= live_component @socket, BordoWeb.Posts.NewLive, id: "new-post", active_brand: @active_brand, show_slideover: false, current_user_id: @current_user.id %>

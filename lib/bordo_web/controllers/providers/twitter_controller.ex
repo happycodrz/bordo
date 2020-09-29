@@ -47,7 +47,7 @@ defmodule BordoWeb.Providers.TwitterController do
 
       conn
       |> put_flash(:success, ["Nice!", "Twitter connected"])
-      |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
+      |> redirect(to: Routes.bordo_path(conn, :settings, brand.slug))
     else
       {:error, 401} ->
         conn
@@ -66,7 +66,7 @@ defmodule BordoWeb.Providers.TwitterController do
 
     conn
     |> put_flash(:error, "There was a problem connecting your twitter account")
-    |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
+    |> redirect(to: Routes.bordo_path(conn, :settings, brand.slug))
   end
 
   # Handling errors from extwitter request_token is difficult right now b/c no error tuple is returned

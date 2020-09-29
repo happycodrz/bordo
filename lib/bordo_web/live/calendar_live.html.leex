@@ -1,6 +1,4 @@
-
-
-<div class="p-8 bg-gray-50 min-h-full" id="edit-post">
+<div class="p-8 bg-gray-50 min-h-full" id="calendar-live-wrapper">
   <div class="flex items-center justify-between  mb-6">
     <h1 class="text-2xl font-semibold text-gray-900">Schedule</h1>
   </div>
@@ -14,25 +12,27 @@
           <button type="button"
             class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
             aria-label="Previous"
-            phx-click="prev-month">
+            phx-click="prev-month"
+            phx-target="#calendar-live-wrapper">
               <%= feather_icon("chevron-left", "w-5 h-5") %>
           </button>
           <button type="button"
             class="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
             aria-label="Next"
-            phx-click="next-month">
+            phx-click="next-month"
+            phx-target="#calendar-live-wrapper">
               <%= feather_icon("chevron-right", "w-6") %>
           </button>
         </span>
       </div>
     </div>
     <div class="w-full grid grid-cols-7 py-2 text-center border-b border-gray-200">
-      <%= for day_name <- @day_names do %>
+      <%= for day_name <- day_names(:mon) do %>
         <div class="text-sm text-gray-400"><%= day_name %></div>
       <% end %>
     </div>
     <div class="w-full grid grid-cols-7">
-      <%= for week <- @week_rows do %>
+      <%= for week <- week_rows(@current_date) do %>
         <%= for day <- week do %>
           <%= live_component @socket, BordoWeb.Components.CalendarDay, day: day, current_date: @current_date, posts: @posts[day], id: day %>
         <% end %>

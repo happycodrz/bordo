@@ -13,28 +13,6 @@ defmodule BordoWeb.Posts.NewLive do
   alias Ecto.Changeset
   alias Timex.Timezone
 
-  def preload([assigns]) do
-    post =
-      if assigns[:live_action] == :edit do
-        assigns[:post] || get_post(nil)
-      else
-        get_post(nil)
-      end
-
-    changeset = Posts.change_post(post)
-
-    [
-      assigns
-      |> Map.merge(%{
-        channels: fetch_available_channels(assigns.active_brand.id),
-        picked_channels: [],
-        changeset: changeset,
-        post: post,
-        live_action: assigns[:live_action] || :new
-      })
-    ]
-  end
-
   def handle_event("validate", %{"post" => post_params}, socket) do
     params = post_params |> prepare_data()
 
@@ -53,9 +31,8 @@ defmodule BordoWeb.Posts.NewLive do
         {:ok, _post} ->
           {:noreply,
            socket
-           |> redirect(
-             to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
-           )}
+           |> put_flash(:success, "Your post was updated")
+           |> redirect(to: Routes.bordo_path(socket, :schedule, socket.assigns.active_brand.slug))}
 
         {:error, %Ecto.Changeset{} = changeset} ->
           {:noreply, assign(socket, changeset: prepare_error_changeset(changeset))}
@@ -65,9 +42,8 @@ defmodule BordoWeb.Posts.NewLive do
         {:ok, _post} ->
           {:noreply,
            socket
-           |> redirect(
-             to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
-           )}
+           |> put_flash(:success, "Your post is scheduled")
+           |> redirect(to: Routes.bordo_path(socket, :schedule, socket.assigns.active_brand.slug))}
 
         {:error, %Ecto.Changeset{} = changeset} ->
           {:noreply, assign(socket, changeset: prepare_error_changeset(changeset))}
@@ -79,9 +55,9 @@ defmodule BordoWeb.Posts.NewLive do
     Posts.delete_post(socket.assigns.post)
 
     {:noreply,
-     redirect(socket,
-       to: Routes.live_path(socket, BordoWeb.CalendarLive, socket.assigns.active_brand.slug)
-     )}
+     socket
+     |> put_flash(:success, "Your post was removed")
+     |> redirect(to: Routes.bordo_path(socket, :schedule, socket.assigns.active_brand.slug))}
   end
 
   def handle_event("add-variant", %{"channel_id" => channel_id}, socket) do
@@ -297,7 +273,11 @@ defmodule BordoWeb.Posts.NewLive do
   def get_post(nil),
     do: %Post{scheduled_for: Timex.now() |> format_for_input(), post_variants: []}
 
-  def get_post(id), do: Posts.get_post!(id)
+  def get_post(id) do
+    post = Posts.get_post!(id)
+    scheduled_for = Map.get(post, :scheduled_for)
+    Map.replace!(post, :scheduled_for, format_for_input(scheduled_for))
+  end
 
   defp format_for_input(time) do
     time
@@ -360,7 +340,7 @@ defmodule BordoWeb.Posts.NewLive do
       <div class="sm:col-span-2">
         <span class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2">
           <%= for channel <- channels do %>
-            <span class="inline-flex rounded-md shadow-sm">
+            <span class="inline-flex rounded-md shadow">
               <%= if channel_added?(channel.id, picked_channels) do %>
                 <button type="button" phx-click="remove-variant" phx-target="#new-post" phx-value-channel_id="<%= channel.id %>" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
                   Remove <%= String.capitalize(channel.network) %>
@@ -382,7 +362,7 @@ defmodule BordoWeb.Posts.NewLive do
     Enum.member?(picked_channels, channel_id)
   end
 
-  def existing_variants(assigns) do
+  defp existing_variants(assigns) do
     Changeset.get_field(assigns.changeset, :post_variants)
   end
 

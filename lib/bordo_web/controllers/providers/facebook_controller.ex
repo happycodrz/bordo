@@ -30,7 +30,7 @@ defmodule BordoWeb.Providers.FacebookController do
 
     conn
     |> put_flash(:success, "Reauthed!")
-    |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
+    |> redirect(to: Routes.bordo_path(conn, :settings, brand.slug))
   end
 
   defp get_auth_url(brand_id, reauth \\ false) do

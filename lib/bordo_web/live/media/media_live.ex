@@ -1,6 +1,6 @@
 defmodule BordoWeb.MediaLive do
-  use BordoWeb, :client_live_view
-  alias Bordo.{Brands, Media}
+  use BordoWeb, :live_component
+  alias Bordo.Media
   alias BordoWeb.Helpers.TimeHelper
 
   def render(assigns) do
@@ -51,34 +51,9 @@ defmodule BordoWeb.MediaLive do
         ) do %>
         <%= live_component(@socket, BordoWeb.Media.UnsplashSearch, id: "unsplash-search", unsplash_search: "", unsplash_results: [], page: 1, active_brand: @active_brand, loading: false) %>
       <% end %>
-      <div id="CanvaHook" phx-hook="Canva"></div>
+      <div id="CanvaHook" phx-hook="Canva" phx-target="#edit-media"></div>
     </div>
     """
-  end
-
-  def mount(%{"brand_slug" => brand_slug}, _session, socket) do
-    active_brand = Brands.get_brand!(slug: brand_slug)
-
-    %{
-      entries: entries,
-      page_number: page_number,
-      page_size: page_size,
-      total_entries: total_entries,
-      total_pages: total_pages
-    } = Media.list_media(active_brand.id)
-
-    {:ok,
-     assign(socket,
-       active_brand: active_brand,
-       medias: entries,
-       nav_item: "media",
-       show_slideover: false,
-       search: "",
-       page_number: page_number || 0,
-       page_size: page_size || 0,
-       total_entries: total_entries || 0,
-       total_pages: total_pages || 0
-     )}
   end
 
   def handle_event("save", %{"media" => media_params}, socket) do
@@ -87,9 +62,7 @@ defmodule BordoWeb.MediaLive do
         {:noreply,
          socket
          |> put_flash(:success, "Updated #{media.title}")
-         |> push_redirect(
-           to: Routes.live_path(socket, BordoWeb.MediaLive, socket.assigns.active_brand.slug)
-         )}
+         |> push_redirect(to: Routes.bordo_path(socket, :media, socket.assigns.active_brand.slug))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -125,9 +98,7 @@ defmodule BordoWeb.MediaLive do
         {:noreply,
          socket
          |> put_flash(:success, "Deleted #{media.title}")
-         |> push_redirect(
-           to: Routes.live_path(socket, BordoWeb.MediaLive, socket.assigns.active_brand.slug)
-         )}
+         |> push_redirect(to: Routes.bordo_path(socket, :media, socket.assigns.active_brand.slug))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply,
@@ -154,7 +125,7 @@ defmodule BordoWeb.MediaLive do
     {:noreply,
      push_redirect(socket,
        to:
-         Routes.live_path(socket, BordoWeb.MediaLive, socket.assigns.active_brand.slug, %{
+         Routes.bordo_path(socket, :media, socket.assigns.active_brand.slug, %{
            page: page
          })
      )}
@@ -180,37 +151,8 @@ defmodule BordoWeb.MediaLive do
      |> assign(:medias, Enum.concat(socket.assigns.medias, [media]))}
   end
 
-  def handle_event("canva-upload", %{"url" => url}, socket) do
-    send(self(), {:upload, url})
-    {:noreply, socket}
-  end
-
   def handle_event("open-canva", _data, socket) do
     {:noreply, push_event(socket, "open", %{})}
-  end
-
-  def handle_info({:upload, url}, socket) do
-    {:ok, result} = Cloudex.upload([url], %{eager: "c_fit,w_400,h_400"})
-
-    {:ok, media} =
-      Media.create_media(%{
-        "title" => result.original_filename,
-        "public_id" => result.public_id,
-        "url" => result.url,
-        "thumbnail_url" => result.eager |> Enum.at(0) |> Map.get("url"),
-        "bytes" => result.bytes,
-        "width" => result.width,
-        "height" => result.height,
-        "resource_type" => "image",
-        "brand_id" => socket.assigns.active_brand.id
-      })
-
-    send_update(BordoWeb.Media.UnsplashSearch, %{id: "unsplash-search", loading: false})
-
-    {:noreply,
-     socket
-     |> put_flash(:success, "Uploaded #{result.original_filename}")
-     |> assign(medias: socket.assigns.medias |> Enum.concat([media]))}
   end
 
   def handle_params(%{"page" => page}, _, socket) do
@@ -245,7 +187,7 @@ defmodule BordoWeb.MediaLive do
     ~L"""
     <div class="pb-4 border-b border-gray-200 space-y-3 sm:flex sm:items-center sm:justify-between sm:space-x-4 sm:space-y-0">
       <div class="w-1/3">
-        <form phx-submit="search">
+        <form phx-submit="search" phx-target="<%= @myself %>">
           <label for="search_candidate" class="sr-only">Search</label>
           <div class="flex rounded-md shadow">
             <div class="relative flex-grow focus-within:z-10">
@@ -272,7 +214,7 @@ defmodule BordoWeb.MediaLive do
 
   defp media_card(media) do
     ~e"""
-    <div class="cursor-pointer group" phx-click="open-slideover" phx-value-media_id="<%= media.id %>">
+    <div class="cursor-pointer group" phx-click="open-slideover" phx-target="#edit-media" phx-value-media_id="<%= media.id %>">
         <div class="bg-white shadow rounded-sm overflow-hidden relative">
           <div class="absolute text-white p-2 z-10">
             <%= feather_icon("image", "w-6 h-6") %>
@@ -390,7 +332,7 @@ defmodule BordoWeb.MediaLive do
     <div class="flex w-full justify-between">
       <div>
         <span class="inline-flex rounded-md shadow">
-          <button class="inline-flex items-center justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out" phx-click="delete" data-confirm="Are you sure you want to delete this asset?">
+          <button type="button" class="inline-flex items-center justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out" phx-click="delete" phx-target="#edit-media" data-confirm="Are you sure you want to delete this asset?">
             <%= feather_icon("trash", "mr-2 w-4 h-4") %>
             Delete
           </button>
@@ -398,7 +340,7 @@ defmodule BordoWeb.MediaLive do
       </div>
       <div>
         <span class="inline-flex rounded-md shadow">
-          <button type="button" phx-click="close-slideover" class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+          <button type="button" phx-click="close-slideover" phx-target="#edit-media" class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
             Cancel
           </button>
         </span>
@@ -429,14 +371,14 @@ defmodule BordoWeb.MediaLive do
     <div x-show="open" x-description="Dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="z-10 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow">
       <div class="rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
         <div class="py-1">
-          <a href="#" @click="open = !open" id="upload_widget" phx-hook="UploadMedia" class="group flex items-center px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">
+          <a href="#" @click="open = !open" id="upload_widget" phx-hook="UploadMedia" phx-target="#edit-media" class="group flex items-center px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">
             <%= feather_icon("upload", "mr-3") %>
             Upload
           </a>
         </div>
         <div class="border-t border-gray-100"></div>
         <div class="py-1">
-          <a href="#" @click="open = !open" phx-click="open-canva" class="group flex items-center px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">
+          <a href="#" @click="open = !open" phx-click="open-canva" phx-target="#edit-media" class="group flex items-center px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">
             <i class="w-5 h-5 rounded-full flex items-center justify-center mr-3" style="background:#00c4cc;">
               <%= BordoWeb.Helpers.Svg.social_icon("canva_logo") %>
             </i>

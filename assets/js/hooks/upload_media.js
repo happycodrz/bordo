@@ -1,7 +1,6 @@
 export const UploadMedia = {
   mounted() {
-    const cloudinaryUpload = cloudinary.createUploadWidget(
-      {
+    const cloudinaryUpload = cloudinary.createUploadWidget({
         cloudName: 'bordo',
         uploadPreset: 'bdo_image_frontend_upload',
         sources: ['local', 'url', 'dropbox', 'google_drive'],
@@ -9,7 +8,7 @@ export const UploadMedia = {
       },
       (error, result) => {
         if (!error && result && result.event === 'success') {
-          this.pushEvent('upload-success', {
+          this.pushEventTo(this.el.getAttribute('phx-target'), 'upload-success', {
             title: result.info.public_id,
             public_id: result.info.public_id,
             url: result.info.url,

@@ -1,14 +1,11 @@
 defmodule BordoWeb.Components.CalendarDay do
   use BordoWeb, :live_component
   use Timex
-  alias BordoWeb.Helpers.Svg
 
   def render(assigns) do
-    assigns = Map.put(assigns, :day_class, day_class(assigns))
-
     ~L"""
-    <div phx-click="pick-date" phx-value-date="<%= Timex.format!(@day, "%Y-%m-%d", :strftime) %>" class="border-b border-r border-gray-200 px-3 py-2 h-40 flex flex-col items-baseline">
-      <span class="inline-flex items-center -ml-2 px-2 py-1 rounded-full text-sm font-light text-gray-600 leading-5 <%= @day_class %>">
+    <div class="border-b border-r border-gray-200 px-3 py-2 h-40 flex flex-col items-baseline">
+      <span class="inline-flex items-center -ml-2 px-2 py-1 rounded-full text-sm font-light text-gray-600 leading-5 <%= day_class(assigns) %>">
         <%= Timex.format!(@day, "%e", :strftime) %>
       </span>
       <div class="overflow-y-auto mt-2 w-full">
@@ -57,27 +54,6 @@ defmodule BordoWeb.Components.CalendarDay do
     """
   end
 
-  defp social_logo("twitter") do
-    Svg.social_icon("twitter_white",
-      class: "fill-current text-white mr-1",
-      style: "width: 10px; height: 10px;"
-    )
-  end
-
-  defp social_logo("linkedin") do
-    Svg.social_icon("linkedin_white",
-      class: "fill-current text-white mr-1",
-      style: "width: 10px; height: 10px;"
-    )
-  end
-
-  defp social_logo("facebook") do
-    Svg.social_icon("fb_white",
-      class: "fill-current text-white mr-1",
-      style: "width: 10px; height: 10px;"
-    )
-  end
-
   defp current_date?(assigns) do
     Map.take(assigns.day, [:year, :month, :day]) ==
       Map.take(assigns.current_date, [:year, :month, :day])
@@ -95,7 +71,9 @@ defmodule BordoWeb.Components.CalendarDay do
     failed =
       post.post_variants |> Enum.map(fn pv -> pv.status end) |> Enum.filter(&(&1 == "failed"))
 
-    main_css =
+    if Enum.any?(failed) do
+      "bg-red-200 text-red-600 hover:bg-red-100 group-hover:text-red-500"
+    else
       case Timex.compare(Timex.now(), post.scheduled_for) do
         1 ->
           "bg-gray-100 hover:bg-gray-50 text-gray-600 hover:text-gray-500"
@@ -103,11 +81,6 @@ defmodule BordoWeb.Components.CalendarDay do
         _ ->
           "bg-blue-200 text-blue-800 hover:bg-blue-100 hover:text-blue-700"
       end
-
-    if Enum.any?(failed) do
-      main_css = "bg-red-200 text-red-600 hover:bg-red-100 group-hover:text-red-500"
-    else
-      main_css
     end
   end
 
