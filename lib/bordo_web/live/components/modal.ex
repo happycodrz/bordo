@@ -60,7 +60,7 @@ defmodule BordoWeb.Components.Modal do
         </div>
 
         <!-- MODAL WRAPPER FOR SCROLLLOCK -->
-        <div class="fixed flex overflow-y-auto top-0 right-0 bottom-0 left-0 items-center justify-content-center"
+        <div class="fixed flex overflow-y-auto top-0 right-0 bottom-0 left-0 justify-content-center"
           phx-hook="ScrollLock">
           <!-- MODAL DIALOG -->
           <div
