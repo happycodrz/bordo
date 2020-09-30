@@ -1,5 +1,11 @@
-<div class="grid grid-cols-6 gap-0 h-screen">
-  <div class="col-span-2 flex items-center justify-center text-center flex-col">
+<div class="md:hidden bg-blue-100 h-screen p-8 flex flex-col items-center justify-center text-center">
+  <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-5" alt="Bordo admin" width="120px" />
+  <h1 class="text-3xl mb-6 text-blue-900">Looks like you're on the move!</h1>
+  <p class="text-blue-800">Unfortunately at this time, Bordo isn't quite suited for mobile use. Try loggin in on your laptop or iPad until this experience is ready.</p>
+</div>
+
+<div class="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-0 h-screen">
+  <div class="flex items-center justify-center text-center flex-col">
     <div class="w-3/5">
       <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-3" alt="Bordo admin" width="120px" />
       <h1 class="text-3xl mb-6 text-gray-700">Welcome back!</h1>
@@ -29,5 +35,5 @@
       </div>
     </div>
   </div>
-  <div class="col-span-4 bg-blue-500 flex items-center justify-center"></div>
+  <div class="lg:col-span-2 bg-blue-500 hidden md:flex items-center justify-center"></div>
 </div>

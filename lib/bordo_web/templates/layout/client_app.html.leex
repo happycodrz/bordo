@@ -4,6 +4,15 @@
 
 <%= live_component(@socket, BordoWeb.Components.Toast, id: "toast", show: false) %>
 
-<div class="h-screen flex">
-  <%= @inner_content %>
+<div class="md:hidden bg-blue-100 h-screen p-8 flex flex-col items-center justify-center text-center">
+  <img src="/images/logo.svg" class="mx-auto mb-5" alt="Bordo admin" width="120px" />
+  <h1 class="text-3xl mb-6 text-blue-900">Looks like you're on the move!</h1>
+  <p class="text-blue-800">Unfortunately at this time, Bordo isn't quite suited for mobile use. Try loggin in on your laptop or iPad until this experience is ready.</p>
+</div>
+
+<div class="h-screen hidden md:flex">
+  <%= live_render(@socket, BordoWeb.BrandNav, id: "brand-nav", session: %{"brand_slug" => @active_brand.slug, "nav_item" => @nav_item}) %>
+  <div class="w-full overflow-y-scroll">
+    <%= @inner_content %>
+  </div>
 </div>
