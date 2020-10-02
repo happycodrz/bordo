@@ -40,9 +40,9 @@ defmodule BordoWeb.Plug.Session do
 
   def verify_brand_access(%{params: %{"brand_slug" => slug}} = conn, _) do
     brand = Brands.get_brand!(slug: slug)
+
     if brand.team_id == conn.assigns.current_identity.team_id do
       conn
-
     else
       conn
       |> put_session(:return_to, conn.request_path)

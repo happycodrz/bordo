@@ -71,7 +71,9 @@ defmodule BordoWeb.Oauth.FacebookLive.Index do
     case Channels.create_channel(channel_params) do
       {:ok, %Channel{} = _channel} ->
         {:noreply,
-         redirect(socket, to: Routes.live_path(socket, BordoWeb.SettingsLive, brand.slug))}
+         socket
+         |> put_flash(:success, ["Sweet!", "Facebook connected"])
+         |> redirect(to: Routes.bordo_path(socket, :settings, brand.slug))}
 
       _ ->
         {:noreply, socket}

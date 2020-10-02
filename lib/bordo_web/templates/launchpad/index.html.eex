@@ -1,18 +1,7 @@
-defmodule BordoWeb.LaunchpadLive do
-  use BordoWeb, :client_live_view
-
-  alias Bordo.Brands
-  alias Bordo.Brands.Brand
-  alias Bordo.Users
-  alias BordoWeb.Live.AuthHelper
-
-  @impl true
-  def render(assigns) do
-    ~L"""
-    <div class="h-full flex flex-col items-center justify-center bg-geometry">
+<div class="h-full flex flex-col items-center justify-center bg-geometry">
       <%= if brand_configured?(@active_brand) do %>
           <p class="text-6xl text-gray-700">
-            <%= @greeting %>, <span class="text-blue-600"><%= @user_greeting %></span>!
+            <%= greeting() %>, <span class="text-blue-600"><%= user_greeting(@current_user) %></span>!
             <span class="wave" role="img">
               👋
             </span>
@@ -25,13 +14,13 @@ defmodule BordoWeb.LaunchpadLive do
               <div class="bg-red-500 px-8 py-4 text-white font-medium w-full text-center rounded-b-lg">Let's go!</div>
             </div>
 
-            <%= link to: Routes.live_path(@socket, BordoWeb.CalendarLive, @active_brand.slug), class: "flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer hover:no-underline transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" do %>
+            <%= live_redirect to: Routes.bordo_path(@socket, :schedule, @active_brand.slug), class: "flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer hover:no-underline transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" do %>
               <div class="absolute flex items-center justify-center rounded-full w-16 h-16 top-0 -mt-8 bg-blue-600"><%= feather_icon("calendar", "w-8 h-8 text-white") %></div>
               <div class="text-xl text-center flex-1 pb-12 px-8 text-gray-700">See my upcoming posts</div>
               <div class="bg-blue-600 px-8 py-4 text-white font-medium w-full text-center rounded-b-lg">Let's go!</div>
             <% end %>
 
-            <%= link to: Routes.live_path(@socket, BordoWeb.MediaLive, @active_brand.slug), class: "flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer hover:no-underline transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" do %>
+            <%= live_redirect to: Routes.bordo_path(@socket, :media, @active_brand.slug), class: "flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer hover:no-underline transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" do %>
               <div class="absolute flex items-center justify-center rounded-full w-16 h-16 top-0 -mt-8 bg-green-400"><%= feather_icon("image", "w-8 h-8 text-white") %></div>
               <div class="text-xl text-center flex-1 pb-12 px-8 text-gray-700">Upload a new image or graphic</div>
               <div class="bg-green-400 px-8 py-4 text-white font-medium w-full text-center rounded-b-lg">Let's go!</div>
@@ -49,7 +38,7 @@ defmodule BordoWeb.LaunchpadLive do
                 </p>
               </div>
               <div class="mt-3 text-sm leading-5">
-                <%= link to: Routes.live_path(@socket, BordoWeb.SettingsLive, @active_brand.slug), class: "font-medium text-indigo-600 hover:text-indigo-500 transition ease-in-out duration-150" do %>
+                <%= link to: Routes.bordo_path(@socket, :settings, @active_brand.slug), class: "font-medium text-indigo-600 hover:text-indigo-500 transition ease-in-out duration-150" do %>
                 Setup social channels in settings &rarr;
                 <% end %>
               </div>
@@ -57,39 +46,3 @@ defmodule BordoWeb.LaunchpadLive do
           </div>
         <% end %>
     </div>
-    """
-  end
-
-  @impl true
-  def mount(%{"brand_slug" => brand_slug}, session, socket) do
-    active_brand = Brands.get_brand!(slug: brand_slug, preloads: [:channels])
-
-    {:ok, current_identity} = AuthHelper.load_user(session)
-    current_user = Users.get_user!(current_identity.user_id)
-    user_greeting = current_user.first_name || current_user.email
-
-    greeting =
-      Enum.random([
-        "Hello",
-        "Welcome back",
-        "Howdy",
-        "What's up",
-        "Hola",
-        "Sup",
-        "Hey",
-        "Hey there"
-      ])
-
-    {:ok,
-     assign(socket,
-       active_brand: active_brand,
-       user_greeting: user_greeting,
-       nav_item: "launchpad",
-       greeting: greeting
-     )}
-  end
-
-  defp brand_configured?(%Brand{channels: channels}) do
-    Enum.any?(channels)
-  end
-end

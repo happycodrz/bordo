@@ -1,0 +1,59 @@
+<div class="h-full flex">
+  <div class="bg-blue-800 text-blue-50 w-18 p-3 flex flex-col h-full" id="brand-nav">
+    <div class="flex-1 ">
+      <%= for brand <- @brands do %>
+        <div class="cursor-pointer mb-3">
+          <%= live_redirect to: Routes.bordo_path(@socket, @live_action, brand.slug),cass: "hover:no-underline" do %>
+            <%= brand_nav_avatar(brand, @active_brand.slug) %>
+          <% end %>
+        </div>
+      <% end %>
+      <div class="cursor-pointer" phx-click="open" phx-target="#new-brand-modal">
+        <div
+          class="bg-blue-700 hover:bg-blue-600 transition duration-150 h-12 w-12 flex items-center justify-center text-blue-800 text-2xl font-semibold rounded-lg mb-1 overflow-hidden">
+          <%= feather_icon("plus", "w-56") %>
+        </div>
+      </div>
+    </div>
+    <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
+      <%= live_redirect to: Routes.bordo_path(@socket, :team_settings, @active_brand.slug), class: "block p-2 text-center text-blue-300 hover:text-blue-100" do %>
+        <%= feather_icon("settings") %>
+      <% end %>
+    </div>
+    <div class="pin-bx" x-data="{ open: false }"  phx-update="ignore">
+      <%= link to: Routes.logout_path(@socket, :index), class: "block p-2 text-center text-blue-300 hover:text-blue-100" do %>
+        <%= feather_icon("log-out") %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex flex-col max-w-sm" style="width: 25vw">
+    <div class="flex flex-col h-0 flex-1 border-r border-gray-200 bg-white">
+      <div class="flex-1 flex flex-col overflow-y-auto">
+        <div class="border-b border-gray-200 relative">
+          <div class="flex items-center justify-between flex-shrink-0 px-4 h-20 w-full focus:outline-none focus:border-0">
+            <div>
+              <span class="text-xl truncate text-gray-900"><%= @active_brand.name %></span>
+            </div>
+          </div>
+        </div>
+        <nav class="flex-1 bg-white space-y-1 py-4">
+          <%= nav_link(Routes.bordo_path(@socket, :launchpad, @active_brand.slug ), @live_action, "Launchpad", "zap") %>
+          <%= if brand_configured?(@active_brand) do %>
+            <%= nav_link(Routes.bordo_path(@socket, :schedule, @active_brand.slug ), @live_action, "Schedule", "calendar") %>
+            <%= nav_link(Routes.bordo_path(@socket,:media, @active_brand.slug ), @live_action, "Media", "image") %>
+            <%= nav_link(Routes.bordo_path(@socket, :settings, @active_brand.slug ), @live_action, "Settings", "settings") %>
+          <% end %>
+        </nav>
+      </div>
+      <div class="flex-shrink-0 flex p-6">
+        <span class="flex rounded-md shadow w-full">
+          <button id="post-slideover-button" class="w-full inline-flex justify-center items-center px-4 py-3 border border-transparent leading-6 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition ease-in-out duration-150 text-lg" phx-target="#new-post" phx-click="open-slideover">
+            <%= feather_icon("send", "-ml-1 mr-3 w-5 h-5") %>
+            New Post
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

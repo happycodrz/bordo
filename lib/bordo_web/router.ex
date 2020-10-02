@@ -72,6 +72,7 @@ defmodule BordoWeb.Router do
 
   scope "/", BordoWeb do
     pipe_through [:browser, :onboarding_layout, :private]
+    live "/", OnboardingLive.Index
     live "/onboarding", OnboardingLive.Index
   end
 
@@ -99,16 +100,13 @@ defmodule BordoWeb.Router do
     end
 
     scope "/:brand_slug" do
-      live "/launchpad", LaunchpadLive
-      live "/media", MediaLive
-      live "/posts/new", Posts.NewLive
-      live "/posts/:id/edit", Posts.NewLive, :edit
-      live "/schedule", CalendarLive
-      live "/schedule/:post_id", CalendarLive
-      live "/settings", SettingsLive
-      live "/team-settings", TeamSettingsLive
+      live "/", BordoLive
+      live "/launchpad", BordoLive, :launchpad
+      live "/media", BordoLive, :media
+      live "/posts/new", BordoLive, :new_post
+      live "/schedule", BordoLive, :schedule
+      live "/settings", BordoLive, :settings
+      live "/team-settings", BordoLive, :team_settings
     end
-
-    live "/*path", OnboardingLive.Index
   end
 end

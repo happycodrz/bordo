@@ -8,21 +8,13 @@ defmodule BordoWeb.BrandModal do
     changeset = Brand.changeset(%Brand{}, %{})
 
     {:ok,
-     assign(socket,
-       state: "CLOSED",
-       changeset: changeset
-     )}
+     socket
+     |> assign(:changeset, changeset)}
   end
 
   def render(assigns) do
     ~L"""
     <div id="<%= @id %>" style="min-height: 250px;"><!-- NOTE THE THE COMPONENT NEEDS TO BE TRACKED WITH AN ID -->
-      <div class="cursor-pointer" phx-click="open" phx-target="#new-brand-modal">
-        <div
-          class="bg-blue-700 hover:bg-blue-600 transition duration-150 h-12 w-12 flex items-center justify-center text-blue-800 text-2xl font-semibold rounded-lg mb-1 overflow-hidden">
-          <%= feather_icon("plus", "w-56") %>
-        </div>
-      </div>
       <div id="new-brand-handler">
         <%= live_component @socket, BordoWeb.Components.Modal, id: "new-brand-modal", title: "Add a new brand" do %>
           <%= f = form_for @changeset, "#", [phx_submit: :save, phx_target: "#new-brand-handler"] %>
@@ -44,7 +36,8 @@ defmodule BordoWeb.BrandModal do
                 </span>
                 <span class="ml-3 inline-flex rounded-md shadow">
                   <button type="submit"
-                    class="inline-flex justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">
+                    class="inline-flex justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out"
+                    phx-disable-with="Validating...">
                     Add New Brand
                   </button>
                 </span>

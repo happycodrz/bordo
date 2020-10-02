@@ -25,7 +25,7 @@ defmodule BordoWeb.Providers.GoogleController do
     %{"access_token" => access_token} = Google.access_token(code)
     Channels.create_channel(build_channel_params(access_token, brand_id))
 
-    conn |> redirect(to: Routes.live_path(conn, BordoWeb.SettingsLive, brand.slug))
+    conn |> redirect(to: Routes.bordo_path(conn, :settings, brand.slug))
   end
 
   defp build_channel_params(access_token, brand_id) do

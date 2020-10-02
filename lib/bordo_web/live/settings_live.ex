@@ -1,5 +1,5 @@
 defmodule BordoWeb.SettingsLive do
-  use BordoWeb, :client_live_view
+  use BordoWeb, :live_component
   alias Bordo.Brands
   alias Bordo.Brands.Brand
   alias Bordo.Channels
@@ -9,18 +9,18 @@ defmodule BordoWeb.SettingsLive do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="min-w-full min-h-full bg-gray-50">
+    <div class="min-w-full min-h-full bg-gray-50" id="settings-live">
       <div class="p-9">
         <div class="flex items-center mb-5">
           <div className="flex align-items-center">
-            <img phx-hook="UploadMedia" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer" src="<%= @active_brand.image_url %>" alt="">
+            <img phx-hook="UploadMedia" phx-target="#settings-live" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer" src="<%= @active_brand.image_url %>" alt="">
           </div>
           <div>
             <%= if !@editing_name do %>
               <h3 class="text-2xl"><%= @active_brand.name %></h3>
-              <span class="text-blue-700 cursor-pointer" phx-click="edit-brand">Edit</span>
+              <span class="text-blue-700 cursor-pointer" phx-click="edit-brand" phx-target="#settings-live">Edit</span>
             <% else %>
-              <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save"] %>
+              <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save", phx_target: "#settings-live"] %>
                 <div>
                   <div class="mt-1 rounded-md shadow">
                     <%= text_input f, :name, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
@@ -30,7 +30,7 @@ defmodule BordoWeb.SettingsLive do
 
                 <div class="">
                   <span class="block w-full">
-                    <span class="text-gray-700 cursor-pointer mr-2" phx-click="edit-brand">Cancel</span>
+                    <span class="text-gray-700 cursor-pointer mr-2" phx-click="edit-brand" phx-target="#settings-live">Cancel</span>
                     <button type="submit"
                       class="py-2 text-blue-700"
                       phx-disable-with="Saving...">Save</button>
@@ -64,7 +64,7 @@ defmodule BordoWeb.SettingsLive do
         <div class="mb-14 bg-white rounded-lg shadow-md p-8">
           <h3 class="border-b mb-4 pb-2 text-gray-600 text-xl">Danger Zone</h3>
           <p class="mb-4 text-gray-400">Deleting a brand is irreversable! Bordo will remove everything associated with the brand if deleted.</p>
-          <button phx-click="delete-brand" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="rounded-md bg-red-500 hover:bg-red-400 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
+          <button phx-click="delete-brand" phx-target="#settings-live" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="rounded-md bg-red-500 hover:bg-red-400 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
         </div>
         <div class="pin-b">
           <p class="text-xs text-center text-gray-500 mb-2">
@@ -74,21 +74,6 @@ defmodule BordoWeb.SettingsLive do
       </div>
     </div>
     """
-  end
-
-  @impl true
-  def mount(%{"brand_slug" => brand_slug}, _session, socket) do
-    active_brand = Brands.get_brand!(slug: brand_slug)
-    channels = Channels.list_channels(brand_id: active_brand.id)
-
-    {:ok,
-     assign(socket,
-       active_brand: active_brand,
-       channels: channels,
-       editing_name: false,
-       nav_item: "settings",
-       changeset: Brand.changeset(active_brand, %{})
-     )}
   end
 
   @impl true
@@ -154,7 +139,7 @@ defmodule BordoWeb.SettingsLive do
 
           <div x-show="open" x-description="Dropdown panel, show/hide based on dropdown state." x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 border w-56 rounded-md shadow-md" style="display: none;">
             <div class="py-1 rounded-md bg-white" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <a href="#" phx-click="delete-channel" phx-value-channel_id="<%= channel.id %>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-blue-500 hover:text-white focus:outline-none focus:bg-blue-500 focus:text-white" role="menuitem" data-confirm="Are you sure? This will remove EVERYTHING associated with this channel.">Remove Channel</a>
+              <a href="#" phx-click="delete-channel" phx-target="#settings-live" phx-value-channel_id="<%= channel.id %>" @click="open = !open" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-blue-500 hover:text-white focus:outline-none focus:bg-blue-500 focus:text-white" role="menuitem" data-confirm="Are you sure? This will remove EVERYTHING associated with this channel.">Remove Channel</a>
             </div>
           </div>
         </div>
@@ -194,9 +179,6 @@ defmodule BordoWeb.SettingsLive do
 
         "linkedin" ->
           Routes.linkedin_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
-
-          # "google" ->
-          #   Routes.google_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
       end
 
     ~e"""
@@ -260,10 +242,6 @@ defmodule BordoWeb.SettingsLive do
     channel.image_url
   end
 
-  defp connection_url(%Channel{network: "google"} = channel) do
-    ""
-  end
-
   defp card_resource_info(%Channel{network: "twitter"} = channel) do
     ~e"""
     <div class="text-gray-800">
@@ -288,11 +266,6 @@ defmodule BordoWeb.SettingsLive do
     <div class="text-gray-800">
       <%= channel.resource_info["localizedName"] %>
     </div>
-    """
-  end
-
-  defp card_resource_info(%Channel{network: "google"} = channel) do
-    ~e"""
     """
   end
 end
