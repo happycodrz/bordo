@@ -11,7 +11,7 @@
     <% :settings -> %>
       <%= live_component @socket, BordoWeb.SettingsLive, id: "settings-live", socket: @socket, active_brand: @active_brand, channels: @active_brand.channels, changeset: @changeset, editing_name: false %>
     <% :team_settings -> %>
-      <%= live_component @socket, BordoWeb.TeamSettingsLive, id: "team-settings-live", socket: @socket, active_brand: @active_brand, changeset: @changeset, users: @users %>
+      <%= live_component @socket, BordoWeb.TeamSettingsLive, id: "team-settings-live", socket: @socket, active_brand: @active_brand, changeset: @changeset, payment_methods: @payment_methods, team: @team, users: @users %>
     <% end %>
 </div>
 <%= live_component @socket, BordoWeb.Posts.NewLive, id: "new-post", active_brand: @active_brand, show_slideover: false, current_user_id: @current_user.id %>
