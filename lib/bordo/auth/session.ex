@@ -39,15 +39,20 @@ defmodule BordoWeb.Plug.Session do
   end
 
   def verify_brand_access(%{params: %{"brand_slug" => slug}} = conn, _) do
-    brand = Brands.get_brand!(slug: slug)
+    try do
+      brand = Brands.get_brand!(slug: slug)
 
-    if brand.team_id == conn.assigns.current_identity.team_id do
-      conn
-    else
-      conn
-      |> put_session(:return_to, conn.request_path)
-      |> redirect(to: BordoWeb.Router.Helpers.login_path(conn, :index))
-      |> halt()
+      if brand.team_id == conn.assigns.current_identity.team_id do
+        conn
+      else
+        conn
+        |> put_session(:return_to, conn.request_path)
+        |> redirect(to: BordoWeb.Router.Helpers.login_path(conn, :index))
+        |> halt()
+      end
+    rescue
+      Ecto.NoResultsError ->
+        redirect(conn, to: "/")
     end
   end
 
