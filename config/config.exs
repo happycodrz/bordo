@@ -30,19 +30,6 @@ config :phoenix, :json_library, Jason
 # this avoids having to configure it on every migration file
 config :bordo, Bordo.Repo, migration_timestamps: [type: :utc_datetime_usec]
 
-config :bordo,
-  auth0: %{
-    url: %URI{
-      host: System.get_env("AUTH0_DOMAIN"),
-      port: 443,
-      scheme: "https"
-    },
-    client_id: System.get_env("AUTH0_CLIENT_ID"),
-    client_secret: System.get_env("AUTH0_CLIENT_SECRET"),
-    audience: System.get_env("AUTH0_AUDIENCE"),
-    scope: "read:all"
-  }
-
 # Setup Guardian with Auth0
 config :bordo, Auth.Guardian,
   allowed_algos: ["HS256"],
