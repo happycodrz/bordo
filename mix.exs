@@ -20,7 +20,7 @@ defmodule Bordo.MixProject do
   def application do
     [
       mod: {Bordo.Application, []},
-      extra_applications: [:cloudex, :logger, :runtime_tools, :os_mon]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -65,7 +65,8 @@ defmodule Bordo.MixProject do
       {:slack, "~> 0.23.2"},
       {:stripity_stripe, "~> 2.0"},
       {:telemetry_metrics, "~> 0.4"},
-      {:timex, "~> 3.6.1"}
+      {:timex, "~> 3.6.1"},
+      {:vapor, "~> 0.10.0"}
     ]
   end
 
