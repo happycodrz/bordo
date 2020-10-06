@@ -8,8 +8,6 @@ defmodule Auth do
   import Base
   require Logger
 
-  @auth0 Application.get_env(:bordo, :auth0)
-
   @doc """
   Retrieves the access_token token for a username / password pair
   Returns {:ok, %TokenResult{access_token: 'ey...', expires_in: 86400}} or {:error, "reason"}
@@ -23,12 +21,21 @@ defmodule Auth do
     body = build_payload(username, password)
     headers = build_headers()
 
-    @auth0.url
+    %URI{
+      host: config().host,
+      port: 443,
+      scheme: "https"
+    }
     |> build_url()
     |> HTTPoison.post(body, headers)
     |> response
     |> parse
     |> find_or_create_user(username)
+  end
+
+  defp config do
+    %{auth0: config} = Vapor.load!(Bordo.Config)
+    config
   end
 
   defp build_url(%URI{} = url) do
@@ -42,10 +49,10 @@ defmodule Auth do
       grant_type: "password",
       username: username,
       password: password,
-      audience: @auth0.audience,
-      scope: @auth0.scope,
-      client_id: @auth0.client_id,
-      client_secret: @auth0.client_secret
+      audience: config().audience,
+      scope: "read:all",
+      client_id: config().client_id,
+      client_secret: config().client_secret
     }
     # This is a predictable step, it cannot fail, error handling omitted intentionally
     |> Jason.encode!()
