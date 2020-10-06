@@ -4,6 +4,7 @@ defmodule BordoWeb.SettingsLive do
   alias Bordo.Brands.Brand
   alias Bordo.Channels
   alias Bordo.Channels.Channel
+  alias BordoWeb.Helpers.BrandHelper
   alias BordoWeb.Helpers.Svg
 
   @impl true
@@ -13,7 +14,13 @@ defmodule BordoWeb.SettingsLive do
       <div class="p-9">
         <div class="flex items-center mb-5">
           <div className="flex align-items-center">
-            <img phx-hook="UploadMedia" phx-target="#settings-live" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer" src="<%= @active_brand.image_url %>" alt="">
+            <%= if is_nil(@active_brand.image_url) do %>
+              <div phx-hook="UploadMedia" phx-target="#settings-live" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer bg-white h-12 hover:no-underline w-12 flex items-center justify-center text-gray-500 text-2xl font-semibold rounded-lg mb-1 overflow-hidden">
+                <%= BrandHelper.brand_letters(@active_brand) %>
+              </div>
+            <% else %>
+              <img phx-hook="UploadMedia" phx-target="#settings-live" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer" src="<%= @active_brand.image_url %>" alt="">
+            <% end %>
           </div>
           <div>
             <%= if !@editing_name do %>
