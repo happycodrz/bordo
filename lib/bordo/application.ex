@@ -6,16 +6,18 @@ defmodule Bordo.Application do
   use Application
 
   def start(_type, _args) do
+    config = Vapor.load!(Bordo.Config)
+
     # List all child processes to be supervised
     children = [
       # Start the PubSub system
       {Phoenix.PubSub, name: Bordo.PubSub},
       # Start the Ecto repository
-      Bordo.Repo,
+      {Bordo.Repo, [db_url: config.db.url]},
       # Start telemetry for live dashboard
       Bordo.Telemetry,
       # Start the endpoint when the application starts
-      BordoWeb.Endpoint,
+      {BordoWeb.Endpoint, port: config.web.port},
       {Oban, oban_config()}
       # Starts a worker by calling: Bordo.Worker.start_link(arg)
       # {Bordo.Worker, arg},
