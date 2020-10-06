@@ -388,7 +388,7 @@ defmodule BordoWeb.MediaLive do
             <i class="w-5 h-5 mr-3">
               <%= BordoWeb.Helpers.Svg.social_icon("unsplash_logo") %>
             </i>
-            Unspash
+            Unsplash
           </a>
         </div>
       </div>
