@@ -64,7 +64,10 @@ config :auth0_ex,
 
 config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
 
-config :bordo, :stripe, standard_price_id: "price_1HCuUsIa5ro1VoLo8QDydMJL"
+config :bordo, :stripe,
+  redirect_cancel: "https://bor.do",
+  redirect_success: "https://bor.do",
+  standard_price_id: "price_1HY9z8Ia5ro1VoLoz2EWk99z"
 
 ####
 # Integration configuration

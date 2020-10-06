@@ -38,6 +38,10 @@ config :bordo,
   facebook_live: false,
   twitter_live: false
 
+config :bordo, :stripe,
+  redirect_cancel: "http://localhost:4000",
+  redirect_success: "http://localhost:4000"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

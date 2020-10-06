@@ -5,6 +5,7 @@ defmodule BordoWeb.BordoLive do
   alias Bordo.Brands
   alias Bordo.Brands.Brand
   alias Bordo.Media
+  alias Bordo.Teams
   alias Bordo.Users
   alias Bordo.Users.User
   alias BordoWeb.Live.AuthHelper
@@ -12,6 +13,7 @@ defmodule BordoWeb.BordoLive do
   def mount(params, session, socket) do
     {:ok, current_identity} = AuthHelper.load_user(session)
     current_user = Users.get_user!(current_identity.user_id)
+    team = Teams.get_team!(current_identity.team_id)
 
     brands = fetch_brands(current_user.team_id)
     active_brand = Brands.get_brand!(slug: params["brand_slug"], preloads: [:channels])
@@ -20,7 +22,8 @@ defmodule BordoWeb.BordoLive do
      assign(socket,
        brands: brands,
        current_user: current_user,
-       active_brand: active_brand
+       active_brand: active_brand,
+       team: team
      )}
   end
 
@@ -75,7 +78,16 @@ defmodule BordoWeb.BordoLive do
 
   def handle_team_settings(_params, _url, socket) do
     users = Users.list_users_for_team(socket.assigns.active_brand.team_id)
-    {:noreply, assign(socket, changeset: User.changeset(%User{}, %{}), users: users)}
+
+    {:ok, payment_methods} =
+      Stripe.PaymentMethod.list(%{customer: socket.assigns.team.stripe_customer_id, type: "card"})
+
+    {:noreply,
+     assign(socket,
+       changeset: User.changeset(%User{}, %{}),
+       users: users,
+       payment_methods: payment_methods
+     )}
   end
 
   def handle_event("canva-upload", %{"url" => url}, socket) do
