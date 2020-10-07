@@ -8,6 +8,7 @@ defmodule BordoWeb.BordoLive do
   alias Bordo.Teams
   alias Bordo.Users
   alias Bordo.Users.User
+  alias BordoWeb.Helpers.BrandHelper
   alias BordoWeb.Live.AuthHelper
 
   def mount(params, session, socket) do
@@ -38,38 +39,52 @@ defmodule BordoWeb.BordoLive do
   end
 
   def handle_schedule(_params, _url, socket) do
-    current_date = Timex.now()
+    if BrandHelper.brand_configured?(socket.assigns.active_brand) do
+      current_date = Timex.now()
 
-    assigns = [
-      current_date: current_date,
-      posts: [],
-      show_slideover: false,
-      current_user: socket.assigns.current_user
-    ]
+      assigns = [
+        current_date: current_date,
+        posts: [],
+        show_slideover: false,
+        current_user: socket.assigns.current_user
+      ]
 
-    {:noreply, socket |> assign(assigns)}
+      {:noreply, socket |> assign(assigns)}
+    else
+      {:noreply,
+       push_patch(socket,
+         to: Routes.bordo_path(socket, :launchpad, socket.assigns.active_brand.slug)
+       )}
+    end
   end
 
   def handle_media(_params, _url, socket) do
-    %{
-      entries: entries,
-      page_number: page_number,
-      page_size: page_size,
-      total_entries: total_entries,
-      total_pages: total_pages
-    } = Media.list_media(socket.assigns.active_brand.id)
+    if BrandHelper.brand_configured?(socket.assigns.active_brand) do
+      %{
+        entries: entries,
+        page_number: page_number,
+        page_size: page_size,
+        total_entries: total_entries,
+        total_pages: total_pages
+      } = Media.list_media(socket.assigns.active_brand.id)
 
-    {:noreply,
-     assign(socket,
-       active_brand: socket.assigns.active_brand,
-       medias: entries,
-       show_slideover: false,
-       search: "",
-       page_number: page_number || 0,
-       page_size: page_size || 0,
-       total_entries: total_entries || 0,
-       total_pages: total_pages || 0
-     )}
+      {:noreply,
+       assign(socket,
+         active_brand: socket.assigns.active_brand,
+         medias: entries,
+         show_slideover: false,
+         search: "",
+         page_number: page_number || 0,
+         page_size: page_size || 0,
+         total_entries: total_entries || 0,
+         total_pages: total_pages || 0
+       )}
+    else
+      {:noreply,
+       push_patch(socket,
+         to: Routes.bordo_path(socket, :launchpad, socket.assigns.active_brand.slug)
+       )}
+    end
   end
 
   def handle_settings(_params, _url, socket) do

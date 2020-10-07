@@ -68,8 +68,4 @@ defmodule BordoWeb.NavView do
       <% end %>
     """
   end
-
-  defp brand_configured?(%Brand{channels: channels}) do
-    Enum.any?(channels)
-  end
 end

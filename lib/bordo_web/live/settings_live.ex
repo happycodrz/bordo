@@ -70,7 +70,7 @@ defmodule BordoWeb.SettingsLive do
         <% end %>
         <div class="mb-14 bg-white rounded-lg shadow-md p-8">
           <h3 class="border-b mb-4 pb-2 text-gray-600 text-xl">Danger Zone</h3>
-          <p class="mb-4 text-gray-400">Deleting a brand is irreversable! Bordo will remove everything associated with the brand if deleted.</p>
+          <p class="mb-4 text-gray-400">Deleting a brand is irreversible! Bordo will remove everything associated with the brand if deleted.</p>
           <button phx-click="delete-brand" phx-target="#settings-live" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" class="rounded-md bg-red-500 hover:bg-red-400 transition transition-all duration-150 font-weight-bold px-4 py-2 text-white">Delete</button>
         </div>
         <div class="pin-b">

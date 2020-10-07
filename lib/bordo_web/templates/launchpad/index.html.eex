@@ -1,5 +1,5 @@
 <div class="h-full flex flex-col items-center justify-center bg-geometry">
-      <%= if brand_configured?(@active_brand) do %>
+      <%= if BrandHelper.brand_configured?(@active_brand) do %>
           <p class="text-6xl text-gray-700">
             <%= greeting() %>, <span class="text-blue-600"><%= user_greeting(@current_user) %></span>!
             <span class="wave" role="img">

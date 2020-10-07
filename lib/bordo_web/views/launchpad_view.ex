@@ -3,10 +3,7 @@ defmodule BordoWeb.LaunchpadView do
   use BordoWeb, :view
 
   alias Bordo.Brands.Brand
-
-  defp brand_configured?(%Brand{channels: channels}) do
-    Enum.any?(channels)
-  end
+  alias BordoWeb.Helpers.BrandHelper
 
   defp greeting do
     Enum.random([

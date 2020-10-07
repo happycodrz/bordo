@@ -13,4 +13,8 @@ defmodule BordoWeb.Helpers.BrandHelper do
       Enum.join(letters)
     end
   end
+
+  def brand_configured?(%Brand{channels: channels}) do
+    Enum.any?(channels)
+  end
 end

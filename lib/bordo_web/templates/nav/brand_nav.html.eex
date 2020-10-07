@@ -39,7 +39,7 @@
         </div>
         <nav class="flex-1 bg-white space-y-1 py-4">
           <%= nav_link(Routes.bordo_path(@socket, :launchpad, @active_brand.slug ), @live_action, "Launchpad", "zap") %>
-          <%= if brand_configured?(@active_brand) do %>
+          <%= if BrandHelper.brand_configured?(@active_brand) do %>
             <%= nav_link(Routes.bordo_path(@socket, :schedule, @active_brand.slug ), @live_action, "Schedule", "calendar") %>
             <%= nav_link(Routes.bordo_path(@socket,:media, @active_brand.slug ), @live_action, "Media", "image") %>
             <%= nav_link(Routes.bordo_path(@socket, :settings, @active_brand.slug ), @live_action, "Settings", "settings") %>
@@ -47,12 +47,14 @@
         </nav>
       </div>
       <div class="flex-shrink-0 flex p-6">
-        <span class="flex rounded-md shadow w-full">
-          <button id="post-slideover-button" class="w-full inline-flex justify-center items-center px-4 py-3 border border-transparent leading-6 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition ease-in-out duration-150 text-lg" phx-target="#new-post" phx-click="open-slideover">
-            <%= feather_icon("send", "-ml-1 mr-3 w-5 h-5") %>
-            New Post
-          </button>
-        </span>
+        <%= if BrandHelper.brand_configured?(@active_brand) do %>
+          <span class="flex rounded-md shadow w-full">
+            <button id="post-slideover-button" class="w-full inline-flex justify-center items-center px-4 py-3 border border-transparent leading-6 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-600 focus:shadow-outline-red active:bg-red-600 transition ease-in-out duration-150 text-lg" phx-target="#new-post" phx-click="open-slideover">
+              <%= feather_icon("send", "-ml-1 mr-3 w-5 h-5") %>
+              New Post
+            </button>
+          </span>
+        <% end %>
       </div>
     </div>
   </div>
