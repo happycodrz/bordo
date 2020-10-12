@@ -53,13 +53,16 @@ defmodule Bordo.Fixtures do
     brand = assoc[:brand] || fixture(:brand)
 
     {:ok, channel} =
-      Channels.create_channel(%{
-        brand_id: brand.id,
-        network: "twitter",
-        token: "123",
-        token_secret: "456",
-        resource_info: %{}
-      })
+      Channels.create_channel(
+        %{
+          brand_id: brand.id,
+          network: "twitter",
+          token: "123",
+          token_secret: "456",
+          resource_info: %{}
+        }
+        |> Map.merge(attrs)
+      )
 
     channel
   end
