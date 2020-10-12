@@ -72,6 +72,22 @@ defmodule Bordo.Channels do
     query |> Repo.one()
   end
 
+  @doc """
+  Gets a single channel only for zapier based on token. This is a hack for "api auth".
+  """
+  def get_channel!(token: token) do
+    query =
+      from c in Channel,
+        left_join: b in Brand,
+        on: b.id == c.brand_id,
+        where:
+          c.token ==
+            ^token and
+            c.network == "zapier"
+
+    query |> Repo.one()
+  end
+
   def get_channel!(id), do: Repo.get!(Channel, id)
 
   @doc """
