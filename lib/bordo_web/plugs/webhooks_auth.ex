@@ -1,6 +1,6 @@
 defmodule BordoWeb.WebhooksAuthPlug do
   @behaviour Plug
-  import Plug.Conn, only: [send_resp: 3, halt: 1, get_req_header: 2, put_session: 3]
+  import Plug.Conn, only: [send_resp: 3, halt: 1, get_req_header: 2]
   alias Bordo.Channels
 
   def init(config), do: config
@@ -39,8 +39,8 @@ defmodule BordoWeb.WebhooksAuthPlug do
     conn
   end
 
-  defp zapier_api_key_valid?(channel, api_key) when is_nil(api_key), do: false
-  defp zapier_api_key_valid?(channel, api_key) when is_nil(channel), do: false
+  defp zapier_api_key_valid?(_channel, api_key) when is_nil(api_key), do: false
+  defp zapier_api_key_valid?(channel, _api_key) when is_nil(channel), do: false
 
   defp zapier_api_key_valid?(channel, api_key) do
     channel.token == api_key
