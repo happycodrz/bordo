@@ -9,7 +9,7 @@ defmodule Bordo.PostVariantsTest do
     @update_attrs %{content: "updated post content"}
     @invalid_attrs %{status: "invalid status"}
 
-    def post_variant_fixture() do
+    def post_variant_fixture do
       brand = fixture(:brand)
       channel = fixture(:channel, brand: brand)
 

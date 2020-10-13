@@ -2,7 +2,6 @@ defmodule BordoWeb.LaunchpadView do
   @moduledoc false
   use BordoWeb, :view
 
-  alias Bordo.Brands.Brand
   alias BordoWeb.Helpers.BrandHelper
 
   defp greeting do

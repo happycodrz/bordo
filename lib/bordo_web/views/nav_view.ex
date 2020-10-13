@@ -2,7 +2,6 @@ defmodule BordoWeb.NavView do
   @moduledoc false
   use BordoWeb, :view
 
-  alias Bordo.Brands.Brand
   alias BordoWeb.Helpers.BrandHelper
 
   def brand_nav_avatar(brand, current_brand_slug) do

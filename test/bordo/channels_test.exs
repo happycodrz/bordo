@@ -17,7 +17,7 @@ defmodule Bordo.ChannelsTest do
     }
     @invalid_attrs %{token: nil, network: nil, token_secret: nil}
 
-    def channel_fixture(attrs \\ %{}) do
+    def channel_fixture(_attrs \\ %{}) do
       brand = fixture(:brand)
 
       fixture(:channel, [brand: brand], @valid_attrs)
