@@ -16,7 +16,6 @@ defmodule BordoWeb.Webhooks.SubscriptionController do
     |> json([
       %{
         content: "Post content from Bordo!",
-        title: "A title of the Bordo post",
         media: [
           %{
             title: "Image title",
