@@ -29,12 +29,30 @@ defmodule BordoWeb.BordoLive do
   end
 
   def handle_params(params, url, socket) do
-    case socket.assigns.live_action do
-      :launchpad -> {:noreply, socket}
-      :schedule -> handle_schedule(params, url, socket)
-      :media -> handle_media(params, url, socket)
-      :settings -> handle_settings(params, url, socket)
-      :team_settings -> handle_team_settings(params, url, socket)
+    if BrandHelper.brand_configured?(socket.assigns.active_brand) do
+      case socket.assigns.live_action do
+        :launchpad -> {:noreply, socket}
+        :schedule -> handle_schedule(params, url, socket)
+        :media -> handle_media(params, url, socket)
+        :settings -> handle_settings(params, url, socket)
+        :team_settings -> handle_team_settings(params, url, socket)
+      end
+    else
+      {:noreply, settings_assigns} = handle_team_settings(params, url, socket)
+
+      if socket.assigns.live_action == :settings do
+        {:noreply, settings_assigns}
+      else
+        {:noreply,
+         push_patch(socket,
+           to:
+             Routes.bordo_path(
+               settings_assigns,
+               :settings,
+               socket.assigns.active_brand.slug
+             )
+         )}
+      end
     end
   end
 
@@ -53,7 +71,7 @@ defmodule BordoWeb.BordoLive do
     else
       {:noreply,
        push_patch(socket,
-         to: Routes.bordo_path(socket, :launchpad, socket.assigns.active_brand.slug)
+         to: Routes.bordo_path(socket, :settings, socket.assigns.active_brand.slug)
        )}
     end
   end
@@ -82,7 +100,7 @@ defmodule BordoWeb.BordoLive do
     else
       {:noreply,
        push_patch(socket,
-         to: Routes.bordo_path(socket, :launchpad, socket.assigns.active_brand.slug)
+         to: Routes.bordo_path(socket, :settings, socket.assigns.active_brand.slug)
        )}
     end
   end

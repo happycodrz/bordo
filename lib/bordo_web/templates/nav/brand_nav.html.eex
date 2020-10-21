@@ -38,12 +38,12 @@
           </div>
         </div>
         <nav class="flex-1 bg-white space-y-1 py-4">
-          <%= nav_link(Routes.bordo_path(@socket, :launchpad, @active_brand.slug ), @live_action, "Launchpad", "zap") %>
           <%= if BrandHelper.brand_configured?(@active_brand) do %>
+            <%= nav_link(Routes.bordo_path(@socket, :launchpad, @active_brand.slug ), @live_action, "Launchpad", "zap") %>
             <%= nav_link(Routes.bordo_path(@socket, :schedule, @active_brand.slug ), @live_action, "Schedule", "calendar") %>
             <%= nav_link(Routes.bordo_path(@socket,:media, @active_brand.slug ), @live_action, "Media", "image") %>
-            <%= nav_link(Routes.bordo_path(@socket, :settings, @active_brand.slug ), @live_action, "Settings", "settings") %>
           <% end %>
+          <%= nav_link(Routes.bordo_path(@socket, :settings, @active_brand.slug ), @live_action, "Settings", "settings") %>
         </nav>
       </div>
       <div class="flex-shrink-0 flex p-6">

@@ -301,7 +301,7 @@ defmodule BordoWeb.OnboardingLive.Index do
 
     {:noreply,
      redirect(socket |> assign(:team, updated_team),
-       to: Routes.bordo_path(socket, :launchpad, brand.slug)
+       to: Routes.bordo_path(socket, :settings, brand.slug)
      )}
   end
 
