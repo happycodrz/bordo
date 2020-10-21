@@ -40,7 +40,7 @@ defmodule BordoWeb.BordoLive do
     else
       {:noreply, settings_assigns} = handle_team_settings(params, url, socket)
 
-      if socket.assigns.live_action == :settings do
+      if socket.assigns.live_action == :settings || socket.assigns.live_action == :team_settings do
         {:noreply, settings_assigns}
       else
         {:noreply,
