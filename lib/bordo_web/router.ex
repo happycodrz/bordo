@@ -12,6 +12,11 @@ defmodule BordoWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :webhooks do
+    plug :accepts, ["json"]
+    plug BordoWeb.WebhooksAuthPlug
+  end
+
   pipeline :unauthenticated do
     plug :put_root_layout, {BordoWeb.LayoutView, :unauthenticated_root}
     plug Guardian.Plug.EnsureNotAuthenticated
@@ -58,7 +63,12 @@ defmodule BordoWeb.Router do
   end
 
   scope "/", BordoWeb do
-    post("/hooks", WebhookController, :hook)
+    pipe_through [:webhooks]
+    post("/webhooks", WebhookController, :hook)
+    get "/providers/zapier/check", Providers.ZapierController, :check
+
+    resources "/webhooks/subscriptions", Webhooks.SubscriptionController,
+      only: [:index, :create, :delete]
   end
 
   scope "/", BordoWeb do
@@ -97,6 +107,7 @@ defmodule BordoWeb.Router do
       get "/twitter/auth", Providers.TwitterController, :auth
       get "/twitter/callback", Providers.TwitterController, :callback
       get "/linkedin/auth", Providers.LinkedinController, :auth
+      get "/zapier/auth", Providers.ZapierController, :auth
     end
 
     scope "/:brand_slug" do

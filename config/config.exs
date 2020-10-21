@@ -82,7 +82,8 @@ config :facebook,
 config :bordo,
   twitter_live: true,
   facebook_live: true,
-  linkedin_live: true
+  linkedin_live: true,
+  zapier_live: true
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

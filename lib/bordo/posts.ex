@@ -92,7 +92,7 @@ defmodule Bordo.Posts do
 
   """
   def get_scheduled_post!(id),
-    do: Repo.get!(Post |> preload(post_variants: [:channel, :media]), id)
+    do: Repo.get!(Post |> preload(post_variants: [:media, channel: [:webhooks]]), id)
 
   @doc """
   Creates a post.
