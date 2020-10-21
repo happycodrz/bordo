@@ -343,11 +343,11 @@ defmodule BordoWeb.Posts.NewLive do
             <span class="inline-flex rounded-md shadow">
               <%= if channel_added?(channel.id, picked_channels) do %>
                 <button type="button" phx-click="remove-variant" phx-target="#new-post" phx-value-channel_id="<%= channel.id %>" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
-                  Remove <%= String.capitalize(channel.network) %>
+                  Remove <%= channel_name(channel) %>
                 </button>
               <% else %>
                 <button type="button" phx-click="add-variant" phx-target="#new-post" phx-value-channel_id="<%= channel.id %>" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
-                  Add <%= String.capitalize(channel.network) %>
+                  Add <%= channel_name(channel) %>
                 </button>
               <% end %>
             </span>
@@ -382,6 +382,14 @@ defmodule BordoWeb.Posts.NewLive do
     |> Enum.reject(fn variant ->
       variant.channel_id == remove_id
     end)
+  end
+
+  def channel_name(channel) do
+    if is_nil(channel.label) do
+      String.capitalize(channel.network)
+    else
+      String.capitalize(channel.network) <> ": " <> channel.label
+    end
   end
 
   defp generate_temp_id,

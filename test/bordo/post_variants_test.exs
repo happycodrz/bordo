@@ -48,7 +48,6 @@ defmodule Bordo.PostVariantsTest do
       assert post_variant == PostVariants.get_post_variant!(post_variant.id)
     end
 
-    @tag :focus
     test "delete_post_variant/1 deletes the post_variant" do
       post_variant = post_variant_fixture()
       assert {:ok, %PostVariant{}} = PostVariants.delete_post_variant(post_variant)

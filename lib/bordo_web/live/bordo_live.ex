@@ -17,7 +17,7 @@ defmodule BordoWeb.BordoLive do
     team = Teams.get_team!(current_identity.team_id)
 
     brands = fetch_brands(current_user.team_id)
-    active_brand = Brands.get_brand!(slug: params["brand_slug"], preloads: [:channels])
+    active_brand = Brands.get_brand!(slug: params["brand_slug"], preloads: [channels: :webhooks])
 
     {:ok,
      assign(socket,

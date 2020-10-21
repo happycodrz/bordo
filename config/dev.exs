@@ -36,7 +36,8 @@ config :bordo, BordoWeb.Endpoint,
 config :bordo,
   linkedin_live: false,
   facebook_live: false,
-  twitter_live: false
+  twitter_live: false,
+  zapier_live: true
 
 config :bordo, :stripe,
   redirect_cancel: "http://localhost:4000",
@@ -77,7 +78,7 @@ config :bordo, BordoWeb.Endpoint,
     ]
   ]
 
-config :bordo, :stripe, standard_price_id: "price_1HCPPAIa5ro1VoLoTk7IOaqA"
+config :bordo, :stripe, standard_price_id: "price_1HY9z8Ia5ro1VoLoz2EWk99z"
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 

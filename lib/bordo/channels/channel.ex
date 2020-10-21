@@ -2,7 +2,7 @@ defmodule Bordo.Channels.Channel do
   use Bordo.Schema
   import Ecto.Changeset
 
-  @supported_networks ["twitter", "facebook", "linkedin"]
+  @supported_networks ["twitter", "facebook", "linkedin", "zapier"]
 
   schema "channels" do
     field :token, :string

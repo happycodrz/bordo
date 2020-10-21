@@ -35,7 +35,7 @@ defmodule BordoWeb.SettingsLive do
                   </div>
                 </div>
 
-                <div class="">
+                <div>
                   <span class="block w-full">
                     <span class="text-gray-700 cursor-pointer mr-2" phx-click="edit-brand" phx-target="#settings-live">Cancel</span>
                     <button type="submit"
@@ -52,7 +52,7 @@ defmodule BordoWeb.SettingsLive do
             <h3 class="border-b mb-8 mt-14 pb-2 text-gray-600 text-xl">Your channels</h3>
             <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               <%= for channel <- @channels do %>
-                <%= channel_card(channel) %>
+                <%= channel_card(channel, assigns) %>
               <% end %>
             </ul>
           </div>
@@ -107,6 +107,36 @@ defmodule BordoWeb.SettingsLive do
     {:noreply, assign(socket, editing_name: !socket.assigns.editing_name)}
   end
 
+  def handle_event("edit-channel-label", %{"channel-id" => channel_id}, socket) do
+    channel = Channels.get_channel!(channel_id)
+
+    changeset = Channel.changeset(channel, %{})
+
+    {:noreply,
+     socket |> assign(:editing_channel, channel_id) |> assign(:channel_changeset, changeset)}
+  end
+
+  def handle_event("edit-channel-label", _params, socket) do
+    {:noreply, socket |> assign(:editing_channel, nil)}
+  end
+
+  def handle_event("channel-save", params, socket) do
+    channel = Channels.get_channel!(socket.assigns.editing_channel)
+
+    case Channels.update_channel(channel, params["channel"]) do
+      {:ok, channel} ->
+        {:noreply,
+         socket
+         |> put_flash(:success, "Updated #{channel.label}")
+         |> push_redirect(
+           to: Routes.bordo_path(socket, :settings, socket.assigns.active_brand.slug)
+         )}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, :channel_changeset, changeset)}
+    end
+  end
+
   def handle_event("upload-success", params, socket) do
     brand = socket.assigns.active_brand
 
@@ -133,7 +163,7 @@ defmodule BordoWeb.SettingsLive do
     end
   end
 
-  def channel_card(channel) do
+  def channel_card(channel, assigns) do
     ~e"""
     <li class="col-span-1 flex flex-col text-center bg-white rounded-lg shadow">
       <div class="flex-1 flex flex-col p-8 relative">
@@ -159,7 +189,7 @@ defmodule BordoWeb.SettingsLive do
             <img class="h-12 w-12 rounded-full" src="<%= connection_url(channel) %>" alt="" />
           </div>
         </div>
-        <%= card_resource_info(channel) %>
+        <%= card_resource_info(channel, assigns[:editing_channel], assigns[:channel_changeset]) %>
       </div>
       <%= if channel.network == "facebook" do %>
         <div class="-mt-px flex">
@@ -175,9 +205,9 @@ defmodule BordoWeb.SettingsLive do
     """
   end
 
-  defp add_channel_card(channel, brand_id) do
+  defp add_channel_card(channel_name, brand_id) do
     link =
-      case channel do
+      case channel_name do
         "twitter" ->
           Routes.twitter_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
 
@@ -187,8 +217,8 @@ defmodule BordoWeb.SettingsLive do
         "linkedin" ->
           Routes.linkedin_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
 
-        _ ->
-          ""
+        "zapier" ->
+          Routes.zapier_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
       end
 
     ~e"""
@@ -196,9 +226,14 @@ defmodule BordoWeb.SettingsLive do
       <div class="flex-1 flex items-center justify-between bg-white rounded-md truncate">
         <div class="flex-1 flex items-center content-center px-4 py-3 text-sm leading-5 truncate">
           <div class="mr-3">
-            <%= card_logo(channel) %>
+            <%= card_logo(channel_name) %>
           </div>
-          <h3 class="text-gray-900 font-medium text-base"><%= String.capitalize(channel) %></h3>
+          <h3 class="text-gray-900 font-medium text-base"><%= String.capitalize(channel_name) %></h3>
+          <%= if channel_name == "zapier" do %>
+            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium leading-4 bg-blue-100 text-blue-800">
+              Beta
+            </span>
+          <% end %>
         </div>
         <div class="flex-shrink-0 pr-3">
           <span class="inline-flex rounded-md">
@@ -218,7 +253,10 @@ defmodule BordoWeb.SettingsLive do
   defp remaining_channels(channels) do
     networks = Channel.supported_networks()
     channel_networks = Enum.map(channels, &Map.get(&1, :network))
-    Enum.reject(networks, fn network -> Enum.member?(channel_networks, network) end)
+
+    Enum.reject(networks, fn network ->
+      Enum.member?(channel_networks, network) && network != "zapier"
+    end)
   end
 
   defp card_logo(channel) do
@@ -234,6 +272,9 @@ defmodule BordoWeb.SettingsLive do
 
       "linkedin" ->
         Svg.social_icon("linkedin", style: "fill: #2867b2; width: 2.5rem; height: 2.5rem;")
+
+      "zapier" ->
+        Svg.social_icon("zapier", style: "fill: #2867b2; width: 2.5rem; height: 2.5rem;")
 
       "google" ->
         "na"
@@ -252,7 +293,11 @@ defmodule BordoWeb.SettingsLive do
     channel.image_url
   end
 
-  defp card_resource_info(%Channel{network: "twitter"} = channel) do
+  defp connection_url(%Channel{network: "zapier"}) do
+    Routes.static_path(BordoWeb.Endpoint, "/images/logo.svg")
+  end
+
+  defp card_resource_info(%Channel{network: "twitter"} = channel, _, _) do
     ~e"""
     <div class="text-gray-800">
       <%= channel.resource_info["name"] %>
@@ -263,7 +308,7 @@ defmodule BordoWeb.SettingsLive do
     """
   end
 
-  defp card_resource_info(%Channel{network: "facebook"} = channel) do
+  defp card_resource_info(%Channel{network: "facebook"} = channel, _, _) do
     ~e"""
     <div class="text-gray-800">
       <%= channel.resource_info["name"] %>
@@ -271,10 +316,85 @@ defmodule BordoWeb.SettingsLive do
     """
   end
 
-  defp card_resource_info(%Channel{network: "linkedin"} = channel) do
+  defp card_resource_info(%Channel{network: "linkedin"} = channel, _, _) do
     ~e"""
     <div class="text-gray-800">
       <%= channel.resource_info["localizedName"] %>
+    </div>
+    """
+  end
+
+  defp card_resource_info(
+         %Channel{network: "zapier"} = channel,
+         editing_channel \\ nil,
+         changeset
+       ) do
+    ~e"""
+    <div>
+      <div class="px-4 py-5 sm:p-0">
+        <dl>
+          <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+            <dt class="text-sm leading-5 font-medium text-gray-500">
+              Label
+            </dt>
+            <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= if editing_channel == channel.id do %>
+                <%= f = form_for changeset, "#", [as: :channel, phx_submit: "channel-save", phx_target: "#settings-live"] %>
+                  <div>
+                      <%= text_input f, :label, class: "border-b border-dotted border-1", autocomplete: :off, placeholder: "No Name" %>
+                      <%= error_tag f, :label %>
+                  </div>
+
+                  <div>
+                    <span class="block w-full">
+                      <span class="text-gray-700 cursor-pointer mr-2" phx-click="edit-channel-label" phx-target="#settings-live">Cancel</span>
+                      <button type="submit"
+                        class="py-2 text-blue-700"
+                        phx-disable-with="Saving...">Save</button>
+                    </span>
+                  </div>
+                </form>
+              <% else %>
+                <span phx-click="edit-channel-label" phx-value-channel-id="<%= channel.id %>" phx-target="#settings-live">
+                  <span class="border-dotted border-b border-1 mr-2">
+                    <%= if is_nil(channel.label) do %>
+                      <i class="text-gray-400 cursor-pointer">No Label</i>
+                    <% else %>
+                      <%= channel.label %>
+                    <% end %>
+                  </span>
+                  <%= feather_icon("edit-3", "text-gray-400 text-sm w-1 h-1 cursor-pointer") %>
+                </span>
+              <% end %>
+            </dd>
+          </div>
+          <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
+            <dt class="text-sm leading-5 font-medium text-gray-500">
+              Api Token
+            </dt>
+            <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= channel.token %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+      <%= if Enum.empty?(channel.webhooks) do %>
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <!-- Heroicon name: exclamation -->
+              <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm leading-5 text-yellow-700">
+                All good here, but this channel isn't fully configured yet. Complete the configuration by <a href="https://zapier.com/app/editor?redirect=true" class="underline">creating a Zap</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
     """
   end
