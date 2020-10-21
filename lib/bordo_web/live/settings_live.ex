@@ -186,6 +186,9 @@ defmodule BordoWeb.SettingsLive do
 
         "linkedin" ->
           Routes.linkedin_path(BordoWeb.Endpoint, :auth, %{"brand_id" => brand_id})
+
+        _ ->
+          ""
       end
 
     ~e"""
