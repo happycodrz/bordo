@@ -297,8 +297,12 @@ defmodule BordoWeb.OnboardingLive.Index do
 
   def handle_event("finish-onboarding", _data, socket) do
     brand = Enum.at(socket.assigns.brands, 0)
-    Teams.update_team(socket.assigns.team, %{completed_onboarding: true})
-    {:noreply, redirect(socket, to: Routes.bordo_path(socket, :launchpad, brand.slug))}
+    {:ok, updated_team} = Teams.update_team(socket.assigns.team, %{completed_onboarding: true})
+
+    {:noreply,
+     redirect(socket |> assign(:team, updated_team),
+       to: Routes.bordo_path(socket, :launchpad, brand.slug)
+     )}
   end
 
   defp fetch_brands(nil), do: []
