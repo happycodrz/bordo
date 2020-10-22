@@ -24,7 +24,8 @@ defmodule BordoWeb.BordoLive do
        brands: brands,
        current_user: current_user,
        active_brand: active_brand,
-       team: team
+       team: team,
+       show_trial_banner: show_trial_banner?(team)
      )}
   end
 
@@ -123,6 +124,11 @@ defmodule BordoWeb.BordoLive do
      )}
   end
 
+  def handle_event("acknowledge-trial", _params, socket) do
+    Teams.update_team(socket.assigns.team, %{trial_banner_acknowledged_at: Timex.now()})
+    {:noreply, socket |> assign(:show_trial_banner, false)}
+  end
+
   def handle_event("canva-upload", %{"url" => url}, socket) do
     send(self(), {:upload, url})
     {:noreply, socket}
@@ -155,4 +161,21 @@ defmodule BordoWeb.BordoLive do
   defp fetch_brands(team_id) do
     Brands.list_brands_for_team(team_id)
   end
+
+  defp show_trial_banner?(%{
+         is_paid_customer: is_paid_customer,
+         trial_banner_acknowledged_at: trial_banner_acknowledged_at
+       }) do
+    if is_paid_customer do
+      false
+    else
+      if is_nil(trial_banner_acknowledged_at) do
+        true
+      else
+        false
+      end
+    end
+  end
+
+  defp show_trial_banner?(_team), do: false
 end
