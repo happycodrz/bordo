@@ -13,7 +13,7 @@ defmodule Bordo.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Bordo.PubSub},
       # Start the Ecto repository
-      {Bordo.Repo, [db_url: config.db.url]},
+      Bordo.Repo,
       # Start telemetry for live dashboard
       Bordo.Telemetry,
       # Start the endpoint when the application starts

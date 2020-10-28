@@ -27,11 +27,4 @@ defmodule Bordo.Config do
            {:port, "PORT", map: &String.to_integer/1, required: false},
            {:secret_key_base, "SECRET_KEY_BASE"}
          ])
-
-  config :db,
-         env([
-           {:id, nil},
-           {:url, "DATABASE_URL"},
-           {:pool_size, "DB_POOL_SIZE", default: 10, map: &String.to_integer/1}
-         ])
 end
