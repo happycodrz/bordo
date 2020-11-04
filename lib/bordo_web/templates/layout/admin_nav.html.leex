@@ -17,7 +17,7 @@
             class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700"
             aria-label="Notifications">
             <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-            <%= link to: Routes.live_dashboard_path(@conn, :home) do %>
+            <%= link to: Routes.live_dashboard_path(@conn, :page) do %>
             <%= feather_icon("activity") %>
             <% end %>
             <% end %>
