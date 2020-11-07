@@ -23,16 +23,19 @@ defmodule Auth.Guardian do
   This can be very robust, and can essentially handle the entire state of the current_resource.
   """
   def resource_from_claims(%{"sub" => "auth0|" <> id}) do
-    user = Repo.get_by!(User, auth0_id: id)
-    {:ok, %Identity{id: id, user_id: user.id, team_id: user.team_id}}
+    find_user(id)
+  rescue
+    _ -> {:error, :resource_not_found}
   end
 
   def resource_from_claims(%{"sub" => id}) do
+    find_user(id)
+  rescue
+    _ -> {:error, :resource_not_found}
+  end
+
+  defp find_user(id) do
     user = Repo.get_by!(User, id: id)
     {:ok, %Identity{id: id, user_id: user.id, team_id: user.team_id}}
   end
-
-  # def build_claims(claims, _resource, opts) do
-  #   {:ok, encode_permissions_into_claims!(claims, Keyword.get(opts, :permissions))}
-  # end
 end
