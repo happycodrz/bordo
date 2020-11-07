@@ -39,6 +39,7 @@ defmodule BordoWeb.Admin.UsersLive.Edit do
   def handle_event("delete", %{"user_id" => user_id}, socket) do
     user = Users.get_user!(user_id)
     {:ok, _user} = Users.delete_user(user)
+    Auth0Ex.Management.User.delete("auth0|#{user.auth0_id}")
 
     {:noreply,
      socket
