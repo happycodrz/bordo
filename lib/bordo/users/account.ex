@@ -5,6 +5,7 @@ defmodule Bordo.Users.Account do
 
   alias Auth0Ex.Authentication
   alias Bordo.Users
+  alias Ecto.Changeset
 
   def create_user_with_auth0(attrs \\ %{}) do
     case Users.create_user(attrs) do
@@ -18,8 +19,12 @@ defmodule Bordo.Users.Account do
           {:ok, auth0_user} ->
             Users.update_user(user, %{auth0_id: auth0_user["_id"]})
 
+          # If there is a problem with Auth0, we just need a generic error, there's nothing
+          # we can do to handle it with 100% accuracy right now
           _ ->
-            {:error, "Problem connecting user account"}
+            Users.change_user(user, attrs)
+            |> Changeset.add_error(:email, "Problem connecting your email.")
+            |> Changeset.apply_action(:insert)
         end
 
       {:error, changeset} ->

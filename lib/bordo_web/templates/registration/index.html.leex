@@ -10,11 +10,11 @@
       <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-3" alt="Bordo admin" width="120px" />
       <h1 class="text-3xl mb-6 text-gray-700">Welcome back!</h1>
 
-      <%= f = form_for @changeset, "#", [as: :user] %>
+      <%= f = form_for @changeset, Routes.registration_path(@conn, :index), [as: :user] %>
 
       <%= if @errors do %>
       <div class="rounded-md bg-red-100 border border-red-200 p-4 mb-6">
-        <h3 class="text-sm leading-5 font-medium text-red-500 mb-2">There was a problem registering with your email.</h3>
+        <h3 class="text-sm leading-5 font-medium text-red-500">There was a problem registering with your email.</h3>
       </div>
       <% end %>
 
