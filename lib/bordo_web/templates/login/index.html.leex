@@ -33,6 +33,9 @@
       <div class="text-sm leading-5">
         <%= link "Forgot your password?", to: Routes.forgot_password_path(@conn, :index), class: "text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition ease-in-out duration-150" %>
       </div>
+      <div class="text-sm leading-5">
+        <%= link "No account? Sign up for free!", to: Routes.registration_path(@conn, :index), class: "text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition ease-in-out duration-150" %>
+      </div>
     </div>
   </div>
   <div class="lg:col-span-2 bg-blue-500 hidden md:flex items-center justify-center"></div>

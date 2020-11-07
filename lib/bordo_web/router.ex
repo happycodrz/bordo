@@ -74,9 +74,11 @@ defmodule BordoWeb.Router do
   scope "/", BordoWeb do
     pipe_through [:browser, :unauthenticated]
     get "/login", LoginController, :index
+    get "/signup", RegistrationController, :index
     get "/forgot-password", ForgotPasswordController, :index
     post "/forgot-password", ForgotPasswordController, :reset
     post "/login", LoginController, :login
+    post "/signup", RegistrationController, :register
     get "/logout", LogoutController, :index
   end
 
