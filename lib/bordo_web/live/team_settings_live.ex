@@ -1,6 +1,7 @@
 defmodule BordoWeb.TeamSettingsLive do
   use BordoWeb, :live_component
 
+  alias Bordo.Teams
   alias Bordo.Users.Account
   alias BordoWeb.Admin.UserView
   alias Stripe.BillingPortal.Session
@@ -9,6 +10,23 @@ defmodule BordoWeb.TeamSettingsLive do
     ~L"""
     <div class="p-8 bg-gray-50 min-h-full" id="team-settings-live-wrapper">
       <h2 class="mt-2 mb-8 text-3xl">Team Settings</h2>
+      <div class="bg-white rounded-lg shadow-md p-8 mb-10">
+        <h3 class="mb-3 text-xl">Timezone</h3>
+        <%= f = form_for @team_changeset, "#", [phx_submit: :update_team, phx_target: "#team-settings-live-wrapper"] %>
+          <div class="mt-6">
+            <%= label f, :timezone, class: "block text-sm leading-5 font-medium text-gray-700" %>
+            <%= timezone_select(f, :timezone, @team.timezone) %>
+          </div>
+          <div class="mt-6">
+            <span class="rounded-md shadow">
+              <button type="submit"
+                class="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
+                phx-disable-with="Updating...">Save changes</button>
+            </span>
+          </div>
+        </form>
+      </div>
+
       <div class="bg-white rounded-lg shadow-md p-8 mb-10">
         <h3 class="mb-3 text-xl">Add Team Member</h3>
         <p class="text-gray-500 mb-4">To add a user to your team, type their email and a new password below. They'll receive an email letting them know they're in!<p>
@@ -118,6 +136,16 @@ defmodule BordoWeb.TeamSettingsLive do
 
       {:error, changeset} ->
         {:noreply, socket |> assign(changeset: changeset)}
+    end
+  end
+
+  def handle_event("update_team", %{"team" => team_params}, socket) do
+    case Teams.update_team(socket.assigns.team, team_params) do
+      {:ok, team} ->
+        {:noreply, socket |> assign(team: team) |> put_flash(:success, "Team updated!")}
+
+      {:error, changeset} ->
+        {:noreply, socket |> assign(team_changeset: changeset)}
     end
   end
 

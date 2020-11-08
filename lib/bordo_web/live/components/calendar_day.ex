@@ -10,7 +10,7 @@ defmodule BordoWeb.Components.CalendarDay do
       </span>
       <div class="overflow-y-auto mt-2 w-full">
         <%= for post <- @posts do %>
-          <%= calendar_day_post(@socket, post) %>
+          <%= calendar_day_post(@socket, post, @team.timezone) %>
         <% end %>
       </div>
     </div>
@@ -33,8 +33,8 @@ defmodule BordoWeb.Components.CalendarDay do
     end
   end
 
-  defp calendar_day_post(socket, post) do
-    time = Timex.to_datetime(post.scheduled_for, "America/Chicago")
+  defp calendar_day_post(socket, post, timezone) do
+    time = Timex.to_datetime(post.scheduled_for, timezone)
 
     scheduled_for =
       Timex.format!(time, "%H:%M", :strftime) <>

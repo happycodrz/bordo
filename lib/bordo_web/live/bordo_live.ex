@@ -6,6 +6,7 @@ defmodule BordoWeb.BordoLive do
   alias Bordo.Brands.Brand
   alias Bordo.Media
   alias Bordo.Teams
+  alias Bordo.Teams.Team
   alias Bordo.Users
   alias Bordo.Users.User
   alias BordoWeb.Helpers.BrandHelper
@@ -119,6 +120,7 @@ defmodule BordoWeb.BordoLive do
     {:noreply,
      assign(socket,
        changeset: User.changeset(%User{}, %{}),
+       team_changeset: Team.changeset(socket.assigns.team, %{}),
        users: users,
        payment_methods: payment_methods
      )}

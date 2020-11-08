@@ -14,17 +14,17 @@ defmodule BordoWeb.Posts.NewLive do
   alias Timex.Timezone
 
   def handle_event("validate", %{"post" => post_params}, socket) do
-    params = post_params |> prepare_data()
+    params = post_params |> prepare_data(socket.assigns.team.timezone)
 
     updated_changeset =
       Posts.change_post(socket.assigns.post, params)
-      |> prepare_error_changeset()
+      |> prepare_error_changeset(socket.assigns.team.timezone)
 
     {:noreply, assign(socket, changeset: updated_changeset)}
   end
 
   def handle_event("save", %{"post" => post_params}, socket) do
-    params = post_params |> prepare_data()
+    params = post_params |> prepare_data(socket.assigns.team.timezone)
 
     if socket.assigns.live_action == :edit do
       case Posts.update_and_schedule_post(socket.assigns.post, params) do
@@ -35,7 +35,10 @@ defmodule BordoWeb.Posts.NewLive do
            |> redirect(to: Routes.bordo_path(socket, :schedule, socket.assigns.active_brand.slug))}
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, changeset: prepare_error_changeset(changeset))}
+          {:noreply,
+           assign(socket,
+             changeset: prepare_error_changeset(changeset, socket.assigns.team.timezone)
+           )}
       end
     else
       case Posts.create_and_schedule_post(params) do
@@ -46,7 +49,10 @@ defmodule BordoWeb.Posts.NewLive do
            |> redirect(to: Routes.bordo_path(socket, :schedule, socket.assigns.active_brand.slug))}
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, changeset: prepare_error_changeset(changeset))}
+          {:noreply,
+           assign(socket,
+             changeset: prepare_error_changeset(changeset, socket.assigns.team.timezone)
+           )}
       end
     end
   end
@@ -148,7 +154,7 @@ defmodule BordoWeb.Posts.NewLive do
         :edit
       end
 
-    post = get_post(post_id)
+    post = get_post(post_id, socket.assigns.team.timezone)
     changeset = Posts.change_post(post)
     existing_variants = existing_variants(%{changeset: changeset, post: post})
 
@@ -168,11 +174,11 @@ defmodule BordoWeb.Posts.NewLive do
     )
   end
 
-  def prepare_error_changeset(changeset) do
+  def prepare_error_changeset(changeset, timezone) do
     changeset
     |> Changeset.put_change(
       :scheduled_for,
-      Changeset.get_field(changeset, :scheduled_for) |> format_for_input()
+      Changeset.get_field(changeset, :scheduled_for) |> format_for_input(timezone)
     )
     |> Changeset.update_change(:post_variants, &inject_media_when_empty(&1))
   end
@@ -234,9 +240,9 @@ defmodule BordoWeb.Posts.NewLive do
     end)
   end
 
-  def prepare_data(params) do
+  def prepare_data(params, timezone) do
     params
-    |> convert_scheduled_for_to_utc()
+    |> convert_scheduled_for_to_utc(timezone)
     |> drop_empty_media()
   end
 
@@ -270,29 +276,29 @@ defmodule BordoWeb.Posts.NewLive do
     Channels.list_channels(brand_id: brand_id)
   end
 
-  def get_post(nil),
-    do: %Post{scheduled_for: Timex.now() |> format_for_input(), post_variants: []}
+  def get_post(nil, timezone),
+    do: %Post{scheduled_for: Timex.now() |> format_for_input(timezone), post_variants: []}
 
-  def get_post(id) do
+  def get_post(id, timezone) do
     post = Posts.get_post!(id)
     scheduled_for = Map.get(post, :scheduled_for)
-    Map.replace!(post, :scheduled_for, format_for_input(scheduled_for))
+    Map.replace!(post, :scheduled_for, format_for_input(scheduled_for, timezone))
   end
 
-  defp format_for_input(time) do
+  defp format_for_input(time, timezone) do
     time
-    |> Timezone.convert("America/Chicago")
+    |> Timezone.convert(timezone)
     |> Timex.format!("%Y-%m-%d %H:%M", :strftime)
   end
 
-  defp convert_scheduled_for_to_utc(post_params) do
+  defp convert_scheduled_for_to_utc(post_params, timezone) do
     post_params
     |> Map.replace!(
       "scheduled_for",
       post_params
       |> Map.get("scheduled_for")
       |> Timex.parse!("%Y-%m-%d %H:%M", :strftime)
-      |> Timex.to_datetime("America/Chicago")
+      |> Timex.to_datetime(timezone)
       |> Timezone.convert("UTC")
     )
   end

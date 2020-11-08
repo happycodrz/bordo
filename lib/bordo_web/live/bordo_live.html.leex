@@ -5,13 +5,13 @@
     <% :launchpad -> %>
       <%= render BordoWeb.LaunchpadView, "index.html", socket: @socket, active_brand: @active_brand, current_user: @current_user %>
     <% :schedule -> %>
-      <%= live_component @socket, BordoWeb.CalendarLive, id: "calendar-live", socket: @socket, active_brand: @active_brand, current_date: @current_date, current_user: @current_user, posts: @posts %>
+      <%= live_component @socket, BordoWeb.CalendarLive, id: "calendar-live", socket: @socket, active_brand: @active_brand, current_date: @current_date, current_user: @current_user, posts: @posts, team: @team %>
     <% :media -> %>
       <%= live_component @socket, BordoWeb.MediaLive, id: "media-live", socket: @socket, active_brand: @active_brand, medias: @medias, show_slideover: false, search: "", total_pages: @total_pages, page_number: @page_number %>
     <% :settings -> %>
       <%= live_component @socket, BordoWeb.SettingsLive, id: "settings-live", socket: @socket, active_brand: @active_brand, channels: @active_brand.channels, changeset: @changeset, editing_name: false %>
     <% :team_settings -> %>
-      <%= live_component @socket, BordoWeb.TeamSettingsLive, id: "team-settings-live", socket: @socket, active_brand: @active_brand, changeset: @changeset, payment_methods: @payment_methods, team: @team, users: @users %>
+      <%= live_component @socket, BordoWeb.TeamSettingsLive, id: "team-settings-live", socket: @socket, active_brand: @active_brand, changeset: @changeset, payment_methods: @payment_methods, team: @team, team_changeset: @team_changeset, users: @users %>
     <% end %>
 </div>
-<%= live_component @socket, BordoWeb.Posts.NewLive, id: "new-post", active_brand: @active_brand, show_slideover: false, current_user_id: @current_user.id %>
+<%= live_component @socket, BordoWeb.Posts.NewLive, id: "new-post", active_brand: @active_brand, show_slideover: false, current_user_id: @current_user.id, team: @team %>

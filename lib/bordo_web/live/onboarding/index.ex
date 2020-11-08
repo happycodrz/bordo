@@ -154,7 +154,7 @@ defmodule BordoWeb.OnboardingLive.Index do
         </div>
         <div class="mt-6">
           <%= label f, :timezone, class: "block text-sm leading-5 font-medium text-gray-700" %>
-          <%= select f, :timezone, Tzdata.zone_list |> Enum.filter(&(&1 == "America/Chicago")), selected: "America/Chicago", class: "mt-1 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" %>
+          <%= timezone_select(f, :timezone, "America/Chicago") %>
         </div>
         <div class="mt-6">
           <span class="block w-full rounded-md shadow">

@@ -104,6 +104,7 @@ defmodule BordoWeb do
       import BordoWeb.ErrorHelpers
       import BordoWeb.Gettext
       import BordoWeb.Admin.SharedView
+      import BordoWeb.FormHelper
       alias BordoWeb.Router.Helpers, as: Routes
     end
   end
