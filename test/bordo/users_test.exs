@@ -6,7 +6,12 @@ defmodule Bordo.UsersTest do
   describe "users" do
     alias Bordo.Users.User
 
-    @valid_attrs %{email: "some@email.com", password: "8charpass"}
+    @valid_attrs %{
+      first_name: "Kevin",
+      last_name: "Brown",
+      email: "some@email.com",
+      password: "8charpass"
+    }
     @update_attrs %{email: "updated@email.com", password: "8charpass2"}
     @invalid_attrs %{email: nil}
 

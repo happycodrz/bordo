@@ -7,12 +7,15 @@ defmodule Bordo.Fixtures do
     Company,
     Internet,
     Lorem.Shakespeare,
+    Person,
     Team
   }
 
   def fixture(:user, assoc \\ [], attrs \\ %{}) do
     {:ok, user} =
       %{
+        first_name: Person.first_name(),
+        last_name: Person.last_name(),
         email: Internet.email(),
         password: Faker.random_bytes(12) |> Base.encode64(),
         auth0_id: Bitcoin.address()

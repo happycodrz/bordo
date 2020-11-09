@@ -42,6 +42,8 @@ defmodule Bordo.Users.User do
       :team_id,
       :password
     ])
+    |> validate_required(:first_name)
+    |> validate_required(:last_name)
     |> validate_email()
     |> validate_password()
   end

@@ -17,10 +17,13 @@ defmodule BordoWeb.RegistrationController do
     )
   end
 
-  def register(conn, %{"user" => %{"email" => email, "password" => password}}) do
-    case Account.create_user_with_auth0(%{"email" => email, "password" => password}) do
+  def register(conn, %{"user" => user_params}) do
+    case Account.create_user_with_auth0(user_params) do
       {:ok, _user} ->
-        Auth.sign_in(%Credentials{username: email, password: Base.encode64(password)})
+        Auth.sign_in(%Credentials{
+          username: user_params["email"],
+          password: Base.encode64(user_params["password"])
+        })
         |> login_reply(conn)
 
       {:error, changeset} ->
