@@ -38,7 +38,7 @@ defmodule Bordo.MixProject do
       {:cloudex, "~> 1.4",
        git: "https://github.com/ClementineOldfield/cloudex", branch: "master"},
       {:cors_plug, "~> 2.0"},
-      {:credo, "~> 1.4.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.5.1", only: [:dev, :test], runtime: false},
       {:ecto_autoslug_field, "~> 2.0"},
       {:ecto_sql, "~> 3.4"},
       {:extwitter, "~> 0.12.0"},
