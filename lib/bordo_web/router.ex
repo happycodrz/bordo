@@ -116,7 +116,6 @@ defmodule BordoWeb.Router do
       live "/", BordoLive
       live "/launchpad", BordoLive, :launchpad
       live "/media", BordoLive, :media
-      live "/posts/new", BordoLive, :new_post
       live "/schedule", BordoLive, :schedule
       live "/settings", BordoLive, :settings
       live "/team-settings", BordoLive, :team_settings
