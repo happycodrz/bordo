@@ -49,9 +49,13 @@ defmodule Bordo.Providers.Facebook do
           end
 
         {:error, error} ->
+          stack = System.stacktrace()
+          Appsignal.Transaction.set_error("ProviderError", error, stack)
           {:error, error}
 
-        _ ->
+        e ->
+          stack = System.stacktrace()
+          Appsignal.Transaction.set_error("ProviderError", e, stack)
           {:error, "An uncaptured error occurred"}
       end
     else
