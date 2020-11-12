@@ -60,7 +60,8 @@ defmodule BordoWeb.Components.CalendarDay do
   end
 
   defp today?(assigns) do
-    Map.take(assigns.day, [:year, :month, :day]) == Map.take(Timex.now(), [:year, :month, :day])
+    Map.take(assigns.day, [:year, :month, :day]) ==
+      Map.take(assigns.current_date, [:year, :month, :day])
   end
 
   defp other_month?(assigns) do

@@ -60,7 +60,7 @@ defmodule BordoWeb.BordoLive do
 
   def handle_schedule(_params, _url, socket) do
     if BrandHelper.brand_configured?(socket.assigns.active_brand) do
-      current_date = Timex.now()
+      current_date = Timex.now() |> Timex.to_datetime(socket.assigns.team.timezone)
 
       assigns = [
         current_date: current_date,
