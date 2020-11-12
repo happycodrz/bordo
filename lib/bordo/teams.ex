@@ -98,6 +98,15 @@ defmodule Bordo.Teams do
 
   """
   def delete_team(%Team{} = team) do
+    # TODO: Convert this to ecto-multi
+    Bordo.Brands.list_brands_for_team(team.id)
+    |> Enum.each( fn brand -> 
+      Bordo.Media.list_media(brand.id)
+      |> Enum.each( fn media -> 
+        Bordo.Media.delete_media(media) 
+      end)
+      Bordo.Brands.delete_brand(brand)
+    end)
     Repo.delete(team)
   end
 
