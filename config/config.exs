@@ -78,7 +78,8 @@ config :facebook,
   app_access_token: System.get_env("FACEBOOK_CLIENT_TOKEN"),
   graph_url: "https://graph.facebook.com",
   graph_video_url: "https://graph-video.facebook.com",
-  request_conn_timeout: 60_000
+  request_conn_timeout: 60_000,
+  request_recv_timeout: 60_000
 
 config :bordo,
   twitter_live: true,
