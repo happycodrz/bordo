@@ -28,6 +28,9 @@ import { TwitterLimit } from './hooks/twitter_limit'
 import { UploadMedia } from './hooks/upload_media'
 import { initSlideOver } from './hooks/slide_over'
 
+// App
+import Shortcuts from './shortcuts'
+
 let Hooks = {}
 
 Hooks = {
@@ -77,4 +80,5 @@ document.addEventListener('DOMContentLoaded', () => {
       searchEnabled: true,
     })
   }
+  Shortcuts.Init()
 })
