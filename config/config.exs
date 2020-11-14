@@ -72,7 +72,8 @@ config :bordo, :stripe,
   redirect_success: "https://bor.do",
   standard_price_id: "price_1HCuUsIa5ro1VoLo8QDydMJL"
 
-config :bordo, :slack_bot, token: System.get_env("SLACK_BOT_API_KEY")
+config :slack, api_token: System.get_env("SLACK_BOT_API_KEY")
+
 ####
 # Integration configuration
 ####

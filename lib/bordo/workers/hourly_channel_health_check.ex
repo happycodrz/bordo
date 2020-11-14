@@ -23,10 +23,7 @@ defmodule Bordo.Workers.HourlyChannelHealthCheck do
       {:error, :health_failure} ->
         Chat.post_message(
           "feed-bordo-bot",
-          format_message(channel),
-          %{
-            token: Application.get_env(:bordo, :slack_bot)[:token]
-          }
+          format_message(channel)
         )
     end
   end
