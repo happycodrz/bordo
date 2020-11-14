@@ -55,7 +55,7 @@ defmodule Bordo.Channels.HealthCheck do
   end
 
   def check(%{network: "facebook"} = channel) do
-    case Facebook.debug_token(channel.token, channel.token) do
+    case Facebook.me("id", channel.token) do
       {:ok, _} ->
         :ok
 
