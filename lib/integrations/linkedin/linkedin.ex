@@ -8,7 +8,8 @@ defmodule Linkedin do
     case get("v2/me", [
            {"Authorization", "Bearer #{token}"}
          ]) do
-      {:ok, %HTTPoison.Response{body: {:ok, body}}} -> {:ok, body}
+      {:ok, %HTTPoison.Response{status_code: 200, body: {:ok, body}}} -> {:ok, body}
+      {:ok, %HTTPoison.Response{status_code: code, body: {:ok, body}}} -> {:error, body}
       {:error, %{reason: reason}} -> {:error, reason}
     end
   end
