@@ -1,12 +1,21 @@
 defmodule Bordo.Workers.HourlyChannelHealthCheck do
+  use Oban.Worker
+
   alias Bordo.Channels
   alias Bordo.Channels.HealthCheck
   alias Bordo.Repo
   alias Slack.Web.Chat
 
-  def check_channel(channel_id) do
-    channel = fetch_channel(channel_id)
+  @impl Oban.Worker
+  def perform(_job) do
+    Channels.list_channels()
+    |> Repo.preload(:brand)
+    |> Enum.each(&check_channel(&1))
 
+    :ok
+  end
+
+  def check_channel(channel) do
     case HealthCheck.check(channel) do
       :ok ->
         :ok
@@ -29,8 +38,6 @@ defmodule Bordo.Workers.HourlyChannelHealthCheck do
     :thumbsdown: Health check failed
     """
   end
-
-  defp fetch_channel(id), do: Channels.get_channel!(id) |> Repo.preload(:brand)
 end
 
 defmodule Bordo.Channels.HealthCheck do

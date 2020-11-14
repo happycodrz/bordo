@@ -46,7 +46,10 @@ config :cloudex,
 config :bordo, Oban,
   repo: Bordo.Repo,
   plugins: [{Oban.Plugins.Pruner, max_age: 10_000}],
-  queues: [default: 10, events: 50, media: 20]
+  queues: [default: 10, events: 50, media: 20],
+  crontab: [
+    {"0 * * * *", Bordo.Workers.HourlyChannelHealthCheck, max_attempts: 1}
+  ]
 
 config :appsignal, :config,
   active: false,
