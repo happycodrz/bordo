@@ -12,7 +12,7 @@ defmodule Bordo.Channels.Channel do
     field :resource_info, :map
     field :image_url, :string
     field :label, :string
-    field :needs_reauthentication, :string
+    field :needs_reauthentication, :boolean
     field :health_last_checked_at, :naive_datetime
 
     belongs_to :brand, Bordo.Brands.Brand
