@@ -18,9 +18,12 @@ defmodule Bordo.Workers.HourlyChannelHealthCheck do
   def check_channel(channel) do
     case HealthCheck.check(channel) do
       :ok ->
+        update_channel(:ok, channel)
         :ok
 
       {:error, :health_failure} ->
+        update_channel(:error, channel)
+
         Chat.post_message(
           "feed-bordo-bot",
           format_message(channel)
@@ -34,6 +37,20 @@ defmodule Bordo.Workers.HourlyChannelHealthCheck do
     :zap: *#{channel.network}* #{channel.id}
     :thumbsdown: Health check failed
     """
+  end
+
+  def update_channel(:ok, channel) do
+    Channels.update_channel(channel, %{
+      needs_reauthentication: false,
+      health_last_checked_at: Timex.now()
+    })
+  end
+
+  def update_channel(:ok, channel) do
+    Channels.update_channel(channel, %{
+      needs_reauthentication: true,
+      health_last_checked_at: Timex.now()
+    })
   end
 end
 
