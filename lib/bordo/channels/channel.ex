@@ -12,6 +12,8 @@ defmodule Bordo.Channels.Channel do
     field :resource_info, :map
     field :image_url, :string
     field :label, :string
+    field :needs_reauthentication, :string
+    field :health_last_checked_at, :naive_datetime
 
     belongs_to :brand, Bordo.Brands.Brand
     has_many :post_variants, Bordo.PostVariants.PostVariant
@@ -35,7 +37,9 @@ defmodule Bordo.Channels.Channel do
       :resource_id,
       :resource_info,
       :image_url,
-      :label
+      :label,
+      :needs_reauthentication,
+      :health_last_checked_at
     ])
     |> validate_inclusion(:network, @supported_networks,
       message: "must be one of #{supported_networks_error_msg()}"
