@@ -28,6 +28,9 @@ defmodule Bordo.Workers.HourlyChannelHealthCheck do
           "feed-bordo-bot",
           format_message(channel)
         )
+
+      _ ->
+        :ok
     end
   end
 
