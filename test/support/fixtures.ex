@@ -62,7 +62,8 @@ defmodule Bordo.Fixtures do
           network: "twitter",
           token: "123",
           token_secret: "456",
-          resource_info: %{}
+          resource_info: %{},
+          needs_reauthentication: false
         }
         |> Map.merge(attrs)
       )
