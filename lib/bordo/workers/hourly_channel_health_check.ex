@@ -46,7 +46,7 @@ defmodule Bordo.Workers.HourlyChannelHealthCheck do
     })
   end
 
-  def update_channel(:ok, channel) do
+  def update_channel(:error, channel) do
     Channels.update_channel(channel, %{
       needs_reauthentication: true,
       health_last_checked_at: Timex.now()
