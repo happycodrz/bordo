@@ -38,8 +38,8 @@
 
   <%# Channels %>
   <%= if Enum.any?(@channels) do %>
-    <div class="bg-white shadow overflow-hidden sm:rounded-md mb-8">
-      <h2 class="m-4 pb-2 text-gray-600 text-xl">Your channels</h2>
+    <div class="bg-white shadow sm:rounded-md mb-8">
+      <h2 class="m-4 pt-4 pb-2 text-gray-600 text-xl">Your channels</h2>
       <ul class="divide-y divide-gray-200">
         <%= for channel <- @channels do %>
           <%= channel_card(channel, assigns) %>
