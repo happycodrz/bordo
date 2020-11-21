@@ -34,7 +34,7 @@ defmodule BordoWeb.Components.EmptySlideOver do
               x-transition:leave="transform transition ease-in-out duration-100" x-transition:leave-start="translate-x-0"
               x-transition:leave-end="translate-x-full">
               <div class="h-full flex flex-col space-y-6 bg-white shadow-xl overflow-y-scroll">
-                <%= @inner_content.([]) %>
+                <%= render_block(@inner_block) %>
               </div>
             </div>
           </section>

@@ -83,7 +83,7 @@ defmodule BordoWeb.Components.Modal do
               </div>
               <!-- MODAL BODY -->
               <div class="relative flex-auto p-4">
-                <%= @inner_content.([]) %>
+                <%= render_block(@inner_block) %>
               </div>
             </div>
           </div>

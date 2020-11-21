@@ -52,7 +52,7 @@ defmodule BordoWeb.Components.SlideOver do
                   </div>
                 </header>
                 <div class="relative flex-1 px-4 sm:px-6">
-                  <%= @inner_content.([]) %>
+                  <%= render_block(@inner_block) %>
                 </div>
               </div>
             </div>

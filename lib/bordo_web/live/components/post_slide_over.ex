@@ -60,7 +60,7 @@ defmodule BordoWeb.Components.PostSlideOver do
                     </div>
                   </header>
                   <div class="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-grayx-200">
-                    <%= @inner_content.([]) %>
+                    <%= render_block(@inner_block) %>
                   </div>
                 </div>
                 <div class="flex-shrink-0 px-4 border-t border-gray-200 py-3 sm:px-6">
