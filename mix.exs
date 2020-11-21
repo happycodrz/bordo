@@ -52,7 +52,7 @@ defmodule Bordo.MixProject do
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:oauther, "~> 1.1"},
       {:oban, "~> 2.3.2"},
-      {:phoenix, "~> 1.5.6"},
+      {:phoenix, "~> 1.5.7"},
       {:phoenix_ecto, "~> 4.1"},
       {:phoenix_html, "2.14.2"},
       {:phoenix_live_view, "0.15.0"},
