@@ -1,0 +1,79 @@
+<div class="max-w-7xl mx-auto min-h-full py-12 sm:px-6 lg:px-8" id="settings-live">
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-4">
+    <%= f = form_for @changeset, "#", [as: :brand, phx_submit: "save", phx_target: "#settings-live"] %>
+      <div class="p-4">
+        <div class="mb-4">
+          <h2 class="text-lg leading-6 font-medium text-gray-900">Brand Settings</h2>
+        </div>
+
+        <div class="flex flex-col space-y-6 lg:flex-row lg:space-y-0 lg:space-x-6">
+          <div class="flex-grow space-y-1 lg:flex-grow-0 lg:flex-shrink-0">
+            <%= if is_nil(@active_brand.image_url) do %>
+              <div phx-hook="UploadMedia" phx-target="#settings-live" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer bg-white h-12 hover:no-underline w-12 flex items-center justify-center text-gray-500 text-2xl font-semibold rounded-lg mb-1 overflow-hidden">
+                <%= BrandHelper.brand_letters(@active_brand) %>
+              </div>
+            <% else %>
+              <img phx-hook="UploadMedia" phx-target="#settings-live" class="inline-block h-20 w-20 rounded-md mr-4 cursor-pointer" src="<%= @active_brand.image_url %>" alt="">
+            <% end %>
+          </div>
+          <div class="flex-grow space-y-6">
+            <div class="space-y-1">
+              <%= label f, :name, class: "block text-sm font-medium leading-5 text-gray-700" %>
+              <%= text_input f, :name, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5", autocomplete: :off %>
+              <%= error_tag f, :name %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+        <span class="inline-flex rounded-md shadow-sm">
+          <button type="submit" phx-disable-with="Saving..." class="bg-gray-800 border border-transparent rounded-md py-2 px-4 inline-flex justify-center text-sm leading-5 font-medium text-white hover:bg-gray-700 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray active:bg-gray-900 transition duration-150 ease-in-out">
+            Save
+          </button>
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <%# Channels %>
+  <%= if Enum.any?(@channels) do %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-md mb-8">
+      <h2 class="m-4 pb-2 text-gray-600 text-xl">Your channels</h2>
+      <ul class="divide-y divide-gray-200">
+        <%= for channel <- @channels do %>
+          <%= channel_card(channel, assigns) %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= if Enum.any?(remaining_channels(@channels)) do %>
+    <div class="mb-8">
+      <h2 class="mb-4 pb-2 text-gray-600 text-xl">Connect a channel</h2>
+      <p class="mb-8 text-gray-400">To connect social media channels to this brand, click a button below. You'll be taken to their site to finish the authorization. Don't worry! You'll be right back.</p>
+      <ul class="grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <%= for channel <- remaining_channels(@channels) do %>
+          <%= add_channel_card(channel, @active_brand.id) %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Delete this brand
+      </h3>
+      <div class="mt-2 max-w-xl text-sm leading-5 text-gray-500">
+        <p>
+          Once you delete this brand, you will lose all data associated with it.
+        </p>
+      </div>
+      <div class="mt-5">
+        <button phx-click="delete-brand" phx-target="#settings-live" data-confirm="Are you sure you want to delete the brand <%= @active_brand.name %>?" type="button" class="inline-flex items-center justify-center px-4 py-2 border border-transparent font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-50 focus:outline-none focus:border-red-300 focus:shadow-outline-red active:bg-red-200 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+          Delete account
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
