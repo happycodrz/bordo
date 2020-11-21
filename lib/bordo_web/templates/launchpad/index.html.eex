@@ -6,7 +6,7 @@
     </span>
   </p>
   <h1 class="mb-20 text-lg text-gray-700">What do you want to accomplish today?</h1>
-  <div class="w-3/5 max-w-4/5 grid grid-cols-3 col-gap-8">
+  <div class="w-3/5 max-w-4/5 grid grid-cols-3 gap-x-8">
     <div class="flex flex-col items-center bg-white pt-16 rounded-lg shadow cursor-pointer transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-xl" style="text-decoration: none;" onclick="document.getElementById('post-slideover-button').click()">
       <div class="absolute flex items-center justify-center rounded-full w-16 h-16 top-0 -mt-8 bg-red-500"><%= feather_icon("send", "w-8 h-8 text-white") %></div>
       <div class="text-xl text-center flex-1 pb-12 px-8 text-gray-700">Schedule a new post</div>

@@ -12,7 +12,7 @@
       <%= live_component(@socket, BordoWeb.Admin.Select, selection: "admin_list_users", form: f) %>
     </div>
   </div>
-  <div class="mt-6 grid grid-cols-1 row-gap-6 col-gap-4 sm:grid-cols-6">
+  <div class="mt-6 grid grid-cols-1 row-gap-6 gap-x-4 sm:grid-cols-6">
     <div class="sm:col-span-3">
       <%= label f, :stripe_customer_id, class: "block text-sm font-medium leading-5 text-gray-700" %>
       <%= text_input f, :stripe_customer_id, class: "mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" %>
