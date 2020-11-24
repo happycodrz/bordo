@@ -34,7 +34,7 @@ defmodule Bordo.MixProject do
   defp deps do
     [
       {:appsignal, "~> 1.13.1"},
-      {:auth0_ex, "~> 0.6"},
+      {:auth0_ex, git: "https://github.com/techgaun/auth0_ex", branch: "master"},
       {:cloudex, "~> 1.4",
        git: "https://github.com/ClementineOldfield/cloudex", branch: "master"},
       {:cors_plug, "~> 2.0"},

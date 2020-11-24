@@ -12,9 +12,13 @@ defmodule Bordo.Users.Account do
       {:ok, user} ->
         case Authentication.signup(
                System.get_env("AUTH0_CLIENT_ID"),
-               user.email,
-               attrs["password"],
-               "Username-Password-Authentication"
+               "chevinbrown+3@gmail.com",
+               "password",
+               "Username-Password-Authentication",
+               %{
+                 given_name: attrs["first_name"],
+                 family_name: attrs["last_name"]
+               }
              ) do
           {:ok, auth0_user} ->
             Users.update_user(user, %{auth0_id: auth0_user["_id"]})

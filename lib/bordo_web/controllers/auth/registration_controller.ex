@@ -21,6 +21,8 @@ defmodule BordoWeb.RegistrationController do
     case Account.create_user_with_auth0(user_params) do
       {:ok, _user} ->
         Auth.sign_in(%Credentials{
+          first_name: user_params["first_name"],
+          last_name: user_params["last_name"],
           username: user_params["email"],
           password: Base.encode64(user_params["password"])
         })

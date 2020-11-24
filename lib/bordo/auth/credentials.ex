@@ -9,14 +9,18 @@ defmodule Auth.Credentials do
 
   @primary_key false
   embedded_schema do
+    field :first_name, :string
+    field :last_name, :string
     field :username, :string
     field :password, :string
   end
 
-  @allowed_fields [:username, :password]
+  @allowed_fields [:first_name, :last_name, :username, :password]
   @required_fields [:username, :password]
 
   @type t :: %__MODULE__{
+          first_name: String.t(),
+          last_name: String.t(),
           username: String.t(),
           password: String.t()
         }
