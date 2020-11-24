@@ -10,9 +10,8 @@ const Shortcuts = {
 
 const OpenModal = () => {
   // click button, or send push-event
-  const NewPostButton = document.getElementById('post-slideover-button')
-  const ModalContainer = document.getElementById('new-post')
-  if (ModalContainer && ModalContainer.children.length < 1) {
+  const NewPostButton = document.getElementById('compose-button')
+  if (window.location.href.indexOf("composer") < 0) {
     NewPostButton.click()
   }
 }

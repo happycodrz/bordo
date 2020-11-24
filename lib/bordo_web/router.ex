@@ -114,6 +114,8 @@ defmodule BordoWeb.Router do
 
     scope "/:brand_slug" do
       live "/", BordoLive
+      live "/composer", BordoLive, :composer
+      live "/composer/:id", BordoLive, :composer
       live "/launchpad", BordoLive, :launchpad
       live "/media", BordoLive, :media
       live "/schedule", BordoLive, :schedule

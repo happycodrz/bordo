@@ -1,0 +1,116 @@
+<div class="max-w-7xl mx-auto min-h-full py-12 sm:px-6 lg:px-8" id="new-post">
+  <%= form_for @changeset, "#", [id: "post-form", phx_submit: "save", phx_change: "validate", phx_target: "#new-post"], fn f -> %>
+    <div class="grid grid-cols-4 bg-white shadow-md rounded-md overflow-hidden">
+      <div class="col-span-3">
+        <!-- Title -->
+        <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+          <div>
+            <%= label f, :title, class: "block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2" %>
+          </div>
+          <div class="sm:col-span-2">
+            <div class="rounded-md shadow">
+              <%= text_input f, :title, class: "form-input block w-full sm:text-sm sm:leading-5", autocomplete: "off", autofocus: true %>
+            </div>
+            <%= error_tag f, :title %>
+          </div>
+        </div>
+
+        <!-- Schedule -->
+        <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+          <div>
+            <%= label f, :scheduled_for, class: "block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2" %>
+          </div>
+          <div class="sm:col-span-2">
+            <div>
+              <%= text_input f, :scheduled_for, id: "datepicker", phx_hook: "DatePicker", class: "form-input block w-full sm:text-sm sm:leading-5", autocomplete: "off" %>
+            </div>
+            <%= error_tag f, :scheduled_for %>
+          </div>
+        </div>
+
+        <%= inputs_for f, :post_variants, fn pv -> %>
+          <%= hidden_input pv, :channel_id %>
+          <!-- Description -->
+          <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+            <div>
+              <% channel = Bordo.Channels.get_channel!(Ecto.Changeset.get_field(pv.source, :channel_id)) %>
+              <% network_name = String.capitalize(channel.network) %>
+              <label class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2"><%= channel_name(channel) %></label>
+            </div>
+            <div class="sm:col-span-2">
+              <div class="flex items-center">
+                <div class="flex w-full rounded-md shadow">
+                  <%= textarea pv, :content, class: "form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 overflow-hidden", "data-content-count": network_name, phx_hook: "AutoGrow" %>
+                </div>
+                <div class="ml-4">
+                  <%= hidden_input pv, :temp_id %>
+                </div>
+              </div>
+              <%= if network_name == "Twitter" do %>
+                <p id="twitter-limit" phx-hook="TwitterLimit" phx-update="ignore" class="mt-2 text-sm text-gray-500"></p>
+              <% end %>
+              <%= error_tag pv, :content %>
+            </div>
+          </div>
+
+          <!-- Media -->
+          <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+            <div></div>
+            <div class="sm:col-span-2">
+              <%= inputs_for pv, :post_variant_media, [append: if(Enum.empty?(Ecto.Changeset.get_field(pv.source, :post_variant_media)), do: [%PostVariantMedia{}], else: [])], fn pvm -> %>
+                <%= media_selector(pvm, Ecto.Changeset.get_field(pv.source, :id) || Ecto.Changeset.get_field(pv.source, :temp_id)) %>
+                <%= hidden_input pvm, :media_id, class: "w-full border" %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <div class="p-5">
+          <%= footer_content(assigns[:live_action]) %>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="col-span-1 bg-gray-100 border-gray-200 border-l p-4">
+        <h2 class="mb-4">Channels</h2>
+        <%= channel_selector(@channels, @picked_channels) %>
+
+        <div class="space-y-1 px-4">
+          <div>
+            <%= error_tag f, :post_variants %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%= hidden_input f, :brand_id, value: @active_brand.id %>
+    <%= hidden_input f, :user_id, value: @current_user_id %>
+  <% end %>
+</div>
+
+<%= live_component @socket, BordoWeb.Components.Modal, id: "choose-media", title: if(@live_action == :new, do: "Choose Media", else: "Change Media"), size: "large" do %>
+  <%= if Enum.empty?(@media) do %>
+    <div class="bg-gray-50 overflow-hidden rounded-lg mt-8">
+      <div class="px-4 py-5 sm:p-6">
+        Go to <%= link "media", to: Routes.bordo_path(@socket, :media, @active_brand.slug), class: "underline" %> to add media.
+      </div>
+    </div>
+  <% else %>
+    <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <%= for media <- @media do %>
+        <div class="cursor-pointer group" phx-value-media_id="<%= media.id %>" phx-target="#new-post" phx-click="media-selected">
+            <div class="bg-white shadow rounded-sm overflow-hidden relative">
+              <div class="absolute text-white p-2 z-10">
+                <%= feather_icon("image", "w-6 h-6") %>
+              </div>
+              <div class="md:flex-shrink-0 overflow-hidden">
+                <img src="<%= media.thumbnail_url %>" class="w-full h-64 object-cover transform group-hover:scale-110 transition duration-150 ease-out">
+              </div>
+              <div class="px-4 py-2 mt-2">
+                <span class="text-sm text-gray-400"><%= BordoWeb.Helpers.TimeHelper.local_date(media.inserted_at) %></span>
+                <h2 class="font-bold text-xl mb-2 text-gray-800 tracking-normal truncate"><%= media.title %></h2>
+              </div>
+            </div>
+        </div>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

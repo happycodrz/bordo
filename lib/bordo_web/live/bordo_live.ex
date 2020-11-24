@@ -5,6 +5,8 @@ defmodule BordoWeb.BordoLive do
   alias Bordo.Brands
   alias Bordo.Brands.Brand
   alias Bordo.Media
+  alias Bordo.Posts
+  alias Bordo.Posts.Post
   alias Bordo.Teams
   alias Bordo.Teams.Team
   alias Bordo.Users
@@ -33,6 +35,7 @@ defmodule BordoWeb.BordoLive do
   def handle_params(params, url, socket) do
     if BrandHelper.brand_configured?(socket.assigns.active_brand) do
       case socket.assigns.live_action do
+        :composer -> handle_composer(params, url, socket)
         :launchpad -> {:noreply, socket}
         :schedule -> handle_schedule(params, url, socket)
         :media -> handle_media(params, url, socket)
@@ -56,6 +59,14 @@ defmodule BordoWeb.BordoLive do
          )}
       end
     end
+  end
+
+  def handle_composer(%{"id" => post_id}, _url, socket) do
+    {:noreply, socket |> assign(post_id: post_id, team: socket.assigns.team)}
+  end
+
+  def handle_composer(_params, _url, socket) do
+    {:noreply, socket |> assign(post_id: nil, team: socket.assigns.team)}
   end
 
   def handle_schedule(_params, _url, socket) do

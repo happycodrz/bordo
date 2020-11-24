@@ -43,14 +43,14 @@ defmodule BordoWeb.Components.CalendarDay do
     assigns = %{socket: socket}
 
     ~L"""
-    <div phx-click="open-slideover" phx-target="#new-post" phx-value-post_id="<%= post.id %>" class="group cursor-pointer flex items-center justify-between px-2.5 py-0.5 rounded-md text-sm font-medium leading-5 mb-2 transition ease-in-out duration-100 <%= post_css(post) %>">
+    <%= link to: Routes.bordo_path(socket, :composer, "big-boi", post.id), class: "group cursor-pointer flex items-center justify-between px-2.5 py-0.5 rounded-md text-sm font-medium leading-5 mb-2 transition ease-in-out duration-100 #{post_css(post)}" do %>
         <span class="flex items-center truncate ">
           <%= post.title %>
         </span>
         <span class="text-xs <%= time_css(post) %>">
           <%= scheduled_for %>
         </span>
-    </div>
+    <% end %>
     """
   end
 

@@ -2,6 +2,8 @@
 <%= live_component(@socket, BordoWeb.BrandModal, id: "brand-modal", team_id: @current_user.team_id) %>
 <div class="w-full overflow-y-scroll">
   <%= case @live_action do %>
+    <% :composer -> %>
+      <%= live_component @socket, BordoWeb.Composer, id: "new-post", active_brand: @active_brand, channels: @active_brand.channels, current_user_id: @current_user.id, post_id: @post_id, team: @team %>
     <% :launchpad -> %>
       <%= render BordoWeb.LaunchpadView, "index.html", socket: @socket, active_brand: @active_brand, current_user: @current_user %>
     <% :schedule -> %>
@@ -14,4 +16,3 @@
       <%= live_component @socket, BordoWeb.TeamSettingsLive, id: "team-settings-live", socket: @socket, active_brand: @active_brand, changeset: @changeset, payment_methods: @payment_methods, team: @team, team_changeset: @team_changeset, users: @users %>
     <% end %>
 </div>
-<%= live_component @socket, BordoWeb.Posts.NewLive, id: "new-post", active_brand: @active_brand, show_slideover: false, current_user_id: @current_user.id, team: @team %>

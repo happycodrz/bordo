@@ -1,4 +1,4 @@
-defmodule BordoWeb.Posts.NewLive do
+defmodule BordoWeb.Composer do
   use BordoWeb, :live_component
 
   alias Bordo.{
@@ -12,6 +12,35 @@ defmodule BordoWeb.Posts.NewLive do
 
   alias Ecto.Changeset
   alias Timex.Timezone
+
+  def preload([assigns]) do
+    live_action =
+      if is_nil(assigns[:post_id]) do
+        :new
+      else
+        :edit
+      end
+
+    post = get_post(assigns[:post_id], assigns[:team].timezone)
+    changeset = Posts.change_post(post)
+    existing_variants = existing_variants(%{changeset: changeset, post: post})
+
+    # reject existing channels in the post-variant changeset
+    channels = fetch_available_channels(assigns[:active_brand].id)
+
+    picked_channels = existing_variants |> Enum.map(& &1.channel_id)
+    IO.inspect(picked_channels)
+
+    [
+      Map.merge(assigns, %{
+        channels: channels,
+        picked_channels: picked_channels,
+        changeset: changeset,
+        live_action: live_action,
+        post: post
+      })
+    ]
+  end
 
   def handle_event("validate", %{"post" => post_params}, socket) do
     params = post_params |> prepare_data(socket.assigns.team.timezone)
@@ -319,7 +348,7 @@ defmodule BordoWeb.Posts.NewLive do
     ~L"""
     <%= if !is_nil(media) do %>
       <span class="inline-block relative">
-        <img class="h-20 w-20 rounded-md" src="<%= media.thumbnail_url %>" alt="">
+        <img class="h-32 w-full object-cover rounded-md" src="<%= media.thumbnail_url %>" alt="">
         <span phx-click="media-removed" phx-target="#new-post" phx-value-post_variant_id="<%= post_variant_id %>" phx-value-post_variant_media_id="<%= media_id %>" class="cursor-pointer absolute flex items-center justify-content-center top-0 right-0 block h-5 w-5 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-gray-300">
           <%= feather_icon("x", "w-2.5 h-2.5") %>
         </span>
@@ -339,10 +368,33 @@ defmodule BordoWeb.Posts.NewLive do
 
   defp channel_selector(channels, picked_channels) do
     ~e"""
+    <div>
+      <%= for channel <- channels do %>
+        <div class="flex items-center mb-2">
+          <button type="button" @click="on = !on" phx-click="<%= channel_selector_click(channel, picked_channels) %>" phx-target="#new-post" phx-value-channel_id="<%= channel.id %>" :aria-pressed="on.toString()" aria-pressed="false" aria-labelledby="toggleLabel" x-data="{ on: <%= channel_added?(channel.id, picked_channels) %> }" :class="{ 'bg-gray-200': !on, 'bg-indigo-600': on }" class="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <span class="sr-only">Use setting</span>
+            <span aria-hidden="true" :class="{ 'translate-x-5': on, 'translate-x-0': !on }" class="translate-x-0 inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
+          </button>
+          <span class="ml-3" id="toggleLabel">
+            <span class="text-sm font-medium text-gray-900"><%= channel_name(channel) %></span>
+          </span>
+        </div>
+      <% end %>
+    </div>
+    """
+  end
+
+  defp channel_selector_click(channel, picked_channels) do
+    if channel_added?(channel.id, picked_channels) do
+      "remove-variant"
+    else
+      "add-variant"
+    end
+  end
+
+  defp channel_selector_old(channels, picked_channels) do
+    ~e"""
     <div class="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
-      <div>
-        <label class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2">Add Channels</label>
-      </div>
       <div class="sm:col-span-2">
         <span class="block text-sm font-medium leading-5 text-gray-900 sm:mt-px sm:pt-2">
           <%= for channel <- channels do %>
@@ -360,6 +412,38 @@ defmodule BordoWeb.Posts.NewLive do
           <% end %>
         </span>
       </div>
+    </div>
+    """
+  end
+
+  defp footer_content(nil), do: footer_content(:new)
+
+  defp footer_content(:edit) do
+    ~e"""
+    <div class="flex justify-between">
+      <button type="button" class="inline-flex items-center justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out" phx-click="delete" phx-target="#new-post">
+        <%= feather_icon("trash", "mr-2 w-4 h-4") %>
+        Delete Post
+      </button>
+      <div class="space-x-3 flex justify-end">
+        <span class="inline-flex rounded-md shadow">
+          <button form="post-form" phx-disable-with="Submitting" type="submit" class="justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-400 transition duration-150 ease-in-out">
+            Update Post
+          </button>
+        </span>
+      </div>
+    </div>
+    """
+  end
+
+  defp footer_content(:new) do
+    ~e"""
+    <div class="space-x-3 flex justify-end">
+      <span class="inline-flex rounded-md shadow">
+        <button form="post-form" phx-disable-with="Submitting" type="submit" class="justify-center py-2 px-4 text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-400 transition duration-150 ease-in-out">
+          Schedule Post
+        </button>
+      </span>
     </div>
     """
   end
