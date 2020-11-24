@@ -19,6 +19,7 @@ import NProgress from 'nprogress'
 import { LiveSocket } from 'phoenix_live_view'
 
 // Hooks
+import { AutoGrow } from './hooks/auto_grow'
 import { Canva } from './hooks/canva'
 import { DatePicker } from './hooks/date_picker'
 import { InitModal } from './hooks/modal'
@@ -35,6 +36,7 @@ let Hooks = {}
 
 Hooks = {
   ...Hooks,
+  AutoGrow,
   Canva,
   DatePicker,
   InitModal,
