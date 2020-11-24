@@ -1,0 +1,32 @@
+<div class="md:hidden bg-blue-100 h-screen p-8 flex flex-col items-center justify-center text-center">
+  <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-5" alt="Bordo admin" width="120px" />
+  <h1 class="text-3xl mb-6 text-blue-900">Looks like you're on the move!</h1>
+  <p class="text-blue-800">Unfortunately at this time, Bordo isn't quite suited for mobile use. Try loggin in on your laptop or iPad until this experience is ready.</p>
+</div>
+
+<div class="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-0 h-screen">
+  <div class="flex items-center justify-center text-center flex-col">
+    <div class="w-3/5">
+      <img src="<%= Routes.static_path(@conn, "/images/logo.svg") %>" class="mx-auto mb-3" alt="Bordo admin" width="120px" />
+
+      <div class="rounded-md bg-green-50 p-4 mb-8">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <!-- Heroicon name: check-circle -->
+            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-green-800">
+              Nice! Just check your email now to confirm your account and circle back here to login.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <%= link "Take me to login now", to: Routes.login_path(@conn, :login) %>
+    </div>
+  </div>
+  <div class="lg:col-span-2 bg-blue-500 hidden md:flex items-center justify-center"></div>
+</div>
