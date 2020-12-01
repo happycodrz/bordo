@@ -34,7 +34,7 @@
     <div class="w-full grid grid-cols-7">
       <%= for week <- week_rows(@current_date) do %>
         <%= for day <- week do %>
-          <%= live_component @socket, BordoWeb.Components.CalendarDay, day: day, current_date: @current_date, posts: @posts[day], id: day, team: @team %>
+          <%= live_component @socket, BordoWeb.Components.CalendarDay, day: day, brand_slug: @active_brand.slug, current_date: @current_date, posts: @posts[day], id: day, team: @team %>
         <% end %>
       <% end %>
     </div>

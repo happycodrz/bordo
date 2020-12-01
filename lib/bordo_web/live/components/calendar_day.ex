@@ -10,7 +10,7 @@ defmodule BordoWeb.Components.CalendarDay do
       </span>
       <div class="overflow-y-auto mt-2 w-full">
         <%= for post <- @posts do %>
-          <%= calendar_day_post(@socket, post, @team.timezone) %>
+          <%= calendar_day_post(@socket, post, @team.timezone, @brand_slug) %>
         <% end %>
       </div>
     </div>
@@ -33,7 +33,7 @@ defmodule BordoWeb.Components.CalendarDay do
     end
   end
 
-  defp calendar_day_post(socket, post, timezone) do
+  defp calendar_day_post(socket, post, timezone, active_brand) do
     time = Timex.to_datetime(post.scheduled_for, timezone)
 
     scheduled_for =
@@ -43,13 +43,13 @@ defmodule BordoWeb.Components.CalendarDay do
     assigns = %{socket: socket}
 
     ~L"""
-    <%= link to: Routes.bordo_path(socket, :composer, "big-boi", post.id), class: "group cursor-pointer flex items-center justify-between px-2.5 py-0.5 rounded-md text-sm font-medium leading-5 mb-2 transition ease-in-out duration-100 #{post_css(post)}" do %>
-        <span class="flex items-center truncate ">
-          <%= post.title %>
-        </span>
-        <span class="text-xs <%= time_css(post) %>">
-          <%= scheduled_for %>
-        </span>
+    <%= link to: Routes.bordo_path(socket, :composer, active_brand, post.id), class: "group cursor-pointer flex items-center justify-between px-2.5 py-0.5 rounded-md text-sm font-medium leading-5 mb-2 transition ease-in-out duration-100 #{post_css(post)}" do %>
+      <span class="flex items-center truncate ">
+        <%= post.title %>
+      </span>
+      <span class="text-xs <%= time_css(post) %>">
+        <%= scheduled_for %>
+      </span>
     <% end %>
     """
   end
