@@ -148,7 +148,7 @@ defmodule BordoWeb.BordoLive do
   end
 
   def handle_info({:upload, url}, socket) do
-    {:ok, result} = Cloudex.upload([url], %{eager: "c_fit,w_400,h_400"})
+    {:ok, result} = Cloudex.upload([url], %{eager: "c_fit,w_800,h_800"})
 
     {:ok, media} =
       Media.create_media(%{
